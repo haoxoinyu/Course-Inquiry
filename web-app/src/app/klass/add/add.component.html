@@ -1,0 +1,6 @@
+<h3>新增班级</h3>
+<form (ngSubmit)="onSubmit()">
+  <label for="name">名称：<input id="name" type="text" [formControl]="name"/></label>
+  <label for="schoolId">学校：<app-school-select id="schoolId" (selected)="onSchoolSelected($event)"></app-school-select></label>
+  <button id="klassAddButton">保存</button>
+</form>

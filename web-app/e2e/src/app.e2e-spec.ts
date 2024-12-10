@@ -9,8 +9,11 @@ describe('workspace-project App', () => {
   });
 
   it('should display welcome message', () => {
+    browser.sleep(1000);
     page.navigateTo();
-    expect(page.getTitleText()).toEqual('web-app app is running!');
+    browser.sleep(2000);
+    expect(page.getTitleText()).toEqual('欢迎使用河北工业大学教务管理系统');
+    browser.sleep(2000);
   });
 
   afterEach(async () => {

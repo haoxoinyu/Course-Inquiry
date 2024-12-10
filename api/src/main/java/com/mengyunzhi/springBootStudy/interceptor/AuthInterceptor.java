@@ -40,7 +40,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
         }
 
         // 判断请求地址、方法是否与用户登录相同
-        if ("/Teacher/login".equals(url) && "POST".equals(method)) {
+        if ("/User/login".equals(url) && "POST".equals(method)) {
             System.out.println("请求地址方法匹配到登录地址，不拦截");
             return true;
         }

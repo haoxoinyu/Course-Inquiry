@@ -1,0 +1,5 @@
+<select id="schoolSelect" [formControl]="schoolSelect" (change)="onChange()" [compareWith]="compareFn">
+  <option *ngFor="let school of schools" [ngValue]="school">
+    {{school.name}}
+  </option>
+</select>
