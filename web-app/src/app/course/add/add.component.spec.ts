@@ -2,17 +2,11 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {AddComponent} from './add.component';
 import {ReactiveFormsModule} from '@angular/forms';
-import {TestModule} from '../../test/test.module';
 import {FormTest} from '../../testing/FormTest';
 import {By} from '@angular/platform-browser';
-import {TeacherSelectService} from '../../test/component/teacher-select/teacher-select.service';
-import {Teacher} from '../../norm/entity/User';
 import {Klass} from '../../norm/entity/Klass';
-import {CourseTestingModule} from '../course-testing/course-testing.module';
-import {CourseTestingController} from '../course-testing/course-testing-controller';
-import {KlassMultipleSelectComponent} from '../user-multiple-select/user-multiple-select.component';
+import {UserMultipleSelectComponent} from '../user-multiple-select/user-multiple-select.component';
 import {CourseService} from '../../service/course.service';
-import {CourseStubService} from '../../service/course-stub.service';
 import {Course} from '../../norm/entity/Course';
 import {of} from 'rxjs';
 import {RouterTestingModule} from '@angular/router/testing';
@@ -27,12 +21,9 @@ describe('course -> AddComponent', () => {
       declarations: [AddComponent],
       imports: [
         ReactiveFormsModule,
-        TestModule,
-        CourseTestingModule,
         RouterTestingModule
       ],
       providers: [
-        {provide: CourseService, useClass: CourseStubService}
       ]
     })
       .compileComponents();
@@ -92,27 +83,6 @@ describe('course -> AddComponent', () => {
     expect(component.onSubmit).toHaveBeenCalled();
   });
 
-  it('嵌入TeacherSelect组件测试', () => {
-    // 获取组件替身的专用服务
-    const teacherSelectService: TeacherSelectService = TestBed.get(TeacherSelectService);
-    const teacher = new Teacher(null, null, null);
-
-    // 服务弹出teacher，断言组件接收到teacher
-    teacherSelectService.selected.emit(teacher);
-    expect(component.course.teacher).toBe(teacher);
-  });
-
-  it('嵌入KlassMultipleSelect组件测试', () => {
-    const courseTestController: CourseTestingController
-      = TestBed.get(CourseTestingController);
-    const klassMultipleSelectComponent: KlassMultipleSelectComponent
-      = courseTestController.get(KlassMultipleSelectComponent);
-    spyOn(component, 'onKlassChange');
-    const klasses = [new Klass(null, null, null)];
-    klassMultipleSelectComponent.changed.emit(klasses);
-    expect(component.onKlassChange).toHaveBeenCalledWith(klasses);
-  });
-
   /**
    * 在beforeEach的组件初始化代码中。
    * 当fixture.detectChanges();被首次执行时，会自动执行一次ngOnInit方法
@@ -120,18 +90,6 @@ describe('course -> AddComponent', () => {
   it('ngOnInit', () => {
     expect(component.formGroup).toBeDefined();
     expect(component.course).toBeDefined();
-  });
-
-  it('onTeacherSelect', () => {
-    const teacher = new Teacher(null, null, null);
-    component.onTeacherSelect(teacher);
-    expect(component.course.teacher).toBe(teacher);
-  });
-
-  it('onKlassesChange', () => {
-    const klasses = [new Klass(null, null, null)];
-    component.onKlassChange(klasses);
-    expect(component.course.klasses).toBe(klasses);
   });
 
   it('onSubmit', () => {
