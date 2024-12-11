@@ -11,6 +11,7 @@ import { WelcomeComponent } from './welcome/welcome.component';
 import { LoginComponent } from './login/login.component';
 import {AuthTokenInterceptor} from './core/auth-token-interceptor';
 import { PersonalCenterComponent } from './personal-center/personal-center.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { PersonalCenterComponent } from './personal-center/personal-center.compo
     HttpClientModule,
     FormsModule,
     RouterModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    BrowserAnimationsModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: AuthTokenInterceptor, multi: true}

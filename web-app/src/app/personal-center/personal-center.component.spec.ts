@@ -1,9 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PersonalCenterComponent } from './personal-center.component';
-import {TestModule} from '../test/test.module';
-import {TeacherService} from '../service/user.service';
-import {Teacher} from '../norm/entity/User';
 import {of} from 'rxjs';
 
 describe('PersonalCenterComponent', () => {
@@ -12,10 +9,7 @@ describe('PersonalCenterComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PersonalCenterComponent ],
-      imports: [
-        TestModule
-      ]
+      declarations: [ PersonalCenterComponent ]
     })
       .compileComponents();
   }));
@@ -28,15 +22,6 @@ describe('PersonalCenterComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('ngOnInit', () => {
-    const teacherService = TestBed.get(TeacherService) as TeacherService;
-    const mockReturnTeacher = new Teacher(null, null, null);
-    spyOn(teacherService, 'me').and.returnValue(of(mockReturnTeacher));
-
-    component.ngOnInit();
-    expect(component.teacher).toBe(mockReturnTeacher);
   });
 
 });

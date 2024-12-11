@@ -5,6 +5,8 @@ import com.mengyunzhi.springBootStudy.service.SchoolService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,40 +21,48 @@ public class SchoolController {
     private static final Logger logger = LoggerFactory.getLogger(SchoolController.class);
 
     @Autowired
-    SchoolService schoolServiceImplService;
-
-    @DeleteMapping("{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id) {
-        schoolServiceImplService.deleteById(id);
-    }
-
-    @GetMapping("{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public School get(@PathVariable Long id) {
-        return this.schoolServiceImplService.getById(id);
-    }
+    SchoolService schoolService;
 
     @GetMapping
-    public List<School> getAll(@RequestParam String name) {
-        return this.schoolServiceImplService.getAll(name);
+    @CrossOrigin("*")
+    public Page<School> findAll(
+            @RequestParam String name,
+            @RequestParam int page,
+            @RequestParam int size) {
+        return this.schoolService.findAll(
+                name,
+                PageRequest.of(page, size));
     }
 
     @PostMapping
+    @CrossOrigin("*")
     @ResponseStatus(HttpStatus.CREATED)
-    public void save(@RequestBody School schoolServiceImpl) {
-        this.schoolServiceImplService.save(schoolServiceImpl);
+    public School save(@RequestBody School school) {
+        // 进行令牌认证与分发
+        return schoolService.save(school);
     }
 
     /**
-     * 更新学校
-     *
-     * @param id    要更新的学校ID
-     * @param schoolServiceImpl 新学校数据
+     * 通过ID查询学校
+     * @param id 学校ID
+     * @return 学校
      */
+    @GetMapping("{id}")
+    @CrossOrigin("*")
+    public School getById(@PathVariable Long id) {
+        return this.schoolService.findById(id);
+    }
+
     @PutMapping("{id}")
+    @CrossOrigin("*")
+    public School update(@PathVariable Long id, @RequestBody School school) {
+        return this.schoolService.update(id, school);
+    }
+
+    @DeleteMapping("{id}")
+    @CrossOrigin("*")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@PathVariable Long id, @RequestBody School schoolServiceImpl) {
-        this.schoolServiceImplService.update(id, schoolServiceImpl);
+    public void deleteById(@PathVariable Long id) {
+        this.schoolService.deleteById(id);
     }
 }

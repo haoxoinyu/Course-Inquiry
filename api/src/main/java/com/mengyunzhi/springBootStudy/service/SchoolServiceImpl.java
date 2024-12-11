@@ -1,10 +1,15 @@
 package com.mengyunzhi.springBootStudy.service;
 
+import com.mengyunzhi.springBootStudy.entity.Klass;
 import com.mengyunzhi.springBootStudy.entity.School;
 import com.mengyunzhi.springBootStudy.repository.SchoolRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -17,45 +22,48 @@ public class SchoolServiceImpl implements SchoolService {
     SchoolRepository schoolRepository;
 
     @Override
-    public void deleteById(Long id) {
-        this.schoolRepository.deleteById(id);
+    public School save(School school) {
+        return this.schoolRepository.save(school);
     }
 
     @Override
-    public List<School> getAll(String name) {
-        return this.schoolRepository.findAllByNameContains(name);
+    public Page<School> findAll(Pageable pageable) {
+        return this.schoolRepository.findAll(pageable);
     }
 
-
-    /**
-     * 获取某个学校
-     *
-     * @param id 学校ID
-     * @return 学校
-     */
     @Override
-    public School getById(Long id) {
+    public Page<School> findAll(String name, @NotNull Pageable pageable) {
+        Assert.notNull(pageable, "Pageable不能为null");
+
+        return this.schoolRepository.findAll(name, pageable);
+    }
+
+    @Override
+    public School findById(@NotNull Long id) {
+        Assert.notNull(id, "id不能为null");
         return this.schoolRepository.findById(id).get();
     }
 
     @Override
-    public void save(School school) {
-        this.schoolRepository.save(school);
+    public School update(Long id, School school) {
+        School oldSchool = this.schoolRepository.findById(id).get();
+        return this.updateFields(school,oldSchool);
+    }
+
+    @Override
+    public void deleteById(@NotNull Long id) {
+        Assert.notNull(id, "传入的ID不能为NULL");
+        this.schoolRepository.deleteById(id);
     }
 
     /**
-     * 更新学校
-     * 获取数据库中的老数据
-     * 使用传入的新数据对老数据的更新字段赋值
-     * 将更新后的老数据重新保存在数据表中
-     *
-     * @param id    要更新的学校ID
-     * @param school 新学校数据
+     * 更新学生
+     * @param newSchool 新学生信息
+     * @param oldSchool 老学生信息
+     * @return 更新后的学生信息
      */
-    @Override
-    public void update(Long id, School school) {
-        School oldSchool = schoolRepository.findById(id).get();
-        oldSchool.setName(school.getName());
-        schoolRepository.save(oldSchool);
+    public School updateFields(School newSchool, School oldSchool) {
+        oldSchool.setName(newSchool.getName());
+        return this.schoolRepository.save(oldSchool);
     }
 }
