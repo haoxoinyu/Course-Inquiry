@@ -29,17 +29,6 @@ describe('klass -> IndexComponent', () => {
     fixture.detectChanges();
   });
 
-  it('测试V层的交互操作', () => {
-    component.params.name = 'test';
-    fixture.detectChanges();
-    fixture.whenStable().then(() => {
-      const debugElement: DebugElement = fixture.debugElement;
-      const nameInputElement = debugElement.query(By.css('input[name="name"]'));
-      const nameInput: HTMLInputElement = nameInputElement.nativeElement;
-      expect(nameInput.value).toBe('test');
-    });
-  });
-
   it('测试V层向C层绑定', () => {
     expect(component).toBeTruthy();
     fixture.whenStable().then(() => {

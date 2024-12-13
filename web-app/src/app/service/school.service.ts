@@ -11,6 +11,11 @@ export class SchoolService {
   constructor(private httpClient: HttpClient) {
   }
 
+  all(): Observable<School[]> {
+    const url = 'http://localhost:8080/School/list';
+    return this.httpClient.get<School[]>(url);
+  }
+
   /**
    * 分页
    * @param params name:名称,page:第几页,size:每页大小

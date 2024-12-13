@@ -7,6 +7,8 @@ import {EditComponent} from './edit/edit.component';
 import { SchoolSelectComponent } from './school-select/school-select.component';
 import {KlassRoutingModule} from './klass-routing.module';
 import {School} from '../norm/entity/School';
+import {MatDialogModule} from '@angular/material/dialog';
+import {CoreModule} from '../core/core.module';
 
 /**
  * 班级模块
@@ -20,7 +22,9 @@ import {School} from '../norm/entity/School';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    KlassRoutingModule
+    KlassRoutingModule,
+    MatDialogModule,
+    CoreModule
   ]
 })
 export class KlassModule {
