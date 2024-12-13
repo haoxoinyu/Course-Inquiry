@@ -30,4 +30,8 @@ public interface SchoolRepository extends PagingAndSortingRepository<School, Lon
         Specification<School> specification = SchoolSpecs.containingName(name);
         return this.findAll(specification, pageable);
     }
+
+    List<School> findAllByNameContains(String name);
+
+    List<School> findAll();
 }

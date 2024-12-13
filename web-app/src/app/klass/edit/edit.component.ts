@@ -1,9 +1,12 @@
-import {Component, OnInit} from '@angular/core';
-import {FormControl, FormGroup} from '@angular/forms';
+import {Component, Inject, OnInit} from '@angular/core';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {HttpClient} from '@angular/common/http';
 import {Klass} from '../../norm/entity/Klass';
 import {School} from '../../norm/entity/School';
+import {SweetAlertService} from '../../service/sweet-alert.service';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
+import {KlassService} from '../../service/klass.service';
 
 @Component({
   selector: 'app-edit',
@@ -14,67 +17,90 @@ export class EditComponent implements OnInit {
   formGroup: FormGroup;
   school: School;
   private url: string;
+  klass = {
+    id: 0,
+    name: '',
+    school: new School(0, '')
+  } as Klass;
 
-  constructor(private route: ActivatedRoute,
+  constructor(private activatedRoute: ActivatedRoute,
               private router: Router,
-              private httpClient: HttpClient) {
+              private httpClient: HttpClient,
+              private klassService: KlassService,
+              private sweetAlertService: SweetAlertService,
+              public dialogRef: MatDialogRef<EditComponent>,
+              @Inject(MAT_DIALOG_DATA) public data: any) {
   }
 
-  private getUrl(): string {
-    return this.url;
+  ngOnInit() {
+    this.activatedRoute.params.subscribe((param: { id: number }) => {
+      param.id = this.data.id;
+      this.klass.id = param.id;
+      this.loadData();
+    });
+
+    this.formGroup = new FormGroup({
+      name: new FormControl('', Validators.required),
+      school: new FormGroup({
+        id: new FormControl('', Validators.required),
+        name: new FormControl('', Validators.required),
+      }),
+    });
   }
 
   /**
    * 加载要编辑的班级数据
    */
   loadData(): void {
-    this.httpClient.get(this.getUrl())
-      .subscribe((klass: Klass) => {
-        this.formGroup.setValue({name: klass.name});
-        this.school = klass.school;
-      }, () => {
-        console.error(`${this.getUrl()}请求发生错误`);
+    this.klassService.getById(this.klass.id)
+      .subscribe(data => {
+        this.klass = data;
+        this.setFormGroupValue(this.klass);
+        console.log(this.klass.school);
+        console.log(this.formGroup.get('school').value);
       });
-  }
-
-  ngOnInit() {
-    this.formGroup = new FormGroup({
-      name: new FormControl(),
-    });
-    this.route.params.subscribe((param: { id: number }) => {
-      this.setUrlById(param.id);
-      this.loadData();
-    });
   }
 
   /**
    * 用户提交时执行的操作
    */
   onSubmit(): void {
-    const data = {
+    this.klass = {
+      id: this.klass.id,
       name: this.formGroup.value.name,
-      school: this.school
+      school: this.formGroup.value.school,
     };
-    this.httpClient.put(this.getUrl(), data)
-      .subscribe(() => {
-        this.router.navigateByUrl('/klass', {relativeTo: this.route});
-      }, () => {
-        console.error(`在${this.getUrl()}上的PUT请求发生错误`);
+    this.klassService.update(this.klass.id, this.klass)
+      .subscribe((result) => {
+        this.school = result;
+        this.dialogRef.close();
+        this.sweetAlertService.showSuccess('编辑成功', '');
       });
   }
 
   /**
    * 选中某个教师时
-   * @param school 教师
+   * @param school 学校
    */
   onSelected(school: School): void {
-    this.school = school;
+    this.klass.school = school;
+    this.formGroup.get('school').setValue(school);
   }
 
-  private setUrlById(id: number): void {
-    this.url = `http://localhost:8080/Klass/${id}`;
+  /**
+   * 设置表单值
+   * @param school 学校
+   */
+  setFormGroupValue(klass: Klass) {
+    this.formGroup.setValue({
+      name: klass.name,
+      school: klass.school
+    });
   }
 
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
 
 }
 

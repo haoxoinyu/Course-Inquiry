@@ -69,7 +69,7 @@ export class EditComponent implements OnInit {
 
   /**
    * 设置表单值
-   * @param school 学生
+   * @param school 学校
    */
   setFormGroupValue(school: School) {
     this.formGroup.setValue({

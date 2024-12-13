@@ -32,9 +32,13 @@ public class SchoolServiceImpl implements SchoolService {
     }
 
     @Override
+    public List<School> getAll() {
+        return this.schoolRepository.findAll();
+    }
+
+    @Override
     public Page<School> findAll(String name, @NotNull Pageable pageable) {
         Assert.notNull(pageable, "Pageable不能为null");
-
         return this.schoolRepository.findAll(name, pageable);
     }
 

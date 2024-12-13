@@ -1,5 +1,6 @@
 package com.mengyunzhi.springBootStudy.service;
 
+import com.mengyunzhi.springBootStudy.entity.Klass;
 import com.mengyunzhi.springBootStudy.entity.School;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +20,13 @@ public interface SchoolService {
      * @return 保存后的学校
      */
     School save(School school);
+
+    /**
+     * 获取所有学校列表
+     *
+     * @return
+     */
+    List<School> getAll();
 
     /**
      * 查询分页信息

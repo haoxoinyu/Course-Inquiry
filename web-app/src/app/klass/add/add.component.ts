@@ -1,9 +1,10 @@
-import {Component, OnInit} from '@angular/core';
-import {FormControl} from '@angular/forms';
+import {Component, Inject, OnInit} from '@angular/core';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {HttpClient} from '@angular/common/http';
 import {School} from '../../norm/entity/School';
 import {Klass} from '../../norm/entity/Klass';
-import {ActivatedRoute, Router} from '@angular/router';
+import {SweetAlertService} from '../../service/sweet-alert.service';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 
 @Component({
   selector: 'app-add',
@@ -13,30 +14,38 @@ import {ActivatedRoute, Router} from '@angular/router';
 export class AddComponent implements OnInit {
   /*当发生请求错误时，显示该信息*/
   public static errorMessage = '数据保存失败，这可能是由于网络的原因引起的';
-  name: FormControl;
   school: School;
   /*当该值不为空时，可以显示在前台并提示用户*/
   message: string;
 
+  formGroup = new FormGroup({
+    name: new FormControl('', Validators.required),
+    school: new FormGroup({
+      id: new FormControl('', Validators.required),
+      name: new FormControl('', Validators.required),
+    }),
+  });
+
   constructor(private httpClient: HttpClient,
-              private router: Router,
-              private route: ActivatedRoute) {
+              private sweetAlertService: SweetAlertService,
+              public dialogRef: MatDialogRef<AddComponent>,
+              @Inject(MAT_DIALOG_DATA) public data: any) {
   }
 
   ngOnInit() {
-    this.name = new FormControl('');
   }
 
   onSubmit(): void {
     console.log('on submit');
     const url = 'http://localhost:8080/Klass';
-    const klass = new Klass(undefined, this.name.value,
+    const klass = new Klass(undefined, this.formGroup.get('name').value,
       this.school
     );
     this.httpClient.post(url, klass)
       .subscribe(() => {
         console.log('保存成功');
-        this.router.navigateByUrl('/klass', {relativeTo: this.route});
+        this.dialogRef.close();
+        this.sweetAlertService.showSuccess('新增成功', '');
       }, (response) => {
         console.log(`向${url}发起的post请求发生错误` + response);
         this.setMessage(AddComponent.errorMessage);
@@ -48,7 +57,12 @@ export class AddComponent implements OnInit {
    * @param school 学校
    */
   onSchoolSelected(school: School) {
+    this.formGroup.get('school').setValue(school);
     this.school = school;
+  }
+
+  onNoClick(): void {
+    this.dialogRef.close();
   }
 
   /**

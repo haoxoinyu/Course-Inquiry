@@ -1,5 +1,6 @@
 package com.mengyunzhi.springBootStudy.controller;
 
+import com.mengyunzhi.springBootStudy.entity.Klass;
 import com.mengyunzhi.springBootStudy.entity.School;
 import com.mengyunzhi.springBootStudy.service.SchoolService;
 import org.slf4j.Logger;
@@ -22,6 +23,11 @@ public class SchoolController {
 
     @Autowired
     SchoolService schoolService;
+
+    @GetMapping("/list")
+    public List<School> getAll() {
+        return this.schoolService.getAll();
+    }
 
     @GetMapping
     @CrossOrigin("*")

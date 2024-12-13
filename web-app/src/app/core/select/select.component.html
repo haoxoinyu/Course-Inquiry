@@ -1,5 +1,5 @@
 <select id="objectSelect" [formControl]="objectSelect" (change)="onChange()" [compareWith]="compareFn">
   <option *ngFor="let object of objects" [ngValue]="object">
-    {{object.name}}
+    {{object?.name}}
   </option>
 </select>

@@ -1,10 +1,15 @@
 package com.mengyunzhi.springBootStudy.service;
 
 import com.mengyunzhi.springBootStudy.entity.Klass;
+import com.mengyunzhi.springBootStudy.entity.School;
 import com.mengyunzhi.springBootStudy.repository.KlassRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -22,10 +27,19 @@ public class KlassServiceImpl implements KlassService {
     }
 
     @Override
-    public List<Klass> getAll(String name) {
-        return this.klassRepository.findAllByNameContains(name);
+    public Page<Klass> findAll(Pageable pageable) {
+        return this.klassRepository.findAll(pageable);
     }
 
+    @Override
+    public Page<Klass> findAll(String name, Long schoolId, @NotNull Pageable pageable) {
+        Assert.notNull(pageable, "Pageable不能为null");
+
+        School school = new School();
+        school.setId(schoolId);
+
+        return this.klassRepository.findAll(name, school, pageable);
+    }
 
     /**
      * 获取某个班级

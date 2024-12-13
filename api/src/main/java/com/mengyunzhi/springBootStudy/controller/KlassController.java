@@ -5,6 +5,8 @@ import com.mengyunzhi.springBootStudy.service.KlassService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,8 +36,16 @@ public class KlassController {
     }
 
     @GetMapping
-    public List<Klass> getAll(@RequestParam String name) {
-        return this.klassService.getAll(name);
+    @CrossOrigin("*")
+    public Page<Klass> findAll(
+            @RequestParam String name,
+            @RequestParam Long schoolId,
+            @RequestParam int page,
+            @RequestParam int size) {
+        return this.klassService.findAll(
+                name,
+                schoolId,
+                PageRequest.of(page, size));
     }
 
     @PostMapping

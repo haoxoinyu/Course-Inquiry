@@ -1,22 +1,72 @@
-<a routerLink="./add">新增班级</a>
-<form (ngSubmit)="onQuery()">
-  <label>名称：<input type="text" name="name" [(ngModel)]="params.name"/></label>
-  <button>查询</button>
-</form>
-<table>
-  <tr>
-    <th>序号</th>
-    <th>名称</th>
-    <th>辅导员</th>
-    <th>操作</th>
-  </tr>
-  <tr *ngFor="let klass of klasses; index as i">
-    <td>{{i + 1}}</td>
-    <td>{{klass.name}}</td>
-    <td>{{klass.school.name}}</td>
-    <td>
-      <a routerLink="./edit/{{klass.id}}">编辑</a>&nbsp;&nbsp;
-      <button (click)="onDelete(klass)">删除</button>
-    </td>
-  </tr>
-</table>
+<div class="container-md main">
+  <div class="row">
+    <div class="col-md-8">
+      <form (ngSubmit)="onQuery()" class="form-inline">
+        <div class="form-group school">
+          <label for="params.school_id">学校名称：</label>
+          <!-- 默认提示选项 -->
+          <select class="form-control mr-2" name="params.school_id" id="params.school_id" [(ngModel)]="params.school_id">
+            <option [ngValue]="null">所有</option>
+            <option *ngFor="let school of schools" [value]="school.id">
+              {{school.name}}
+            </option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>班级名称：</label>
+          <input class="form-control mr-2" name="name" [formControl]="params.name" type="text"/>
+        </div>
+        <button  class="btn btn-outline-success mb-2 search" type="submit">查询</button>
+      </form>
+    </div>
+    <div class="col-md-4 text-right">
+      <a class="btn btn-primary" (click)="openAddDialog()"><span class="oi oi-plus"></span>新增</a>
+    </div>
+  </div>
+
+  <table class="table">
+    <tr>
+      <th>序号</th>
+      <th>班级名称</th>
+      <th>学校</th>
+      <th>操作</th>
+    </tr>
+    <tr *ngFor="let klass of pageKlass.content; index as index">
+      <td>{{index + 1}}</td>
+      <td>{{klass.name}}</td>
+      <td>{{klass.school.name}}</td>
+      <td>
+        <button (click)="openEditDialog(klass)" class="btn btn-sm btn-info button"><span class="oi oi-pencil"></span>编辑</button>
+        <button (click)="onDelete(klass)" class="btn btn-sm btn-danger"><span class="oi oi-trash"></span>删除</button>
+      </td>
+    </tr>
+  </table>
+  <div *ngIf="pageKlass" class="row">
+    <div class="col-4" id="pageInfo">
+      第{{params.page + 1}}/{{pageKlass.totalPages}}页 每页{{params.size}}条
+    </div>
+    <div class="col-8">
+      <nav>
+        <ul class="pagination">
+          <li class="page-item" [ngClass]="{'disabled': params.page === 0}" (click)="onPage(0)">
+            <span class="page-link">首页</span>
+          </li>
+          <li class="page-item" [ngClass]="{'disabled': params.page === 0}" (click)="onPage(params.page - 1)">
+            <span class="page-link">上一页</span>
+          </li>
+          <li class="page-item" [ngClass]="{'active': params.page === page}" *ngFor="let page of pages" (click)="onPage(page)">
+            <span class="page-link" *ngIf="page !== params.page">{{page + 1}}</span>
+            <span class="page-link" *ngIf="page === params.page">{{page + 1}}<span class="sr-only">(current)</span></span>
+          </li>
+          <li class="page-item" [ngClass]="{'disabled': params.page === pageKlass.totalPages - 1}" (click)="onPage(params.page + 1)">
+            <span class="page-link">下一页</span>
+          </li>
+          <li class="page-item" [ngClass]="{'disabled': params.page === pageKlass.totalPages - 1}" (click)="onPage(pageKlass.totalPages - 1)">
+            <span class="page-link">尾页</span>
+          </li>
+
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>
