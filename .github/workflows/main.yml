@@ -1,0 +1,69 @@
+ name: GitHub Actions
+ run-name: integrationTesting
+
+  #设置触发时机
+ on:
+    pull_request:
+      branches: [ main ]
+
+  #每个 workflow 由多个 job 组成
+  #默认并行运行
+ jobs:
+    unit-test:
+      runs-on: ubuntu-latest
+      # 定义任务的步骤 串行
+      steps:
+         # 将仓库的代码检出到当前工作目录中
+        - name: Checkout repository
+          uses: actions/checkout@v4
+
+        - name: Set up Node.js
+          uses: actions/setup-node@v4
+          with:
+            node-version: 18.16.0
+
+        - name: angular-test
+        # 执行shell命令
+          run: |
+            pwd # 打印当前工作目录
+            cd web # 切换到 web 目录
+            env # 显示环境变量信息
+            npm install # 安装 Node.js 依赖
+            # 运行angular 单元测试
+            npm run test -- --no-watch --no-progress --browsers=ChromeHeadlessCI
+            # 构建 Angular 应用
+            npm run build
+
+    spring-boot-test:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
+
+        - name: build mysql
+          run: |
+            docker pull mysql:8.0
+            docker run -p 3307:3306 -e MYSQL_ROOT_PASSWORD=yunzhi -e MYSQL_DATABASE=integrationTesting -d mysql:8.0 --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
+        - name: Set up JDK17
+          uses: actions/setup-java@v3
+          with:
+            java-version: '17'
+            distribution: 'temurin'
+            cache: maven
+        
+        - name: springboot-test
+           # 执行shell命令
+          run: |
+            pwd
+            # 切换到 api 目录
+            cd api
+            # 切换到 api 目录
+            env #显示环境变量信息
+            # 安装 Maven 依赖
+            mvn install
+            # 显示 Maven 版本信息
+            mvn -v
+            # 运行 Maven 测试
+            mvn test
+            # 使用批处理模式进行打包
+            mvn --batch-mode packageage
