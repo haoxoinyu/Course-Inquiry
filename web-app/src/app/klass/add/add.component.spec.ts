@@ -9,6 +9,8 @@ import {Klass} from '../../norm/entity/Klass';
 import {SchoolSelectComponent} from '../school-select/school-select.component';
 import {RouterTestingModule} from '@angular/router/testing';
 import {School} from '../../norm/entity/School';
+import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from "@angular/material/dialog";
+import {CoreModule} from "../../core/core.module";
 
 describe('Klass/AddComponent', () => {
   let component: AddComponent;
@@ -19,11 +21,17 @@ describe('Klass/AddComponent', () => {
     TestBed.configureTestingModule({
       declarations: [AddComponent, SchoolSelectComponent],
       imports: [
+        CoreModule,
         FormsModule,
         ReactiveFormsModule,
         HttpClientTestingModule,
-        RouterTestingModule
-      ]
+        RouterTestingModule,
+        MatDialogModule,
+      ],
+      providers: [
+        { provide: MatDialogRef, useValue: {} },
+        { provide: MAT_DIALOG_DATA, useValue: {} },
+      ],
     })
       .compileComponents();
   }));
@@ -33,4 +41,6 @@ describe('Klass/AddComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
+
+  it('should create', () => {})
 });

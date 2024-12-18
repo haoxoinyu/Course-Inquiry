@@ -3,8 +3,9 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { IndexComponent } from './index.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {RouterTestingModule} from '@angular/router/testing';
+import {HttpClientTestingModule} from "@angular/common/http/testing";
 
-describe('IndexComponent', () => {
+describe('course IndexComponent', () => {
   let component: IndexComponent;
   let fixture: ComponentFixture<IndexComponent>;
 
@@ -14,7 +15,8 @@ describe('IndexComponent', () => {
       imports: [
         ReactiveFormsModule,
         FormsModule,
-        RouterTestingModule
+        RouterTestingModule,
+        HttpClientTestingModule
       ]
     })
     .compileComponents();

@@ -4,10 +4,11 @@ import {IndexComponent} from './index.component';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import {Klass} from '../../norm/entity/Klass';
 import {User} from '../../norm/entity/User';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
 import {DebugElement} from '@angular/core';
 import {RouterTestingModule} from '@angular/router/testing';
+import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from "@angular/material/dialog";
 
 describe('klass -> IndexComponent', () => {
   let component: IndexComponent;
@@ -17,7 +18,12 @@ describe('klass -> IndexComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [IndexComponent],
-      imports: [HttpClientTestingModule, FormsModule, RouterTestingModule]
+      imports: [HttpClientTestingModule, ReactiveFormsModule,FormsModule, RouterTestingModule,
+        MatDialogModule],
+      providers: [
+        { provide: MatDialogRef, useValue: {} },
+        { provide: MAT_DIALOG_DATA, useValue: {} },
+      ],
     })
       .compileComponents();
   }));
@@ -29,4 +35,5 @@ describe('klass -> IndexComponent', () => {
     fixture.detectChanges();
   });
 
+  it('should create', () => {})
 });

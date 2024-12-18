@@ -1,14 +1,16 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { IndexComponent } from './index.component';
+import {HttpClientTestingModule} from "@angular/common/http/testing";
 
-describe('IndexComponent', () => {
+describe('term IndexComponent', () => {
   let component: IndexComponent;
   let fixture: ComponentFixture<IndexComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ IndexComponent ]
+      declarations: [ IndexComponent ],
+      imports: [HttpClientTestingModule],
     })
     .compileComponents();
   }));

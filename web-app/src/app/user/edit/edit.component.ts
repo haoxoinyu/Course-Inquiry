@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {HttpClient} from '@angular/common/http';
-import {AppComponent} from '../../app.component';
 
 @Component({
   selector: 'app-edit',
@@ -15,7 +14,6 @@ export class EditComponent implements OnInit {
 
   constructor(private route: ActivatedRoute,
               private httpClient: HttpClient,
-              private appComponent: AppComponent,
               private router: Router) {
   }
 
@@ -54,7 +52,6 @@ export class EditComponent implements OnInit {
     this.httpClient.put(this.getUrl(), this.user)
       .subscribe(() => {
           console.log('更新成功');
-          this.appComponent.ngOnInit();
           this.router.navigate(['./../../'], {relativeTo: this.route});
         },
         () => {
