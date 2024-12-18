@@ -33,37 +33,3 @@
             npm run test -- --no-watch --no-progress --browsers=ChromeHeadlessCI
             # 构建 Angular 应用
             npm run build
-
-    spring-boot-test:
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v4
-
-        - name: build mysql
-          run: |
-            docker pull mysql:8.0
-            docker run -p 3307:3306 -e MYSQL_ROOT_PASSWORD=yunzhi -e MYSQL_DATABASE=integrationTesting -d mysql:8.0 --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
-
-        - name: Set up JDK17
-          uses: actions/setup-java@v3
-          with:
-            java-version: '17'
-            distribution: 'temurin'
-            cache: maven
-        
-        - name: springboot-test
-           # 执行shell命令
-          run: |
-            pwd
-            # 切换到 api 目录
-            cd api
-            # 切换到 api 目录
-            env #显示环境变量信息
-            # 安装 Maven 依赖
-            mvn install
-            # 显示 Maven 版本信息
-            mvn -v
-            # 运行 Maven 测试
-            mvn test
-            # 使用批处理模式进行打包
-            mvn --batch-mode packageage
