@@ -26,7 +26,7 @@
         # 执行shell命令
           run: |
             pwd # 打印当前工作目录
-            cd web # 切换到 web 目录
+            cd web-app # 切换到 web 目录
             env # 显示环境变量信息
             npm install # 安装 Node.js 依赖
             # 运行angular 单元测试
