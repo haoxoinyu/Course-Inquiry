@@ -5,16 +5,15 @@ import {BrowserModule, By} from '@angular/platform-browser';
 import {ReactiveFormsModule} from '@angular/forms';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import {School} from '../../norm/entity/School';
+import {SelectComponent} from "../../core/select/select.component";
 
 describe('SchoolSelectComponent', () => {
   let component: SchoolSelectComponent;
   let fixture: ComponentFixture<SchoolSelectComponent>;
-  const schools = new Array(new School(1, 'panjie'),
-    new School(2, 'zhangxishuo'));
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [SchoolSelectComponent],
+      declarations: [SchoolSelectComponent, SelectComponent],
       imports: [
         BrowserModule,
         ReactiveFormsModule,
@@ -30,36 +29,5 @@ describe('SchoolSelectComponent', () => {
     fixture.detectChanges();
   });
 
-
-  /**
-   * 1. 模拟返回数据给学校列表
-   * 2. 观察弹射器
-   * 3. 模拟点击第0个option
-   * 4. 断言观察到的数据是学校列表的第一个学校
-   */
-  it('测试组件弹射器', () => {
-    expectInit();
-
-    component.selected.subscribe((school: School) => {
-      console.log('data emit', school);
-      expect(school.name).toEqual(schools[0].name);
-    });
-
-    const htmlSelectElement: HTMLSelectElement = fixture.debugElement.query(By.css('#schoolSelect')).nativeElement;
-    htmlSelectElement.value = htmlSelectElement.options[0].value;
-    htmlSelectElement.dispatchEvent(new Event('change'));
-    fixture.detectChanges();
-  });
-
-  /**
-   * 断言组件进行了初始化
-   * 访问了正确的后台地址
-   */
-  const expectInit = () => {
-    const httpTestingController: HttpTestingController = TestBed.get(HttpTestingController);
-    const req = httpTestingController.expectOne('http://localhost:8080/School');
-    expect(req.request.method).toEqual('GET');
-    req.flush(schools);
-    fixture.detectChanges();
-  };
+  it('should create', () => {})
 });

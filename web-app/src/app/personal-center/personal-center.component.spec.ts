@@ -2,6 +2,10 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PersonalCenterComponent } from './personal-center.component';
 import {of} from 'rxjs';
+import {HttpClientTestingModule} from "@angular/common/http/testing";
+import {SexPipe} from "../norm/sex.pipe";
+import {RolePipe} from "../norm/role.pipe";
+import {StatePipe} from "../norm/state.pipe";
 
 describe('PersonalCenterComponent', () => {
   let component: PersonalCenterComponent;
@@ -9,7 +13,8 @@ describe('PersonalCenterComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PersonalCenterComponent ]
+      declarations: [ PersonalCenterComponent, SexPipe, RolePipe, StatePipe],
+      imports: [HttpClientTestingModule]
     })
       .compileComponents();
   }));

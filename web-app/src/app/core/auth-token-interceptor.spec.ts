@@ -9,4 +9,6 @@ describe('AuthTokenInterceptor', () => {
     })
       .compileComponents();
   }));
+
+  it('should be created', () => {})
 });

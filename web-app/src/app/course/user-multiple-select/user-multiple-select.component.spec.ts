@@ -1,9 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { UserMultipleSelectComponent } from './user-multiple-select.component';
+import { MultipleSelectComponent} from "../../core/multiple-select/multiple-select.component";
 import {User} from '../../norm/entity/User';
 import {UserService} from '../../service/user.service';
 import {of} from 'rxjs';
+import {HttpClientTestingModule} from "@angular/common/http/testing";
 
 describe('UserMultipleSelectComponent', () => {
   let component: UserMultipleSelectComponent;
@@ -11,7 +13,8 @@ describe('UserMultipleSelectComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ UserMultipleSelectComponent ],
+      declarations: [ UserMultipleSelectComponent, MultipleSelectComponent ],
+      imports: [HttpClientTestingModule],
       providers: [
         UserService
       ]

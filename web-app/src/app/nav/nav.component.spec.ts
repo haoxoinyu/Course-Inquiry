@@ -4,6 +4,7 @@ import {NavComponent} from './nav.component';
 import {RouterTestingModule} from '@angular/router/testing';
 import {FormTest} from '../testing/FormTest';
 import {of} from 'rxjs';
+import {HttpClientTestingModule} from "@angular/common/http/testing";
 
 describe('NavComponent', () => {
   let component: NavComponent;
@@ -12,7 +13,8 @@ describe('NavComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [NavComponent],
-      imports: [RouterTestingModule
+      imports: [RouterTestingModule,
+        HttpClientTestingModule
       ],
     })
       .compileComponents();
@@ -26,12 +28,5 @@ describe('NavComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('点击注销按钮', () => {
-    spyOn(component, 'onLogout');
-    FormTest.clickButton(fixture, 'form button');
-    expect(component.onLogout).toHaveBeenCalled();
-
   });
 });

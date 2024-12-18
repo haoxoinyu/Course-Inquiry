@@ -1,14 +1,24 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { IndexComponent } from './index.component';
+import {HttpClientTestingModule} from "@angular/common/http/testing";
+import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from "@angular/material/dialog";
+import {ReactiveFormsModule} from "@angular/forms";
 
-describe('IndexComponent', () => {
+describe('School/IndexComponent', () => {
   let component: IndexComponent;
   let fixture: ComponentFixture<IndexComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ IndexComponent ]
+      declarations: [ IndexComponent],
+      imports: [ HttpClientTestingModule,
+        ReactiveFormsModule,
+        MatDialogModule],
+      providers: [
+        { provide: MatDialogRef, useValue: {} },
+        { provide: MAT_DIALOG_DATA, useValue: {} },
+      ],
     })
     .compileComponents();
   }));

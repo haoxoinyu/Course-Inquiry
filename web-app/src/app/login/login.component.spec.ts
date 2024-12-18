@@ -4,6 +4,7 @@ import { LoginComponent } from './login.component';
 import {FormTest} from '../testing/FormTest';
 import {ReactiveFormsModule} from '@angular/forms';
 import {of} from 'rxjs';
+import {HttpClientTestingModule} from "@angular/common/http/testing";
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
@@ -12,7 +13,8 @@ describe('LoginComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ LoginComponent ],
-      imports: [ ReactiveFormsModule]
+      imports: [ ReactiveFormsModule,
+      HttpClientTestingModule]
     })
     .compileComponents();
   }));
