@@ -1,10 +1,10 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {HttpClient} from '@angular/common/http';
-import {School} from '../../norm/entity/School';
-import {Klass} from '../../norm/entity/Klass';
-import {SweetAlertService} from '../../service/sweet-alert.service';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
+import { Component, Inject, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { School } from '../../norm/entity/School';
+import { Klass } from '../../norm/entity/Klass';
+import { SweetAlertService } from '../../service/sweet-alert.service';
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-add',
@@ -14,9 +14,9 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 export class AddComponent implements OnInit {
   /*当发生请求错误时，显示该信息*/
   public static errorMessage = '数据保存失败，这可能是由于网络的原因引起的';
-  school: School;
+  school: School | undefined;
   /*当该值不为空时，可以显示在前台并提示用户*/
-  message: string;
+  message: string | undefined;
 
   formGroup = new FormGroup({
     name: new FormControl('', Validators.required),
@@ -38,14 +38,12 @@ export class AddComponent implements OnInit {
   onSubmit(): void {
     console.log('on submit');
     const url = 'http://localhost:8080/Klass';
-    const klass = new Klass(undefined, this.formGroup.get('name').value,
-      this.school
-    );
+    const klass = new Klass(undefined, this.formGroup.get('name')?.value!,
+      this.school); // 确保这里使用的是正确的表单值
     this.httpClient.post(url, klass)
       .subscribe(() => {
         console.log('保存成功');
-        this.dialogRef.close();
-        this.sweetAlertService.showSuccess('新增成功', '');
+        this.sweetAlertService.showSuccess('新增成功', "success");
       }, (response) => {
         console.log(`向${url}发起的post请求发生错误` + response);
         this.setMessage(AddComponent.errorMessage);
@@ -57,12 +55,12 @@ export class AddComponent implements OnInit {
    * @param school 学校
    */
   onSchoolSelected(school: School) {
-    this.formGroup.get('school').setValue(school);
+    const schoolValue = {
+      id: school.id.toString(),
+      name: school.name
+    };
+    this.formGroup.get('school')?.setValue(schoolValue);
     this.school = school;
-  }
-
-  onNoClick(): void {
-    this.dialogRef.close();
   }
 
   /**
@@ -76,4 +74,7 @@ export class AddComponent implements OnInit {
     }, 1500);
   }
 
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
 }

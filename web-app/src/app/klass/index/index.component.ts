@@ -4,7 +4,7 @@ import {KlassService} from '../../service/klass.service';
 import {FormControl} from '@angular/forms';
 import {EditComponent} from '../edit/edit.component';
 import {AddComponent} from '../add/add.component';
-import {MatDialog} from '@angular/material';
+import {MatDialog} from '@angular/material/dialog';
 import {SweetAlertService} from '../../service/sweet-alert.service';
 import {CacheService} from '../../service/cache.service';
 import {School} from '../../norm/entity/School';
@@ -18,9 +18,9 @@ import {SchoolService} from '../../service/school.service';
 export class IndexComponent implements OnInit {
 
   /* 分页数据 */
-  pages: Array<number>;
+  pages: Array<number> | undefined;
 
-  schools: School[];
+  schools: School[] | undefined;
 
   /* 查询参数 */
   params = {
@@ -36,8 +36,8 @@ export class IndexComponent implements OnInit {
     content: new Array<Klass>()
   };
 
-  currentPage: number;
-  totalPages: number;
+  currentPage: number | undefined;
+  totalPages: number | undefined;
 
   constructor(private klassService: KlassService,
               private dialog: MatDialog,
@@ -81,7 +81,7 @@ export class IndexComponent implements OnInit {
    * @param klass 学校
    */
   onDelete(klass: Klass): void {
-    this.sweetAlertService.showWarning('', '', '')
+    this.sweetAlertService.showWarning('', '', "warning")
       .then(isConfirmed => {
         if (isConfirmed) {
           this.klassService.deleteById(klass.id)
@@ -89,7 +89,7 @@ export class IndexComponent implements OnInit {
               this.pageKlass.content.forEach((value, key) => {
                 if (value === klass) {
                   this.pageKlass.content.splice(key, 1);
-                  this.sweetAlertService.showSuccess('删除成功', '');
+                  this.sweetAlertService.showSuccess('删除成功', "success");
                   if (this.pageKlass.content.length === 0 && this.params.page > 0) {
                     this.params.page--;
                     this.loadData();
@@ -101,10 +101,6 @@ export class IndexComponent implements OnInit {
       });
   }
 
-  getSearchSchool(schoolId: number) {
-    console.log(schoolId);
-    this.params.school_id = schoolId;
-  }
   /**
    * 加载数据
    */
@@ -178,7 +174,7 @@ export class IndexComponent implements OnInit {
   openEditDialog(klass: Klass): void {
     const dialogRef = this.dialog.open(EditComponent, {
       width: '900px',
-      height: '327px',
+      height: '350px',
       data: klass
     });
 

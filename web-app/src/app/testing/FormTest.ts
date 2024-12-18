@@ -22,7 +22,7 @@ export class FormTest<T> {
    * @param cssSelector CSS选择器
    * @return string input的值，如果未找到该元素返回null
    */
-  static getInputValueByFixtureAndCss(fixture: ComponentFixture<any>, cssSelector: string): string {
+  static getInputValueByFixtureAndCss(fixture: ComponentFixture<any>, cssSelector: string): string | null {
     const debugElement: DebugElement = fixture.debugElement;
     const nameElement = debugElement.query(By.css(cssSelector));
     if (isNull(nameElement)) {

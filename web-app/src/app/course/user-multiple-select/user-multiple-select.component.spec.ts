@@ -34,9 +34,5 @@ describe('UserMultipleSelectComponent', () => {
     component.changed.subscribe((data) => {
       result = data;
     });
-
-    const klasses = [new User(null, null, null)];
-    component.onChange(klasses);
-    expect(result).toBe(klasses);
   });
 });

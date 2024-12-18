@@ -1,6 +1,5 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
-
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
@@ -12,6 +11,9 @@ import { LoginComponent } from './login/login.component';
 import {AuthTokenInterceptor} from './core/auth-token-interceptor';
 import { PersonalCenterComponent } from './personal-center/personal-center.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {RolePipe} from './norm/role.pipe';
+import {StatePipe} from './norm/state.pipe';
+import {SexPipe} from './norm/sex.pipe';
 
 @NgModule({
   declarations: [
@@ -19,7 +21,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     NavComponent,
     WelcomeComponent,
     LoginComponent,
-    PersonalCenterComponent
+    PersonalCenterComponent,
+    RolePipe,
+    StatePipe,
+    SexPipe
   ],
   imports: [
     BrowserModule,
@@ -30,6 +35,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     ReactiveFormsModule,
     BrowserAnimationsModule
   ],
+  exports: [RolePipe, StatePipe, SexPipe],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: AuthTokenInterceptor, multi: true}
   ],
