@@ -1,6 +1,6 @@
-import { DebugElement } from '@angular/core';
-import { ComponentFixture } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
+import {DebugElement} from '@angular/core';
+import {ComponentFixture} from '@angular/core/testing';
+import {By} from '@angular/platform-browser';
 
 /**
  * 表单测试
@@ -14,17 +14,26 @@ export class FormTest<T> {
 
   /**
    * 获取input输入框的值
+   * 首先获取整个V层元素
+   * 然后根据CSS选择器，获取指定的元素
+   * 最后将获取的元素转换为HTMLInput元素并返回该元素的值
+   * @param fixture 组件夹具
    * @param cssSelector CSS选择器
    * @return string input的值，如果未找到该元素返回null
    */
   static getInputValueByFixtureAndCss(fixture: ComponentFixture<any>, cssSelector: string): string | null {
     const debugElement: DebugElement = fixture.debugElement;
-    const inputElement = debugElement.query(By.css(cssSelector));
-    return inputElement ? inputElement.nativeElement.value : null;
+    const nameElement = debugElement.query(By.css(cssSelector));
+    if (!nameElement) {
+      return null;
+    }
+    const nameInput: HTMLInputElement = nameElement.nativeElement;
+    return nameInput.value;
   }
 
   /**
    * 设置input的值
+   * @param fixture 夹具
    * @param cssSelector CSS选择器
    * @param value 要设置的值
    * @return 成功true 失败false
@@ -32,7 +41,7 @@ export class FormTest<T> {
   static setInputValue(fixture: ComponentFixture<any>, cssSelector: string, value: string): boolean {
     const selectorElement = this.getSelectorElement(fixture, cssSelector);
     if (!selectorElement) {
-      return false;
+      throw new Error(`未找到css选器${cssSelector}对应的html元素`);
     }
     const htmlInputElement: HTMLInputElement = selectorElement.nativeElement;
     htmlInputElement.value = value;
@@ -42,13 +51,14 @@ export class FormTest<T> {
 
   /**
    * 获取button按钮，并点击
+   * @param fixture 夹具
    * @param cssSelector CSS选择器
    * @return 成功true 失败false
    */
   static clickButton(fixture: ComponentFixture<any>, cssSelector: string): boolean {
     const selectorElement = this.getSelectorElement(fixture, cssSelector);
     if (!selectorElement) {
-      return false;
+      throw new Error(`未找到css选器${cssSelector}对应的html元素`);
     }
     const htmlButtonElement: HTMLButtonElement = selectorElement.nativeElement;
     htmlButtonElement.click();
@@ -57,10 +67,11 @@ export class FormTest<T> {
 
   /**
    * 根据CSS选择器来获取夹具中Debug元素
+   * @param fixture 夹具
    * @param cssSelector CSS选择器
    * @return DebugElement
    */
-  private static getSelectorElement(fixture: ComponentFixture<any>, cssSelector: string): DebugElement | null {
+  static getSelectorElement(fixture: ComponentFixture<any>, cssSelector: string): DebugElement {
     const debugElement: DebugElement = fixture.debugElement;
     return debugElement.query(By.css(cssSelector));
   }
@@ -81,4 +92,5 @@ export class FormTest<T> {
   clickButton(cssSelector: string): boolean {
     return FormTest.clickButton(this.fixture, cssSelector);
   }
+
 }
