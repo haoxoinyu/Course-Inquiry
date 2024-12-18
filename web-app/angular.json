@@ -23,6 +23,7 @@
             "polyfills": [
               "zone.js"
             ],
+            "karmaConfig": "karma.conf.js",
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "sass",
             "assets": [
@@ -88,6 +89,7 @@
               "zone.js",
               "zone.js/testing"
             ],
+            "karmaConfig": "karma.conf.js",
             "tsConfig": "tsconfig.spec.json",
             "inlineStyleLanguage": "sass",
             "assets": [
