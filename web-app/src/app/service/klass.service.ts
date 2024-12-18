@@ -17,8 +17,8 @@ export class KlassService {
    * 分页
    * @param params name:名称,page:第几页,size:每页大小
    */
-  page(params: { size: number; schoolId: null; name: any; page: number }):
-    Observable<{ totalPages: number; content: Array<Klass> }> {
+  page(params: { name?: string, schoolId?: string, page?: number, size?: number }):
+    Observable<{ totalPages: number, content: Array<Klass> }> {
     const url = 'http://localhost:8080/Klass';
 
     /* 设置默认值 */
@@ -58,7 +58,7 @@ export class KlassService {
    * 获取某个学校
    * @param id 学校ID
    */
-  getById(id: number | undefined): Observable<Klass> {
+  getById(id: number): Observable<Klass> {
     const url = `http://localhost:8080/Klass/${id}`;
     return this.httpClient.get<Klass>(url);
   }
@@ -68,7 +68,7 @@ export class KlassService {
    * @param id id
    * @param klass 班级
    */
-  update(id: number | undefined, klass: Klass): Observable<Klass> {
+  update(id: number, klass: Klass): Observable<Klass> {
     const url = `http://localhost:8080/Klass/${id}`;
     return this.httpClient.put<Klass>(url, klass);
   }
@@ -77,7 +77,7 @@ export class KlassService {
    * 删除学校
    * @param id 学校id
    */
-  deleteById(id: number | undefined): Observable<void> {
+  deleteById(id: number): Observable<void> {
     const url = `http://localhost:8080/Klass/${id}`;
     return this.httpClient.delete<void>(url);
   }

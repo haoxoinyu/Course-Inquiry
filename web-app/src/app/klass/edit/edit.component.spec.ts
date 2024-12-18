@@ -9,7 +9,7 @@ import {ActivatedRouteStub} from './activated-route-stub';
 import {Klass} from '../../norm/entity/Klass';
 import {FormTest} from '../../testing/FormTest';
 import SpyObj = jasmine.SpyObj;
-
+import {Test} from 'tslint';
 
 describe('klass EditComponent', () => {
   let component: EditComponent;

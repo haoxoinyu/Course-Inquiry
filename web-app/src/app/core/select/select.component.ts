@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {FormControl} from '@angular/forms';
+import {HttpClient} from '@angular/common/http';
 
 @Component({
   selector: 'app-select',
@@ -9,33 +9,31 @@ import { HttpClient } from '@angular/common/http';
 })
 export class SelectComponent implements OnInit {
 
-  /* 所有对象 */
-  objects?: Select[];
+  /*所有对象*/
+  objects: Array<Select>;
 
-  /* 选中的对象 */
-  objectSelect!: FormControl;
+  objectSelect: FormControl;
 
   @Output() selected = new EventEmitter<Select>();
-  @Input() set object(obj: Select) {
-    this.objectSelect = new FormControl(obj);
+  @Input() set object(object: { id: number }) {
+    this.objectSelect = new FormControl(object);
   }
-  @Input() url: string | undefined;
+  @Input() url: string;
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient) {
+  }
 
+
+  /**
+   * 获取所有的对象，并传给V层
+   */
   ngOnInit() {
-    if (this.url) {
-      this.httpClient.get<Select[]>(this.url).subscribe(
-        (objects: Select[]) => {
-          this.objects = objects;
-        },
-        (error) => {
-          console.error('Error fetching objects:', error);
-        }
-      );
-    } else {
-      console.error('URL is not provided');
-    }
+    console.log(this.object);
+    this.objectSelect = new FormControl(this.object);
+    this.httpClient.get(this.url)
+      .subscribe((objects: Array<Select>) => {
+        this.objects = objects;
+      });
   }
 
   /**
@@ -43,22 +41,25 @@ export class SelectComponent implements OnInit {
    * @param t1 源
    * @param t2 目标
    */
-  compareFn(t1: Select, t2: Select) {
+  compareFn(t1: { id: number }, t2: { id: number }) {
     return t1 && t2 ? t1.id === t2.id : t1 === t2;
   }
 
-  /**
-   * 触发选择事件
-   */
   onChange() {
-    this.selected.emit(this.objectSelect?.value);
+    this.selected.emit(this.objectSelect.value);
   }
 
 }
 
 /**
- * 选择对象模型
+ * 选择
  */
 export class Select {
-  constructor(public id: number, public name: string) { }
+  id: number;
+  name: string;
+
+  constructor(id: number, name: string) {
+    this.id = id;
+    this.name = name;
+  }
 }

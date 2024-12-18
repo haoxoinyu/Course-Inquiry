@@ -8,16 +8,14 @@ import {Injectable} from '@angular/core';
 })
 export class CacheService {
   /** 认证令牌 */
-  private static authToken: string | null = sessionStorage.getItem('authToken');
+  private static authToken: string = sessionStorage.getItem('authToken');
 
   constructor() {
   }
 
-  static setAuthToken(token: string | null) {
+  static setAuthToken(token: string) {
     CacheService.authToken = token;
-    if (typeof token === "string") {
-      sessionStorage.setItem('authToken', token);
-    }
+    sessionStorage.setItem('authToken', token);
   }
 
   static getAuthToken() {

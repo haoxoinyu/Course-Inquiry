@@ -11,7 +11,7 @@ import {AppComponent} from '../../app.component';
 export class EditComponent implements OnInit {
 
   public user: any = {};
-  private id: number | undefined;
+  private id: number;
 
   constructor(private route: ActivatedRoute,
               private httpClient: HttpClient,
@@ -42,7 +42,7 @@ export class EditComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe(data => {
       console.log('路由参数发生变化，接收通知');
-      this.id = data['id'];
+      this.id = data.id;
       this.load();
     });
   }

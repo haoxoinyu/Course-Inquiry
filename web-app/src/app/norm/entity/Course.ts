@@ -2,7 +2,7 @@ import {Term} from './Term';
 import {User} from './User';
 
 export class Course {
-  id: string;
+  id: number;
   name: string;
   sory: number;
   term: Term;
@@ -12,7 +12,7 @@ export class Course {
   users: User[];
 
   constructor(data = {} as {
-    id?: string;
+    id?: number;
     name?: string;
     term?: Term;
     sory?: number;
@@ -21,7 +21,7 @@ export class Course {
     period?: number[];
     users?: User[];
   }) {
-    this.id = data.id as string;
+    this.id = data.id as number;
     this.name = data.name as string;
     this.sory = data.sory as number;
     this.term = data.term as Term;

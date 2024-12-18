@@ -9,14 +9,13 @@ import {UserService} from '../service/user.service';
 })
 export class PersonalCenterComponent implements OnInit {
   /** 绑定到V层 */
-  public user: User | undefined;
+  public user: User;
   constructor(private userService: UserService) { }
 
   ngOnInit() {
     // 调用M层的相关方法
     this.userService.me().subscribe((user) => {
       this.user = user;
-      console.log(user);
     });
   }
 

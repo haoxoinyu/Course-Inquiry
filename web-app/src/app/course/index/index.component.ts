@@ -14,7 +14,7 @@ export class IndexComponent implements OnInit {
     name: new FormControl('')
   };
 
-  coursePage: Page<Course> | undefined;
+  coursePage: Page<Course>;
 
   constructor() {
   }

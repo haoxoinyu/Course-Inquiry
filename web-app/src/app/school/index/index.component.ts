@@ -4,7 +4,7 @@ import {SchoolService} from '../../service/school.service';
 import {FormControl} from '@angular/forms';
 import {EditComponent} from '../edit/edit.component';
 import {AddComponent} from '../add/add.component';
-import {MatDialog} from '@angular/material/dialog';
+import {MatDialog} from '@angular/material';
 import {SweetAlertService} from '../../service/sweet-alert.service';
 import {CacheService} from '../../service/cache.service';
 
@@ -16,7 +16,7 @@ import {CacheService} from '../../service/cache.service';
 export class IndexComponent implements OnInit {
 
   /* 分页数据 */
-  pages: Array<number> | undefined;
+  pages: Array<number>;
 
   /* 查询参数 */
   params = {
@@ -31,8 +31,8 @@ export class IndexComponent implements OnInit {
     content: new Array<School>()
   };
 
-  currentPage: number | undefined;
-  totalPages: number | undefined;
+  currentPage: number;
+  totalPages: number;
 
   constructor(private schoolService: SchoolService,
               private dialog: MatDialog,
@@ -75,7 +75,7 @@ export class IndexComponent implements OnInit {
    * @param school 学校
    */
   onDelete(school: School): void {
-    this.sweetAlertService.showWarning('', '', "warning")
+    this.sweetAlertService.showWarning('', '', '')
       .then(isConfirmed => {
         if (isConfirmed) {
           this.schoolService.deleteById(school.id)
@@ -83,7 +83,7 @@ export class IndexComponent implements OnInit {
               this.pageSchool.content.forEach((value, key) => {
                 if (value === school) {
                   this.pageSchool.content.splice(key, 1);
-                  this.sweetAlertService.showSuccess('删除成功', "success");
+                  this.sweetAlertService.showSuccess('删除成功', '');
                   if (this.pageSchool.content.length === 0 && this.params.page > 0) {
                     this.params.page--;
                     this.loadData();

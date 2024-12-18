@@ -62,6 +62,27 @@ describe('course -> AddComponent', () => {
     expect(fixture.debugElement.query(By.css('#nameMixLength'))).toBeDefined();
   });
 
+  it('button校验', () => {
+    // 初始化时，不能点击
+    let button: HTMLButtonElement = fixture.debugElement.query(By.css('button[type="submit"]')).nativeElement;
+    expect(button.disabled).toBeTruthy();
+
+    // 输入合格的内容后可点击
+    component.formGroup.get('name').setValue('1234');
+    fixture.detectChanges();
+    button = fixture.debugElement.query(By.css('button[type="submit"]')).nativeElement;
+    expect(button.disabled).toBeFalsy();
+  });
+
+  it('点击保存按钮', () => {
+    component.formGroup.get('name').setValue('1234');
+    fixture.detectChanges();
+
+    spyOn(component, 'onSubmit');
+    FormTest.clickButton(fixture, 'button[type="submit"]');
+    expect(component.onSubmit).toHaveBeenCalled();
+  });
+
   /**
    * 在beforeEach的组件初始化代码中。
    * 当fixture.detectChanges();被首次执行时，会自动执行一次ngOnInit方法
@@ -69,5 +90,22 @@ describe('course -> AddComponent', () => {
   it('ngOnInit', () => {
     expect(component.formGroup).toBeDefined();
     expect(component.course).toBeDefined();
+  });
+
+  it('onSubmit', () => {
+    component.formGroup.get('name').setValue('test');
+    const course = new Course();
+    component.course = course;
+    const courseService: CourseService = TestBed.get(CourseService);
+
+    const returnCourse = new Course();
+    spyOn(courseService, 'save').and.returnValue(of(returnCourse));
+    spyOn(console, 'log');
+
+    component.onSubmit();
+
+    expect(courseService.save).toHaveBeenCalledWith(course);
+    expect(console.log).toHaveBeenCalledWith(returnCourse);
+    expect(course.name).toEqual('test');
   });
 });

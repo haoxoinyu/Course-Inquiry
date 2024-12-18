@@ -1,18 +1,17 @@
 import {Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
-import {FormControl, FormGroup, Validators, ɵFormGroupValue, ɵTypedOrUntyped} from '@angular/forms';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {School} from '../../norm/entity/School';
 import {SchoolService} from '../../service/school.service';
 import {SweetAlertService} from '../../service/sweet-alert.service';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog'; // 更新导入路径
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
+
 @Component({
   selector: 'app-add',
   templateUrl: './add.component.html',
   styleUrls: ['./add.component.sass']
 })
 export class AddComponent implements OnInit {
-  school: ɵTypedOrUntyped<{ name: FormControl<string | null> }, ɵFormGroupValue<{
-    name: FormControl<string | null>
-  }>, any> = {
+  school = {
     name: ''
   } as School;
 
@@ -34,7 +33,7 @@ export class AddComponent implements OnInit {
     console.log(this.formGroup.value);
     this.schoolService.save(this.school).subscribe((school: School) => {
       this.dialogRef.close();
-      this.sweetAlertService.showSuccess('新增成功', "success");
+      this.sweetAlertService.showSuccess('新增成功', '');
     });
   }
 

@@ -8,7 +8,7 @@ import {UserService} from '../service/user.service';
   styleUrls: ['./login.component.sass']
 })
 export class LoginComponent implements OnInit {
-  formGroup: FormGroup | undefined;
+  formGroup: FormGroup;
 
   constructor(private userService: UserService) { }
 
@@ -23,8 +23,8 @@ export class LoginComponent implements OnInit {
    * 点击提交按钮后进行用户登录
    */
   onSubmit() {
-    const username = this.formGroup?.get('username')!.value;
-    const password = this.formGroup?.get('password')!.value;
+    const username = this.formGroup.get('username').value;
+    const password = this.formGroup.get('password').value;
     this.userService.login(username, password).subscribe(result => {
       if (result) {
         this.userService.setIsLogin(true);

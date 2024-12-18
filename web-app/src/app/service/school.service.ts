@@ -2,7 +2,6 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable, of} from 'rxjs';
 import {School} from '../norm/entity/School';
-import {FormControl, ɵFormGroupValue, ɵTypedOrUntyped} from '@angular/forms';
 
 @Injectable({
   providedIn: 'root'
@@ -51,7 +50,7 @@ export class SchoolService {
    * 1. 其它人可以通过 订阅 操作来获取该对象后续发送的值。
    * 2. 该对象如果发送值，那么该值的类型必然是School。
    */
-  save(school: ɵTypedOrUntyped<{ name: FormControl<string | null> }, ɵFormGroupValue<{ name: FormControl<string | null> }>, any>): Observable<School> {
+  save(school: School): Observable<School> {
     const url = 'http://localhost:8080/School';
     return this.httpClient.post<School>(url, school);
   }
