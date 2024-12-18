@@ -17,7 +17,7 @@ export class CourseService {
    * 保存课程
    * @param course 课程
    */
-  save(course: Course): Observable<Course> {
+  save(course: Course | undefined): Observable<Course> {
     return this.httpClient.post<Course>(this.url, course);
   }
 
@@ -34,7 +34,7 @@ export class CourseService {
    * 分页
    * @param params name课程名称  klassId 班级 teacherId 教师
    */
-  page(params?: {name?: string, klassId?: number, teacherId?: number}): Observable<Page<Course>> {
+  page(params?: {name?: string, klassId?: number, teacherId?: number}): Observable<Page<Course>> | null {
     return null;
   }
 }

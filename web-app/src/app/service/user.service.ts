@@ -15,7 +15,7 @@ export class UserService {
   private isLoginCacheKey = 'isLogin';
 
   constructor(private httpClient: HttpClient) {
-    const isLogin: string = window.sessionStorage.getItem(this.isLoginCacheKey);
+    const isLogin: string = window.sessionStorage?.getItem(this.isLoginCacheKey)!;
     this.isLogin = new BehaviorSubject(this.convertStringToBoolean(isLogin));
     this.isLogin$ = this.isLogin.asObservable();
   }

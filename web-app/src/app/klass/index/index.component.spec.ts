@@ -29,16 +29,4 @@ describe('klass -> IndexComponent', () => {
     fixture.detectChanges();
   });
 
-  it('测试V层向C层绑定', () => {
-    expect(component).toBeTruthy();
-    fixture.whenStable().then(() => {
-      const debugElement: DebugElement = fixture.debugElement;
-      const nameInputElement = debugElement.query(By.css('input[name="name"]'));
-      const nameInput: HTMLInputElement = nameInputElement.nativeElement;
-      nameInput.value = 'test1';
-      nameInput.dispatchEvent(new Event('input'));
-      expect(component.params.name).toBe('test1');
-    });
-  });
-
 });

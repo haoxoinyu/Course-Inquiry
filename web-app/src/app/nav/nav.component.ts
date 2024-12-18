@@ -8,7 +8,7 @@ import {UserService} from '../service/user.service';
 })
 export class NavComponent implements OnInit {
   /*标题*/
-  title: string;
+  title: string | undefined;
   /*菜单项*/
   menus = new Array<{ url: string; name: string }>();
 

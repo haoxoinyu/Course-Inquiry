@@ -34,7 +34,7 @@
     <tr *ngFor="let klass of pageKlass.content; index as index">
       <td>{{index + 1}}</td>
       <td>{{klass.name}}</td>
-      <td>{{klass.school.name}}</td>
+      <td>{{klass.school?.name}}</td>
       <td>
         <button (click)="openEditDialog(klass)" class="btn btn-sm btn-info button"><span class="oi oi-pencil"></span>编辑</button>
         <button (click)="onDelete(klass)" class="btn btn-sm btn-danger"><span class="oi oi-trash"></span>删除</button>

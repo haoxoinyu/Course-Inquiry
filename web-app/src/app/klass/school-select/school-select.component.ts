@@ -9,7 +9,7 @@ import {School} from '../../norm/entity/School';
 export class SchoolSelectComponent implements OnInit {
 
   @Output() selected = new EventEmitter<School>();
-  @Input() school: School;
+  @Input() school!: School;
   url = 'http://localhost:8080/School/list';
 
   constructor() {
