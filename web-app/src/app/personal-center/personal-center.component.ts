@@ -28,7 +28,15 @@ export class PersonalCenterComponent implements OnInit {
   }
 
   openDialog(): void {
-    const dialogRef = this.dialog.open(ChangePasswordComponent, {
+    this.dialog.open(ChangePasswordComponent, {
+      width: '900px',
+      height: '400px',
+      data: this.user
+    });
+  }
+
+  openRoleDialog(): void {
+    this.dialog.open(ChangePasswordComponent, {
       width: '900px',
       height: '400px',
       data: this.user

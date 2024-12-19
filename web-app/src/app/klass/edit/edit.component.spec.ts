@@ -46,6 +46,8 @@ describe('klass EditComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {})
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  })
 });
 

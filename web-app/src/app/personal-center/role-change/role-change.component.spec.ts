@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ChangePasswordComponent } from './change-password.component';
+import { RoleChangeComponent } from './role-change.component';
 import {HttpClientTestingModule} from "@angular/common/http/testing";
 import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from "@angular/material/dialog";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 
-describe('ChangePasswordComponent', () => {
-  let component: ChangePasswordComponent;
-  let fixture: ComponentFixture<ChangePasswordComponent>;
+describe('RoleChangeComponent', () => {
+  let component: RoleChangeComponent;
+  let fixture: ComponentFixture<RoleChangeComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ChangePasswordComponent ],
+      declarations: [ RoleChangeComponent ],
       imports: [HttpClientTestingModule, MatDialogModule, ReactiveFormsModule, FormsModule],
       providers: [
         { provide: MatDialogRef, useValue: {} },
@@ -20,7 +20,7 @@ describe('ChangePasswordComponent', () => {
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ChangePasswordComponent);
+    fixture = TestBed.createComponent(RoleChangeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
