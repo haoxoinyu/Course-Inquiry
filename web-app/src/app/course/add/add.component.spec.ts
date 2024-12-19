@@ -33,6 +33,8 @@ describe('course -> AddComponent', () => {
   });
 
   it('should create', () => {
+    expect(component).toBeTruthy();
+
   });
 
 });

@@ -1,5 +1,6 @@
 package com.mengyunzhi.springBootStudy.service;
 
+import com.mengyunzhi.springBootStudy.entity.School;
 import com.mengyunzhi.springBootStudy.entity.User;
 
 /**
@@ -43,5 +44,13 @@ public interface UserService {
      * @return 当前登录用户。用户未登录则返回null
      */
     User me();
+
+    /**
+     * 更新用户
+     * @param id ID
+     * @param user 更新的用户信息
+     * @return 用户
+     */
+    User update(Long id, User user);
 }
 
