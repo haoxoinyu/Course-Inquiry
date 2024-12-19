@@ -10,6 +10,7 @@ import {RouterModule} from "@angular/router";
 import {MatDialogModule} from "@angular/material/dialog";
 import {CommonModule} from "@angular/common";
 import {PersonalCenterRoutingModule} from "./personal-center-routing.module";
+import { RoleChangeComponent } from './role-change/role-change.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import {PersonalCenterRoutingModule} from "./personal-center-routing.module";
     PersonalCenterComponent,
     SexPipe,
     RolePipe,
-    StatePipe
+    StatePipe,
+    RoleChangeComponent
   ],
   imports: [
     CommonModule,
