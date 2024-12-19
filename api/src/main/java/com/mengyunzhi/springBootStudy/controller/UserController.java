@@ -107,25 +107,7 @@ public class UserController {
     @GetMapping("{id}")
     @CrossOrigin("*")
     public User getById(@PathVariable Long id) {
-        User user = new User();
-
-        RowCallbackHandler rowCallbackHandler = new RowCallbackHandler() {
-            @Override
-            public void processRow(ResultSet resultSet) throws SQLException {
-                user.setId(resultSet.getLong("id"));
-                user.setName(resultSet.getString("name"));
-                user.setSex(resultSet.getBoolean("sex"));
-                user.setUsername(resultSet.getString("username"));
-                user.setRole(resultSet.getLong("role"));
-                user.setState(resultSet.getLong("state"));
-            }
-        };
-
-        String query = String.format("select id, name, sex, username, role, state from user where id = %d", id);
-
-        jdbcTemplate.query(query, rowCallbackHandler);
-
-        return user;
+        return this.userService.getById(id);
     }
 
 

@@ -4,6 +4,7 @@ import {UserService} from '../service/user.service';
 import {MatDialog} from "@angular/material/dialog";
 import {ChangePasswordComponent} from "./change-password/change-password.component";
 import {SweetAlertService} from "../service/sweet-alert.service";
+import {RoleChangeComponent} from "./role-change/role-change.component";
 
 @Component({
   selector: 'app-personal-center',
@@ -15,8 +16,7 @@ export class PersonalCenterComponent implements OnInit {
   public user: User | undefined;
   public role: number | undefined;
   constructor(private userService: UserService,
-              private dialog: MatDialog,
-              private sweetAlertService: SweetAlertService) { }
+              private dialog: MatDialog) { }
 
   ngOnInit() {
     // 调用M层的相关方法
@@ -36,9 +36,9 @@ export class PersonalCenterComponent implements OnInit {
   }
 
   openRoleDialog(): void {
-    this.dialog.open(ChangePasswordComponent, {
+    this.dialog.open(RoleChangeComponent, {
       width: '900px',
-      height: '400px',
+      height: '300px',
       data: this.user
     });
   }

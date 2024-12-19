@@ -1,5 +1,6 @@
 package com.mengyunzhi.springBootStudy.service;
 
+import com.mengyunzhi.springBootStudy.entity.Klass;
 import com.mengyunzhi.springBootStudy.entity.School;
 import com.mengyunzhi.springBootStudy.entity.User;
 import com.mengyunzhi.springBootStudy.filter.TokenFilter;
@@ -84,6 +85,17 @@ public class UserServiceImpl implements UserService {
         // 如获取到userId，则由数据库中获取user并返回
         Optional<User> userOptional = this.userRepository.findById(userId);
         return userOptional.get();
+    }
+
+    /**
+     * 获取某个用户
+     *
+     * @param id 用户ID
+     * @return 用户
+     */
+    @Override
+    public User getById(Long id) {
+        return this.userRepository.findById(id).get();
     }
 
     @Override
