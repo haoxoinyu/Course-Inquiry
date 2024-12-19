@@ -2,16 +2,14 @@ import {EventEmitter, Injectable} from '@angular/core';
 import Swal, {SweetAlertResult} from 'sweetalert2';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import {UserService} from "./user.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class SweetAlertService {
 
-  beLogout = new EventEmitter<void>();
-  login = false;
-
-  constructor(private httpClient: HttpClient, private router: Router) { }
+  constructor(private httpClient: HttpClient, private router: Router, private userService: UserService) { }
 
   /**
    * 显示错误信息
@@ -119,12 +117,10 @@ export class SweetAlertService {
     }).then((result: SweetAlertResult<any>) => { // 明确 result 的类型
       if (result && result.dismiss !== Swal.DismissReason.cancel) { // 检查 result 是否存在
         console.log('I was closed by the timer');
-        this.beLogout.emit();
-        this.login = false;
-        localStorage.removeItem('login');
-        window.sessionStorage.removeItem('login');
-        window.sessionStorage.removeItem('role');
-        window.location.href = '/login'; // 假设登录页面的路由是 '/login'
+        this.userService.logout()
+          .subscribe(() => {
+            this.userService.setIsLogin(false);
+          });
       }
     });
   }
