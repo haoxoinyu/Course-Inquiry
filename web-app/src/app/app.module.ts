@@ -14,6 +14,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {RolePipe} from './norm/role.pipe';
 import {StatePipe} from './norm/state.pipe';
 import {SexPipe} from './norm/sex.pipe';
+import {ChangePasswordComponent} from "./personal-center/change-password/change-password.component";
+import {MatDialogModule} from "@angular/material/dialog";
 
 @NgModule({
   declarations: [
@@ -21,10 +23,6 @@ import {SexPipe} from './norm/sex.pipe';
     NavComponent,
     WelcomeComponent,
     LoginComponent,
-    PersonalCenterComponent,
-    RolePipe,
-    StatePipe,
-    SexPipe
   ],
   imports: [
     BrowserModule,
@@ -33,9 +31,9 @@ import {SexPipe} from './norm/sex.pipe';
     FormsModule,
     RouterModule,
     ReactiveFormsModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    MatDialogModule,
   ],
-  exports: [RolePipe, StatePipe, SexPipe],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: AuthTokenInterceptor, multi: true}
   ],

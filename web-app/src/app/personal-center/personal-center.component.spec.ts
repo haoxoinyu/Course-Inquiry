@@ -6,6 +6,7 @@ import {HttpClientTestingModule} from "@angular/common/http/testing";
 import {SexPipe} from "../norm/sex.pipe";
 import {RolePipe} from "../norm/role.pipe";
 import {StatePipe} from "../norm/state.pipe";
+import {MatDialogModule} from "@angular/material/dialog";
 
 describe('PersonalCenterComponent', () => {
   let component: PersonalCenterComponent;
@@ -14,7 +15,7 @@ describe('PersonalCenterComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ PersonalCenterComponent, SexPipe, RolePipe, StatePipe],
-      imports: [HttpClientTestingModule]
+      imports: [HttpClientTestingModule, MatDialogModule]
     })
       .compileComponents();
   }));

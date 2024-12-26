@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import {User} from '../norm/entity/User';
 import {UserService} from '../service/user.service';
+import {MatDialog} from "@angular/material/dialog";
+import {ChangePasswordComponent} from "./change-password/change-password.component";
+import {SweetAlertService} from "../service/sweet-alert.service";
+import {RoleChangeComponent} from "./role-change/role-change.component";
 
 @Component({
   selector: 'app-personal-center',
@@ -10,13 +14,32 @@ import {UserService} from '../service/user.service';
 export class PersonalCenterComponent implements OnInit {
   /** 绑定到V层 */
   public user: User | undefined;
-  constructor(private userService: UserService) { }
+  public role: number | undefined;
+  constructor(private userService: UserService,
+              private dialog: MatDialog) { }
 
   ngOnInit() {
     // 调用M层的相关方法
     this.userService.me().subscribe((user) => {
       this.user = user;
+      this.role = user.role;
       console.log(user);
+    });
+  }
+
+  openDialog(): void {
+    this.dialog.open(ChangePasswordComponent, {
+      width: '900px',
+      height: '400px',
+      data: this.user
+    });
+  }
+
+  openRoleDialog(): void {
+    this.dialog.open(RoleChangeComponent, {
+      width: '900px',
+      height: '300px',
+      data: this.user
     });
   }
 

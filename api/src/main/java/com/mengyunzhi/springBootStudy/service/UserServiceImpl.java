@@ -1,5 +1,7 @@
 package com.mengyunzhi.springBootStudy.service;
 
+import com.mengyunzhi.springBootStudy.entity.Klass;
+import com.mengyunzhi.springBootStudy.entity.School;
 import com.mengyunzhi.springBootStudy.entity.User;
 import com.mengyunzhi.springBootStudy.filter.TokenFilter;
 import com.mengyunzhi.springBootStudy.repository.UserRepository;
@@ -83,6 +85,41 @@ public class UserServiceImpl implements UserService {
         // 如获取到userId，则由数据库中获取user并返回
         Optional<User> userOptional = this.userRepository.findById(userId);
         return userOptional.get();
+    }
+
+    /**
+     * 获取某个用户
+     *
+     * @param id 用户ID
+     * @return 用户
+     */
+    @Override
+    public User getById(Long id) {
+        return this.userRepository.findById(id).get();
+    }
+
+    @Override
+    public User update(Long id, User user) {
+        User oldUser = this.userRepository.findById(id).get();
+        System.out.println(oldUser);
+        return this.updateFields(user,oldUser);
+    }
+
+    /**
+     * 更新学生
+     * @param newUser 新用户信息
+     * @param oldUser 老用户信息
+     * @return 更新后的用户信息
+     */
+    public User updateFields(User newUser, User oldUser) {
+        oldUser.setName(newUser.getName());
+        oldUser.setUsername(newUser.getUsername());
+        oldUser.setPassword(newUser.getPassword());
+        oldUser.setSex(newUser.getSex());
+        oldUser.setRole(newUser.getRole());
+        oldUser.setState(newUser.getState());
+        oldUser.setKlass(newUser.getKlass());
+        return this.userRepository.save(oldUser);
     }
 }
 

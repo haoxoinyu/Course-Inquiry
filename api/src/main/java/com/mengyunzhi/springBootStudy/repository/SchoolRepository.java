@@ -33,5 +33,6 @@ public interface SchoolRepository extends PagingAndSortingRepository<School, Lon
 
     List<School> findAllByNameContains(String name);
 
+    @Override
     List<School> findAll();
 }

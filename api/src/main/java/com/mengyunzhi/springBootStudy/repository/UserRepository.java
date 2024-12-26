@@ -4,7 +4,7 @@ import com.mengyunzhi.springBootStudy.entity.User;
 import org.springframework.data.repository.CrudRepository;
 
 /**
- * 教师仓库
+ * 用户仓库
  */
 public interface UserRepository extends CrudRepository<User, Long> {
     /**

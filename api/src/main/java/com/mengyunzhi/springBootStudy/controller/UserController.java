@@ -91,7 +91,7 @@ public class UserController {
     }
 
     /**
-     * 根据ID获取数据表中的教师数据并返回，用于查询某个教师的数据
+     * 根据ID获取数据表中的用户数据并返回，用于查询某个用户的数据
      * 虽然在学习的过程中，我们将方法中的每条语句都加入注释会有利于我们的理解。
      * 但在生产的环境中，我们并不推荐在方法体中加入注释。
      * 我们认为：
@@ -101,41 +101,23 @@ public class UserController {
      * 如果我们认为方法中的代码的确是需要注释的（比如一些新的方法、新的思想的引入，我们想其它的成员能够快速的学习到该技巧）
      * 那么应该该代码段抽离出来，变成一个新的方法，然后在该方法上加入注释。
      *
-     * @param id 教师ID
+     * @param id 用户ID
      * @return
      */
     @GetMapping("{id}")
     @CrossOrigin("*")
     public User getById(@PathVariable Long id) {
-        User user = new User();
-
-        RowCallbackHandler rowCallbackHandler = new RowCallbackHandler() {
-            @Override
-            public void processRow(ResultSet resultSet) throws SQLException {
-                user.setId(resultSet.getLong("id"));
-                user.setName(resultSet.getString("name"));
-                user.setSex(resultSet.getBoolean("sex"));
-                user.setUsername(resultSet.getString("username"));
-                user.setRole(resultSet.getLong("role"));
-                user.setState(resultSet.getLong("state"));
-            }
-        };
-
-        String query = String.format("select id, name, sex, username, role, state from user where id = %d", id);
-
-        jdbcTemplate.query(query, rowCallbackHandler);
-
-        return user;
+        return this.userService.getById(id);
     }
 
 
     /**
-     * 新增教师
-     * 1. 获取前台传入的教师对象
+     * 新增用户
+     * 1. 获取前台传入的用户对象
      * 2. 拼接插入sql语句
      * 3. 执行sql语句。
      *
-     * @param user 教师
+     * @param user 用户
      */
     @PostMapping
     @CrossOrigin("*")
@@ -149,18 +131,17 @@ public class UserController {
     }
 
     /**
-     * 使用传入的数据更新某个教师的数据
+     * 使用传入的数据更新某个用户的数据
      *
-     * @param id 教师ID
-     * @param newUser 更新教师
+     * @param id   用户ID
+     * @param user 更新用户
+     * @return
      */
     @PutMapping("{id}")
     @CrossOrigin("*")
-    public void update(@PathVariable Long id, @RequestBody User newUser) {
-        String sql = String.format(
-                "update `user` set `name` = '%s'  , `username` = '%s' , `sex` = %s , `role` = %s , `state` = %s where `id` = %s",
-                newUser.getName(), newUser.getUsername(), newUser.getSex().toString(), newUser.getRole().toString(), newUser.getState().toString(), id
-        );
-        this.jdbcTemplate.update(sql);
+    public User update(@PathVariable Long id, @RequestBody User user) {
+        System.out.println(id);
+        System.out.println(user);
+        return this.userService.update(id, user);
     }
 }

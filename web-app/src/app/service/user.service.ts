@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {User} from '../norm/entity/User';
+import {School} from "../norm/entity/School";
 
 @Injectable({
   providedIn: 'root'
@@ -80,5 +81,15 @@ export class UserService {
   all(): Observable<User[]> {
     const httpParams = new HttpParams().append('name', '');
     return this.httpClient.get<User[]>('http://localhost:8080/User', {params: httpParams});
+  }
+
+  /**
+   * 更新用户
+   * @param id id
+   * @param user 学校
+   */
+  update(id: number | undefined, user: User | undefined): Observable<User> {
+    const url = `http://localhost:8080/User/${id}`;
+    return this.httpClient.put<User>(url, user);
   }
 }
