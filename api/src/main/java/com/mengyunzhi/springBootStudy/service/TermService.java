@@ -1,14 +1,13 @@
 package com.mengyunzhi.springBootStudy.service;
 
+import com.mengyunzhi.springBootStudy.entity.Klass;
 import com.mengyunzhi.springBootStudy.entity.Term;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.util.List;
+import javax.validation.constraints.NotNull;
 
-/**
- * 学期服务
- */
 public interface TermService {
-
     /**
      * 删除
      *
@@ -17,33 +16,43 @@ public interface TermService {
     void deleteById(Long id);
 
     /**
-     * 获取所有学期列表
+     * 查询分页信息
      *
-     * @param name 学期名称
-     * @return
+     * @param pageable 分页条件
+     * @return 分页数据
      */
-    List<Term> getAll(String name);
+    Page<Term> findAll(Pageable pageable);
 
     /**
-     * 通过ID获取学期
+     * 综合查询
      *
-     * @param id 学期ID
-     * @return 学期实体
+     * @param name     containing 班级名称
+     * @param schoolId 学校ID
+     * @param pageable
+     * @return
+     */
+    Page<Term> findAll(String name, Long schoolId, @NotNull Pageable pageable);
+
+    /**
+     * 通过ID获取班级
+     *
+     * @param id 班级ID
+     * @return 班级实体
      */
     Term getById(Long id);
 
     /**
      * 新增
      *
-     * @param klass 学期
+     * @param term 班级
      */
-    void save(Term klass);
+    void save(Term term);
 
     /**
-     * 更新学期
+     * 更新班级
      *
-     * @param id    预更新的学期ID
-     * @param klass 新的学期信息
+     * @param id    预更新的班级ID
+     * @param term 新的班级信息
      */
-    void update(Long id, Term klass);
+    void update(Long id, Term term);
 }

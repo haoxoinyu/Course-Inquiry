@@ -1,17 +1,22 @@
 package com.mengyunzhi.springBootStudy.controller;
 
+import com.mengyunzhi.springBootStudy.entity.Klass;
+import com.mengyunzhi.springBootStudy.entity.School;
 import com.mengyunzhi.springBootStudy.entity.Term;
+import com.mengyunzhi.springBootStudy.service.KlassService;
 import com.mengyunzhi.springBootStudy.service.TermService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 /**
- * 学期控制器
+ * 班级控制器
  */
 @RestController
 @RequestMapping("Term")
@@ -19,40 +24,49 @@ public class TermController {
     private static final Logger logger = LoggerFactory.getLogger(TermController.class);
 
     @Autowired
-    TermService termServiceImplService;
+    TermService termService;
 
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
-        termServiceImplService.deleteById(id);
+        termService.deleteById(id);
     }
 
     @GetMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
     public Term get(@PathVariable Long id) {
-        return this.termServiceImplService.getById(id);
+        return this.termService.getById(id);
     }
 
     @GetMapping
-    public List<Term> getAll(@RequestParam String name) {
-        return this.termServiceImplService.getAll(name);
+    @CrossOrigin("*")
+    public Page<Term> findAll(
+            @RequestParam String name,
+            @RequestParam Long schoolId,
+            @RequestParam int page,
+            @RequestParam int size) {
+        System.out.println("Requesting page: " + page + " with size: " + size);
+        return this.termService.findAll(
+                name,
+                schoolId,
+                PageRequest.of(page, size));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void save(@RequestBody Term termServiceImpl) {
-        this.termServiceImplService.save(termServiceImpl);
+    public void save(@RequestBody Term term) {
+        this.termService.save(term);
     }
 
     /**
-     * 更新学期
+     * 更新班级
      *
-     * @param id    要更新的学期ID
-     * @param termServiceImpl 新学期数据
+     * @param id    要更新的班级ID
+     * @param term
      */
     @PutMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@PathVariable Long id, @RequestBody Term termServiceImpl) {
-        this.termServiceImplService.update(id, termServiceImpl);
+    public void update(@PathVariable Long id, @RequestBody Term term) {
+        this.termService.update(id, term);
     }
 }
