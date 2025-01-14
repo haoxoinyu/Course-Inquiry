@@ -6,15 +6,17 @@ import { IndexComponent } from './index/index.component';
 import { AddComponent } from './add/add.component';
 import { EditComponent } from './edit/edit.component';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {KlassModule} from "../klass/klass.module";
 
 
 @NgModule({
   declarations: [IndexComponent, AddComponent, EditComponent],
-  imports: [
-    CommonModule,
-    TermRoutingModule,
-    FormsModule,
-    ReactiveFormsModule
-  ]
+    imports: [
+        CommonModule,
+        TermRoutingModule,
+        FormsModule,
+        ReactiveFormsModule,
+        KlassModule
+    ]
 })
 export class TermModule { }

@@ -65,7 +65,7 @@ public class TermServiceImpl implements TermService {
      * 将更新后的老数据重新保存在数据表中
      *
      * @param id    要更新的班级ID
-     * @param term 新班级数据
+     * @param term 新学期数据
      */
     @Override
     public void update(Long id, Term term) {

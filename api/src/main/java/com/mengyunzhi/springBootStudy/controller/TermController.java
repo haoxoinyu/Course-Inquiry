@@ -1,9 +1,6 @@
 package com.mengyunzhi.springBootStudy.controller;
 
-import com.mengyunzhi.springBootStudy.entity.Klass;
-import com.mengyunzhi.springBootStudy.entity.School;
 import com.mengyunzhi.springBootStudy.entity.Term;
-import com.mengyunzhi.springBootStudy.service.KlassService;
 import com.mengyunzhi.springBootStudy.service.TermService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,8 +9,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * 班级控制器

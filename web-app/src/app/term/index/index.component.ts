@@ -119,6 +119,31 @@ export class IndexComponent implements OnInit {
   }
 
   /**
+   * 删除学期
+   * @param term 学期
+   */
+  onDelete(term: Term): void {
+    this.sweetAlertService.showWarning('', '', "warning")
+      .then(isConfirmed => {
+        if (isConfirmed) {
+          this.termService.deleteById(term.id)
+            .subscribe(() => {
+              this.pageTerm.content.forEach((value, key) => {
+                if (value === term) {
+                  this.pageTerm.content.splice(key, 1);
+                  this.sweetAlertService.showSuccess('删除成功', "success");
+                  if (this.pageTerm.content.length === 0 && this.params.page > 0) {
+                    this.params.page--;
+                    this.loadData();
+                  }
+                }
+              });
+            });
+        }
+      });
+  }
+
+  /**
    * 点击分页按钮
    * @param page 要请求的页码
    */
