@@ -16,6 +16,7 @@ import {StatePipe} from './norm/state.pipe';
 import {SexPipe} from './norm/sex.pipe';
 import {ChangePasswordComponent} from "./personal-center/change-password/change-password.component";
 import {MatDialogModule} from "@angular/material/dialog";
+import {ApiDemoModule} from "../api/api-demo.module";
 
 @NgModule({
   declarations: [
@@ -32,7 +33,7 @@ import {MatDialogModule} from "@angular/material/dialog";
     RouterModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
-    MatDialogModule,
+    MatDialogModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: AuthTokenInterceptor, multi: true}

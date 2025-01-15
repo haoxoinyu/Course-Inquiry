@@ -2,7 +2,6 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Klass} from '../norm/entity/Klass';
-import {School} from '../norm/entity/School';
 
 @Injectable({
   providedIn: 'root'
