@@ -1,9 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { IndexComponent } from './index.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {RouterTestingModule} from '@angular/router/testing';
 import {HttpClientTestingModule} from "@angular/common/http/testing";
+import { MatDialogModule } from '@angular/material/dialog';
 
 describe('course IndexComponent', () => {
   let component: IndexComponent;
@@ -16,7 +16,8 @@ describe('course IndexComponent', () => {
         ReactiveFormsModule,
         FormsModule,
         RouterTestingModule,
-        HttpClientTestingModule
+        HttpClientTestingModule,
+        MatDialogModule
       ]
     })
     .compileComponents();
@@ -30,5 +31,6 @@ describe('course IndexComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+    fixture.detectChanges();
   });
 });

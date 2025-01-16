@@ -4,10 +4,12 @@ import {HTTP_INTERCEPTORS} from '@angular/common/http';
 import {CommonModule} from '@angular/common';
 import {TermApi} from './term-api';
 import {LoginApi} from './login-api';
+import { CourseApi } from './course-api';
 
 export const api = [
   TermApi,
-  LoginApi
+  LoginApi,
+  CourseApi
 ];
 
 @NgModule({
