@@ -63,6 +63,15 @@ export class TermService {
   }
 
   /**
+   *获取某个学期 
+   * @param id 学期id
+   **/
+   getTermById(id: number | undefined): Observable<Term> {
+    const url = `http://localhost:8080/Term/${id}`;
+    return this.httpClient.get<Term>(url);
+  }
+
+  /**
    * 更新学期
    * @param id id
    * @param term 学期
@@ -79,5 +88,13 @@ export class TermService {
   deleteById(id: number | undefined): Observable<void> {
     const url = `http://localhost:8080/Term/${id}`;
     return this.httpClient.delete<void>(url);
+  }
+
+   /**
+   * 通过学校id获取所属所有学期
+   * @param schoolId 
+   * */
+   getTermsBySchoolId(schoolId: number): Observable<Term[]> {
+    return this.httpClient.get<Term[]>(this.url + '/' +  String(schoolId));
   }
 }

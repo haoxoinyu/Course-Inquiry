@@ -5,7 +5,7 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {HttpClientTestingModule} from "@angular/common/http/testing";
 import { MatDialogModule } from '@angular/material/dialog';
 
-fdescribe('course IndexComponent', () => {
+describe('course IndexComponent', () => {
   let component: IndexComponent;
   let fixture: ComponentFixture<IndexComponent>;
 
@@ -32,7 +32,7 @@ fdescribe('course IndexComponent', () => {
     fixture.detectChanges();
   });
 
-  fit('should create', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
     fixture.detectChanges();
   });

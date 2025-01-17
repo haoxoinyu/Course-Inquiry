@@ -1,45 +1,134 @@
-<div class="row justify-content-center">
-  <div class="col-4">
-    <h2>添加课程</h2>
-    <form (ngSubmit)="onSubmit()" [formGroup]="formGroup">
-      <div class="form-group">
-        <label for="name">名称</label>
-        <input type="text" class="form-control" id="name"
-               placeholder="名称" formControlName="name" required>
-      </div>
-      <div class="form-group">
-        <label>学校</label>
-        <!-- 添加学校选择控件，例如下拉列表 -->
-        <select class="form-control" >
-
-        </select>
-      </div>
-      <div class="form-group">
-        <label>班级</label>
-        <!-- 添加班级选择控件，例如下拉列表 -->
-        <select class="form-control" >
-
-        </select>
-      </div>
-      <div class="form-group">
-        <label>学期</label>
-        <!-- 添加学期选择控件，例如下拉列表 -->
-        <select class="form-control" >
-          <option value="spring">春季</option>
-          <option value="summer">夏季</option>
-          <option value="autumn">秋季</option>
-          <option value="winter">冬季</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>用户</label>
-        <div>
-          <app-user-multiple-select (changed)="onUserChange($event)"></app-user-multiple-select>
-        </div>
-      </div>
-      <div class="form-group">
-        <button type="submit" [disabled]="formGroup.invalid">保存</button>
-      </div>
-    </form>
-  </div>
+<div>
+  <h2>新增课程</h2>
 </div>
+<hr>
+<form class="container-sm" style="margin: 40px 0px 0px 0px">
+  <div class="mb-3 row">
+    <label class="col-sm-2 col-form-label">学校名称</label>
+    <div class="col-sm-10">
+      <!-- <app-school-select (beChange)="onSchoolChange($event)"></app-school-select> -->
+      <small class="text-danger"
+             *ngIf="course.school_id === null">
+        必须指定一个学校
+      </small>
+    </div>
+  </div>
+  <div class="mb-3 row" *ngIf="course.school_id !== null">
+    <label class="col-sm-2 col-form-label">班级名称</label>
+    <div class="col-sm-10">
+      <select class="form-control" [(ngModel)]="course.clazz_id" name="course.clazz_id" id="course.clazz_id">
+        <option [ngValue]="null">所有班级</option>
+        <option *ngFor="let clazz of clazzes" [value]="clazz.id">
+          {{clazz.name}}
+        </option>
+      </select>
+      <small class="text-danger"
+             *ngIf="course.clazz_id === null">
+        必须指定一个班级
+      </small>
+    </div>
+  </div>
+  <div class="mb-3 row" *ngIf="course.school_id !== null">
+    <label class="col-sm-2 col-form-label">学期</label>
+    <div class="col-sm-10">
+      <select class="form-control" [(ngModel)]="course.term_id" (change)="onTermChange(course.term_id)" name="course.term_id" id="course.term_id">
+        <option [ngValue]="null">所有学期</option>
+        <option *ngFor="let term of terms" [value]="term.id">
+          {{term.name}}
+        </option>
+      </select>
+      <small class="text-danger"
+             *ngIf="course.term_id === null">
+        必须指定一个学期
+      </small>
+    </div>
+  </div>
+  <div class="mb-3 row">
+    <label for="name" class="col-sm-2 col-form-label">课程名称</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" [(ngModel)]="course.name" name="name" id="name">
+      <small class="text-danger"
+             *ngIf="course.name === ''">
+        课程名称不能为空
+      </small>
+    </div>
+  </div>
+  <div class="mb-3 row">
+    <label class="col-sm-2 col-form-label">类别：</label>
+    <div class="col-sm-10" >
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" id="sory-bi"
+               name="sory"
+               [(ngModel)]="course.sory"
+               [value]="1">
+        <label class="form-check-label" for="sory-bi">必修</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" id="sory-option"
+               name="sory"
+               [(ngModel)]="course.sory"
+               [value]="0">
+        <label class="form-check-label" for="sory-option">选修</label>
+      </div>
+    </div>
+  </div>
+  <div class="mb-3 row" *ngIf="course && course.sory === 0">
+    <label class="col-sm-2 col-form-label">用户</label>
+    <div class="col-sm-10">
+      <select class="form-control" [(ngModel)]="course.user_id" name="course.user_id" id="course.user_id">
+        <option [ngValue]="null">请选择用户</option>
+        <option *ngFor="let user of users" [value]="user.id">
+          {{user.name}}
+        </option>
+      </select>
+      <small class="text-danger"
+             *ngIf="course.user_id === null">
+        必须指定一个用户
+      </small>
+    </div>
+  </div>
+  <div class="mb-3 row">
+    <label for="name" class="col-sm-2 col-form-label">选择周数</label>
+    <div class="col-sm-10">
+      <select [(ngModel)]="course.week" name="course.week">
+          <option *ngFor="let week of weeks" [value]="week">{{ week }}</option>
+        </select>
+      </div>
+
+  </div>
+  <div class="mb-3 row">
+    <label for="name" class="col-sm-2 col-form-label">周几上课</label>
+    <div class="col-sm-10">
+    <select [(ngModel)]="course.day" name="course.day">
+        <option *ngFor="let day of days" [value]="day.value">{{ day.name }}</option>
+      </select>
+    </div>
+  </div>
+  <div class="mb-3 row">
+    <label for="name" class="col-sm-2 col-form-label">上课节数</label>
+    <div class="col-sm-10">
+      <select [(ngModel)]="course.period" name="course.period">
+        <option *ngFor="let period of periods" [value]="period.value">{{ period.name }}</option>
+      </select>
+    </div>
+  </div>
+  <div class="mb-3 row" style="margin: 20px 0px 0px 0px">
+    <div class="col-sm-3 offset-sm-1" style="margin: 0px 0px 0px 200px">
+      <button appLoading class="btn btn-primary" (click)="onSubmit()"
+              [disabled]="course.name === '' ||
+                          course.sory === null ||
+                          (course.sory === 0 && course.user_id === null) ||
+                          course.school_id === null ||
+                          course.clazz_id === null ||
+                          course.term_id === null ||
+                          course.week === null ||
+                          course.day === null ||
+                          course.period === null"><i class="fa fa-save"></i>保存
+      </button>
+    </div>
+    <div class="col-sm-3 offset-sm-1">
+      <button mat-button class="btn btn-secondary" (click)="onNoClick()">取消</button>
+    </div>
+  </div>
+</form>
+
