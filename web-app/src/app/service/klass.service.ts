@@ -80,4 +80,12 @@ export class KlassService {
     const url = `http://localhost:8080/Klass/${id}`;
     return this.httpClient.delete<void>(url);
   }
+
+  /**
+   * 通过学校id获取所属所有班级
+   * @param schoolId 
+   * */
+  getClazzBySchoolId(schoolId: number): Observable<Klass[]> {
+    return this.httpClient.get<Klass[]>(this.url + '/' +  String(schoolId));
+  }
 }
