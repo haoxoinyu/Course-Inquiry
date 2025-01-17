@@ -74,8 +74,8 @@
         <a class="btn btn-outline-success btn-sm"  *ngIf="course.sory === 0">
           <i class="fas fa-plus"></i>添加
         </a>
-        <a class="btn btn-outline-primary btn-sm" *ngIf="role !== 3">
-          <i class="fas fa-pen"></i>编辑
+        <a class="btn btn-outline-primary btn-sm" (click)="openEditDialog(course.id)">
+          <i class="fas fa-pen" ></i>编辑
         </a>
         <span class="btn btn-sm btn-outline-danger" *ngIf="role !== 3">
             <i class="far fa-trash-alt"></i>删除

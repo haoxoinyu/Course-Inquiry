@@ -11,7 +11,7 @@ export class Course {
   day: number[];
   period: number[];
   users: User[];
-  klass: Klass;
+  klass: Klass; 
 
   constructor(data = {} as {
     id?: string;

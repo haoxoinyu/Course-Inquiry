@@ -179,8 +179,8 @@ export class IndexComponent implements OnInit {
  
    openAddDialog(): void {
      const dialogRef = this.dialog.open(AddComponent, {
-       width: '1000px',
-       height: '370px',
+       width: '900px',
+       height: '700px',
      });
  
      dialogRef.afterClosed().subscribe(() => {
@@ -188,13 +188,13 @@ export class IndexComponent implements OnInit {
      });
    }
  
-   openEditDialog(id: number): void {
+   openEditDialog(id: String): void {
      console.log('edit dialog');
      console.log(id);
-     this.shareService.setId(id);
      const dialogRef = this.dialog.open(EditComponent, {
        width: '900px',
-       height: '400px',
+       height: '700px',
+       data:{id: id}
      });
  
      dialogRef.afterClosed().subscribe(() => {

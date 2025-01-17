@@ -8,9 +8,10 @@ import {HttpClientTestingModule} from "@angular/common/http/testing";
 import {MultipleSelectComponent} from "../../core/multiple-select/multiple-select.component";
 import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
-fdescribe('course -> AddComponent', () => {
+describe('course -> AddComponent', () => {
   let component: AddComponent;
   let fixture: ComponentFixture<AddComponent>;
 
@@ -27,7 +28,8 @@ fdescribe('course -> AddComponent', () => {
         HttpClientTestingModule,
         MatDialogModule,
         MatSelectModule,
-        FormsModule
+        FormsModule,
+        BrowserAnimationsModule
       ],
       providers: [
         { provide: MatDialogRef, useValue: {} },
@@ -46,7 +48,7 @@ fdescribe('course -> AddComponent', () => {
     fixture.detectChanges();
   });
 
-  fit('should create', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
 
   });
