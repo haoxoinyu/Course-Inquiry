@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { School } from '../../norm/entity/School';
@@ -33,18 +33,42 @@ export class EditComponent implements OnInit {
     };
   }
 
+  // 开始时间过滤器：只允许选择周一
+  isMondayValidator: ValidatorFn = (control: AbstractControl) => {
+    const value = control.value;
+    if (!value) {
+      return null;
+    }
+    const date = new Date(value);
+    return date.getDay() === 1 ? null : { 'isNotMonday': true };
+  }
+
+  // 结束时间过滤器：只允许选择周日
+  isSundayValidator: ValidatorFn = (control: AbstractControl) => {
+    const value = control.value;
+    if (!value) {
+      return null;
+    }
+    const date = new Date(value);
+    return date.getDay() === 0 ? null : { 'isNotSunday': true };
+  }
+
   ngOnInit() {
     this.loadTermData();
 
     this.formGroup = new FormGroup({
-      name: new FormControl('', Validators.required),
+      name: new FormControl('', [
+        Validators.required,
+        Validators.minLength(2),
+        Validators.maxLength(40)
+      ]),
       school: new FormGroup({
         id: new FormControl('', Validators.required),
         name: new FormControl('', Validators.required),
       }),
-      startTime: new FormControl(new Date(), Validators.required),
-      endTime: new FormControl(new Date(), Validators.required)
-    });
+      startTime: new FormControl('', [Validators.required, this.isMondayValidator]),
+      endTime: new FormControl('', [Validators.required, this.isSundayValidator]),
+    }, { validators: this.validateDateRange() });
   }
 
   /**
@@ -117,5 +141,25 @@ export class EditComponent implements OnInit {
 
   onNoClick(): void {
     this.dialogRef.close();
+  }
+
+  // 自定义验证器：确保日期范围在18到22周之间
+  validateDateRange(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const startTime = control.get('startTime')?.value;
+      const endTime = control.get('endTime')?.value;
+
+      if (startTime && endTime) {
+        const start = new Date(startTime);
+        const end = new Date(endTime);
+        const weeks = (end.getTime() - start.getTime()) / (7 * 24 * 60 * 60 * 1000);
+
+        if (weeks < 18 || weeks > 22) {
+          return { invalidDateRange: true };
+        }
+      }
+
+      return null;
+    };
   }
 }
