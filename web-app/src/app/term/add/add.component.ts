@@ -1,10 +1,11 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import {AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { School } from '../../norm/entity/School';
 import { SweetAlertService } from '../../service/sweet-alert.service';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {Term} from "../../norm/entity/Term";
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 
 @Component({
   selector: 'app-add',
@@ -18,15 +19,39 @@ export class AddComponent implements OnInit {
   /*当该值不为空时，可以显示在前台并提示用户*/
   message: string | undefined;
 
+  // 开始时间过滤器：只允许选择周一
+  isMondayValidator: ValidatorFn = (control: AbstractControl) => {
+    const value = control.value;
+    if (!value) {
+      return null;
+    }
+    const date = new Date(value);
+    return date.getDay() === 1 ? null : { 'isNotMonday': true };
+  }
+
+  // 结束时间过滤器：只允许选择周日
+  isSundayValidator: ValidatorFn = (control: AbstractControl) => {
+    const value = control.value;
+    if (!value) {
+      return null;
+    }
+    const date = new Date(value);
+    return date.getDay() === 0 ? null : { 'isNotSunday': true };
+  }
+
   formGroup = new FormGroup({
-    name: new FormControl('', Validators.required),
+    name: new FormControl('', [
+      Validators.required,
+      Validators.minLength(2),
+      Validators.maxLength(40)
+    ]),
     school: new FormGroup({
       id: new FormControl('', Validators.required),
       name: new FormControl('', Validators.required),
     }),
-    startTime: new FormControl('', Validators.required),
-    endTime: new FormControl('', Validators.required),
-  });
+    startTime: new FormControl('', [Validators.required, this.isMondayValidator]),
+    endTime: new FormControl('', [Validators.required, this.isSundayValidator]),
+  }, { validators: this.validateDateRange() });
 
   constructor(private httpClient: HttpClient,
               private sweetAlertService: SweetAlertService,
@@ -79,5 +104,25 @@ export class AddComponent implements OnInit {
 
   onNoClick(): void {
     this.dialogRef.close();
+  }
+
+  // 自定义验证器：确保日期范围在18到22周之间
+  validateDateRange(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const startTime = control.get('startTime')?.value;
+      const endTime = control.get('endTime')?.value;
+
+      if (startTime && endTime) {
+        const start = new Date(startTime);
+        const end = new Date(endTime);
+        const weeks = (end.getTime() - start.getTime()) / (7 * 24 * 60 * 60 * 1000);
+
+        if (weeks < 18 || weeks > 22) {
+          return { invalidDateRange: true };
+        }
+      }
+
+      return null;
+    };
   }
 }

@@ -16,9 +16,14 @@
       <label for="name" class="col-sm-2 col-form-label">名称：</label>
       <div class="col-sm-10">
         <input type="text" class="form-control" name="name" formControlName="name" id="name">
-        <small class="text-danger"
-               *ngIf="formGroup?.get('name')!.invalid">
+        <small class="text-danger" *ngIf="formGroup?.get('name')?.errors?.['required']">
           学期名称不能为空
+        </small>
+        <small class="text-danger" *ngIf="formGroup?.get('name')?.errors?.['minlength']">
+          学期名称至少需要2个字符
+        </small>
+        <small class="text-danger" *ngIf="formGroup?.get('name')?.errors?.['maxlength']">
+          学期名称不能超过40个字符
         </small>
       </div>
     </div>
@@ -26,9 +31,11 @@
       <label for="startTime" class="col-sm-2 col-form-label">开始时间：</label>
       <div class="col-sm-10">
         <input type="date" class="form-control" name="startTime" formControlName="startTime" id="startTime">
-        <small class="text-danger"
-               *ngIf="formGroup?.get('startTime')?.invalid && formGroup?.get('startTime')?.touched">
+        <small class="text-danger" *ngIf="formGroup?.get('startTime')?.errors?.['required']">
           开始时间不能为空
+        </small>
+        <small class="text-danger" *ngIf="formGroup?.get('startTime')?.errors?.['isNotMonday']">
+          开始时间必须是周一
         </small>
       </div>
     </div>
@@ -36,9 +43,15 @@
       <label for="endTime" class="col-sm-2 col-form-label">结束时间：</label>
       <div class="col-sm-10">
         <input type="date" class="form-control" name="endTime" formControlName="endTime" id="endTime">
-        <small class="text-danger"
-               *ngIf="formGroup?.get('endTime')?.invalid && formGroup?.get('endTime')?.touched">
+        <small class="text-danger" *ngIf="formGroup?.get('endTime')?.errors?.['required']">
           结束时间不能为空
+        </small>
+        <small class="text-danger" *ngIf="formGroup?.get('endTime')?.errors?.['isNotSunday']">
+          结束时间必须是周日
+        </small>
+        <br>
+        <small class="text-danger" *ngIf="formGroup.errors?.['invalidDateRange']">
+          日期范围必须在18到22周之间,并且开始时间要小于结束时间
         </small>
       </div>
     </div>
