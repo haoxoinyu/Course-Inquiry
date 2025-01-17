@@ -45,7 +45,12 @@ export class IndexComponent implements OnInit {
         new School(1, '河北工业大学'), 
         new Date(2024, 9, 9), 
         new Date(2025, 0, 23)
-      )
+      ),
+      klass: new Klass(1, '计科234', new School(1, '河北工业大学')),
+      week: [1,2,3],
+      day: [1],
+      period: [1],
+      sory: 1
     })]
    pageData = new Page<Course>({
      content: this.courses,

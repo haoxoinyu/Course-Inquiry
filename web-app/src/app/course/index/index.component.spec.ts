@@ -5,7 +5,7 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {HttpClientTestingModule} from "@angular/common/http/testing";
 import { MatDialogModule } from '@angular/material/dialog';
 
-describe('course IndexComponent', () => {
+fdescribe('course IndexComponent', () => {
   let component: IndexComponent;
   let fixture: ComponentFixture<IndexComponent>;
 
@@ -18,7 +18,10 @@ describe('course IndexComponent', () => {
         RouterTestingModule,
         HttpClientTestingModule,
         MatDialogModule
-      ]
+      ],
+      teardown: {
+        destroyAfterEach: false
+      }
     })
     .compileComponents();
   }));
@@ -29,7 +32,7 @@ describe('course IndexComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  fit('should create', () => {
     expect(component).toBeTruthy();
     fixture.detectChanges();
   });

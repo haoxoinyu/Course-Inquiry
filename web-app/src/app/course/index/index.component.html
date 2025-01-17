@@ -1,4 +1,4 @@
-<div class="container-md main">
+<div class="container-md main" style="margin-left: 120px; margin-right: auto;">
   <div class="row">
     <div class="col-md-8">
       <form class="form-inline d-flex justify-content-between" style="width: 1050px"
@@ -6,7 +6,7 @@
         <div class="form-group mb-2">
           <label class="mr-2">学校：</label>
           <!-- 默认提示选项 -->
-          <app-school-select name="school" id="school" [(ngModel)]="searchParameters.school"></app-school-select>
+          <!-- <app-school-select name="school" id="school" [(ngModel)]="searchParameters.school"></app-school-select> -->
         </div>
         <div class="form-group mb-2">
           <label class="mr-2">班级：</label>
@@ -63,13 +63,13 @@
     <tr *ngFor="let course of pageData.content; index as i">
       <td>{{ i+1 }}</td>
       <td>{{ course.term.school?.name }}</td>
-      <td></td>
+      <td>{{ course.klass.name }}</td>
       <td>{{ course.term.name }}</td>
       <td>{{ course.name }}</td>
-      <td>{{ course.sory}}</td>
+      <td>{{ course.sory }}</td>
       <td>{{ course.week }}</td>
-      <td></td>
-      <td></td>
+      <td>{{ course.day }}</td>
+      <td>{{ course.period }}</td>
       <td>
         <a class="btn btn-outline-success btn-sm"  *ngIf="course.sory === 0">
           <i class="fas fa-plus"></i>添加
