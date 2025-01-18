@@ -1,8 +1,10 @@
 package com.mengyunzhi.springBootStudy.service;
 
-import com.mengyunzhi.springBootStudy.entity.Course;
+import com.mengyunzhi.springBootStudy.entity.*;
 import com.mengyunzhi.springBootStudy.repository.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -63,6 +65,19 @@ public class CourseServiceImpl implements CourseService {
         oldCourse.setName(course.getName());
         oldCourse.setTerm(course.getTerm());
         courseRepository.save(oldCourse);
+    }
+
+    @Override
+    public Page<Course> findAll(String name, Long schoolId, Long klassId, Long termId, Long userId, Pageable pageable) {
+        Klass klass = new Klass();
+        klass.setId(klassId);
+        School school = new School();
+        klass.setId(schoolId);
+        Term term = new Term();
+        klass.setId(termId);
+        User user = new User();
+        klass.setId(userId);
+        return this.courseRepository.findAll(name, school, klass, term, user, pageable);
     }
 
 }
