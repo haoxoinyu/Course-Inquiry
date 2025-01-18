@@ -1,11 +1,17 @@
 package com.mengyunzhi.springBootStudy.service;
 
+import com.mengyunzhi.springBootStudy.entity.Klass;
+import com.mengyunzhi.springBootStudy.entity.School;
 import com.mengyunzhi.springBootStudy.entity.Term;
+import com.mengyunzhi.springBootStudy.repository.KlassRepository;
 import com.mengyunzhi.springBootStudy.repository.TermRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
-import java.util.List;
+import javax.validation.constraints.NotNull;
 
 /**
  * 学期服务实现
@@ -22,16 +28,25 @@ public class TermServiceImpl implements TermService {
     }
 
     @Override
-    public List<Term> getAll(String name) {
-        return this.termRepository.findAllByNameContains(name);
+    public Page<Term> findAll(Pageable pageable) {
+        return this.termRepository.findAll(pageable);
     }
 
+    @Override
+    public Page<Term> findAll(String name, Long schoolId, @NotNull Pageable pageable) {
+        Assert.notNull(pageable, "Pageable不能为null");
+
+        School school = new School();
+        school.setId(schoolId);
+
+        return this.termRepository.findAll(name, school, pageable);
+    }
 
     /**
-     * 获取某个学期
+     * 获取某个班级
      *
-     * @param id 学期ID
-     * @return 学期
+     * @param id 班级ID
+     * @return 班级
      */
     @Override
     public Term getById(Long id) {
@@ -44,12 +59,12 @@ public class TermServiceImpl implements TermService {
     }
 
     /**
-     * 更新学期
+     * 更新班级
      * 获取数据库中的老数据
      * 使用传入的新数据对老数据的更新字段赋值
      * 将更新后的老数据重新保存在数据表中
      *
-     * @param id    要更新的学期ID
+     * @param id    要更新的班级ID
      * @param term 新学期数据
      */
     @Override

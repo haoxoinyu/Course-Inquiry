@@ -4,9 +4,9 @@ import {School} from './School';
  * 班级实体
  */
 export class Term {
-  id: number;
-  name: string;
-  school: School;
+  id: number | undefined;
+  name: string | undefined;
+  school: School | undefined;
   startTime: Date;
   endTime: Date;
 
@@ -16,7 +16,7 @@ export class Term {
    * @param name 名称
    * @param school 学校
    */
-  constructor(id: number, name: string, school: School, startTime: Date, endTime: Date) {
+  constructor(id: number | undefined, name: string | undefined, school: School | undefined, startTime: Date, endTime: Date) {
     this.id = id;
     this.name = name;
     this.school = school;
