@@ -28,11 +28,13 @@ export class IndexComponent implements OnInit {
    // 初始化一个有0条数据的
  
    searchParameters = {
-     school: null as unknown as number,
-     clazz: null as unknown as number,
-     term: null as unknown as number,
-     userId: null as unknown as number,
-     name: ''
+     schoolId: 1,
+     klassId: 1,
+     termId: 1,
+     userId: 1,
+     name: '',
+     page: this.page,
+     size: this.size
    };
  
    courses: Course[] = [
@@ -140,18 +142,18 @@ export class IndexComponent implements OnInit {
      const httpParams = new HttpParams().append('page', page.toString())
        .append('size', this.size.toString());
      console.log(this.searchParameters);
-     this.httpClient.post<Page<Course>>('/api/course', this.searchParameters, {params: httpParams})
-       .subscribe(pageData => {
-           // 在请求数据之后设置当前页
-           this.page = page;
-           console.log('课表组件接收到返回数据，重新设置pageData');
-           this.pageData = pageData;
-           console.log(pageData);
-         },
-         error => {
-           console.error('请求数据失败', error);
-         }
-       );
+     this.courseService.page(this.searchParameters)
+      .subscribe(pageData => {
+        // 在请求数据之后设置当前页
+        this.page = page;
+        console.log('课表组件接收到返回数据，重新设置pageData');
+        this.pageData = pageData;
+        console.log(pageData);
+      },
+      error => {
+        console.error('请求数据失败', error);
+      });
+
    }
  
    onDelete(index: number, id: number): void {
@@ -179,8 +181,8 @@ export class IndexComponent implements OnInit {
  
    openAddDialog(): void {
      const dialogRef = this.dialog.open(AddComponent, {
-       width: '1000px',
-       height: '370px',
+       width: '900px',
+       height: '700px',
      });
  
      dialogRef.afterClosed().subscribe(() => {
@@ -188,13 +190,13 @@ export class IndexComponent implements OnInit {
      });
    }
  
-   openEditDialog(id: number): void {
+   openEditDialog(id: String): void {
      console.log('edit dialog');
      console.log(id);
-     this.shareService.setId(id);
      const dialogRef = this.dialog.open(EditComponent, {
        width: '900px',
-       height: '400px',
+       height: '700px',
+       data:{id: id}
      });
  
      dialogRef.afterClosed().subscribe(() => {
