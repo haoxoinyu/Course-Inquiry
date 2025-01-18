@@ -11,7 +11,7 @@
         <div class="form-group mb-2">
           <label class="mr-2">班级：</label>
           <!-- 默认提示选项 -->
-          <select class="form-control" [(ngModel)]="searchParameters.clazz" name="clazz_id" id="clazz_id">
+          <select class="form-control" [(ngModel)]="searchParameters.klassId" name="clazz_id" id="clazz_id">
             <option [ngValue]="null">所有班级</option>
             <option *ngFor="let clazz of clazzes" [value]="clazz.id">
               {{clazz.name}}
@@ -21,7 +21,7 @@
         <div class="form-group mb-2">
           <label class="mr-2">学期：</label>
           <!-- 默认提示选项 -->
-          <select class="form-control" [(ngModel)]="searchParameters.term" name="term_id" id="term_id">
+          <select class="form-control" [(ngModel)]="searchParameters.termId" name="term_id" id="term_id">
             <option [ngValue]="null">所有学期</option>
             <option *ngFor="let term of terms" [value]="term.id">
               {{term.name}}
