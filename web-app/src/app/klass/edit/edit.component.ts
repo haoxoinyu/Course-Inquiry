@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Klass } from '../../norm/entity/Klass';
@@ -68,7 +68,7 @@ export class EditComponent implements OnInit {
    */
   onSubmit(): void {
     this.klass = {
-      id: this.formGroup?.get('school')?.get('id')?.value,
+      id: this.klass.id,
       name: this.formGroup?.get('name')?.value,
       school: this.formGroup?.get('school')?.value
     };

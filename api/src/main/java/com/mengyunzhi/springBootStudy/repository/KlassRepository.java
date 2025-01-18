@@ -34,5 +34,13 @@ public interface KlassRepository extends PagingAndSortingRepository<Klass, Long>
         return this.findAll(specification, pageable);
     }
 
+    default List<Klass> findBySchoolId(School school) {
+        Specification<Klass> specification = KlassSpecs.belongToSchool(school);
+        return this.findAll(specification);
+    }
+
     List<Klass> findAllByNameContains(String name);
+
+    @Override
+    List<Klass> findAll();
 }

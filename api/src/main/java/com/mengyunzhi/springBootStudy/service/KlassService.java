@@ -21,12 +21,27 @@ public interface KlassService {
     void deleteById(Long id);
 
     /**
+     * 获取所有学校列表
+     *
+     * @return
+     */
+    List<Klass> getAll();
+
+    /**
      * 查询分页信息
      *
      * @param pageable 分页条件
      * @return 分页数据
      */
     Page<Klass> findAll(Pageable pageable);
+
+    /**
+     * 通过学校查找班级
+     *
+     * @param school
+     * @return
+     */
+    List<Klass> getKlassBySchool(School school);
 
     /**
      * 综合查询

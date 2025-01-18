@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {User} from '../norm/entity/User';
-import {School} from "../norm/entity/School";
 
 @Injectable({
   providedIn: 'root'
@@ -84,6 +83,34 @@ export class UserService {
   }
 
   /**
+   * 分页
+   * @param params name:名称,page:第几页,size:每页大小
+   */
+  page(params: { username?: string, klass_id?: number, role?: number, state?: number, page?: number, size?: number }):
+    Observable<{ totalPages: number, content: Array<User> }> {
+    const url = 'http://localhost:8080/User';
+
+    /* 设置默认值 */
+    if (params.page === undefined) {
+      params.page = 0;
+    }
+    if (params.size === undefined) {
+      params.size = 10;
+    }
+    /* 初始化查询参数 */
+    const queryParams = new HttpParams()
+      .set('username', params.username ? params.username : '')
+      .set('klassId', params.klass_id ? params.klass_id : '')
+      .set('role', params.role ? params.role : '')
+      .set('state', params.state ? params.state : '')
+      .set('page', params.page.toString())
+      .set('size', params.size.toString());
+    console.log(queryParams);
+
+    return this.httpClient.get<{ totalPages: number, content: Array<User> }>(url, {params: queryParams});
+  }
+
+  /**
    * 更新用户
    * @param id id
    * @param user 学校
@@ -91,5 +118,23 @@ export class UserService {
   update(id: number | undefined, user: User | undefined): Observable<User> {
     const url = `http://localhost:8080/User/${id}`;
     return this.httpClient.put<User>(url, user);
+  }
+
+  /**
+   * 获取某个学校
+   * @param id 学校ID
+   */
+  getById(id: number | undefined): Observable<User> {
+    const url = `http://localhost:8080/User/${id}`;
+    return this.httpClient.get<User>(url);
+  }
+
+  /**
+   * 删除学校
+   * @param id 学校id
+   */
+  deleteById(id: number): Observable<void> {
+    const url = `http://localhost:8080/User/${id}`;
+    return this.httpClient.delete<void>(url);
   }
 }
