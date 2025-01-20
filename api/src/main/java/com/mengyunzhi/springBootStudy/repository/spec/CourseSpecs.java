@@ -14,6 +14,7 @@ public class CourseSpecs {
     public static Specification<Course> belongToKlass(Klass klass) {
 
         if(klass == null || null == klass.getId()) {
+            System.out.println("klass为null");
             return Specification.where(null);
         }else {
             return new Specification<Course>() {

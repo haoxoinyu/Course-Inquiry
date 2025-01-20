@@ -31,8 +31,9 @@ public class CourseController {
             @RequestParam int page,
             @RequestParam int size
     ) {
-        System.out.println("成功请求Course.findAll方法");
-        return this.courseService.findAll(name, schoolId, klassId, termId, userId, PageRequest.of(page, size));
+        Page<Course> tset = this.courseService.findAll(name, schoolId, klassId, termId, userId, PageRequest.of(page, size));
+        Long scholl = schoolId;
+        return tset;
     }
 
     @PostMapping("add")
