@@ -1,10 +1,14 @@
 package com.mengyunzhi.springBootStudy.controller;
 
+import com.mengyunzhi.springBootStudy.entity.Klass;
 import com.mengyunzhi.springBootStudy.entity.User;
 import com.mengyunzhi.springBootStudy.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.web.bind.annotation.*;
@@ -43,51 +47,67 @@ public class UserController {
     }
 
     @DeleteMapping("{id}")
-    @CrossOrigin("*")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
-        String sql = String.format( "delete from `user` where id = %s", id);
-        this.jdbcTemplate.update(sql);
+        userService.deleteById(id);
     }
+
+//    @GetMapping
+//    @CrossOrigin("*")
+//    public List<User> getAll() {
+//        logger.info("调用UserController的getAll方法");
+//        /*初始化不固定大小的数组*/
+//        List<User> users = new ArrayList<>();
+//
+//        /* 定义实现了RowCallbackHandler接口的对象*/
+//        RowCallbackHandler rowCallbackHandler = new RowCallbackHandler() {
+//            /**
+//             * 该方法用于执行jdbcTemplate.query后的回调，每行数据回调1次。比如User表中有两行数据，则回调此方法两次。
+//             *
+//             * @param resultSet 查询结果，每次一行
+//             * @throws SQLException 查询出错时，将抛出此异常，暂时不处理。
+//             */
+//            @Override
+//            public void processRow(ResultSet resultSet) throws SQLException {
+//                User user = new User();
+//                /*获取字段id，并转换为Long类型返回*/
+//                user.setId(resultSet.getLong("id"));
+//                /*获取字段name，并转换为String类型返回*/
+//                user.setName(resultSet.getString("name"));
+//                /*获取字段sex，并转换为布尔类型返回*/
+//                user.setSex(resultSet.getBoolean("sex"));
+//                user.setUsername(resultSet.getString("username"));
+//                user.setRole(resultSet.getLong("role"));
+//                user.setState(resultSet.getLong("state"));
+//
+//                /*将得到的user添加到要返回的数组中*/
+//                users.add(user);
+//            }
+//        };
+//
+//        /*定义查询字符串*/
+//        String query = "select id, name, sex, username, role, state from user";
+//
+//        /*使用query进行查询，并把查询的结果通过调用rowCallbackHandler.processRow()方法传递给rowCallbackHandler对象*/
+//        jdbcTemplate.query(query, rowCallbackHandler);
+//        return users;
+//    }
 
     @GetMapping
     @CrossOrigin("*")
-    public List<User> getAll() {
-        logger.info("调用UserController的getAll方法");
-        /*初始化不固定大小的数组*/
-        List<User> users = new ArrayList<>();
-
-        /* 定义实现了RowCallbackHandler接口的对象*/
-        RowCallbackHandler rowCallbackHandler = new RowCallbackHandler() {
-            /**
-             * 该方法用于执行jdbcTemplate.query后的回调，每行数据回调1次。比如User表中有两行数据，则回调此方法两次。
-             *
-             * @param resultSet 查询结果，每次一行
-             * @throws SQLException 查询出错时，将抛出此异常，暂时不处理。
-             */
-            @Override
-            public void processRow(ResultSet resultSet) throws SQLException {
-                User user = new User();
-                /*获取字段id，并转换为Long类型返回*/
-                user.setId(resultSet.getLong("id"));
-                /*获取字段name，并转换为String类型返回*/
-                user.setName(resultSet.getString("name"));
-                /*获取字段sex，并转换为布尔类型返回*/
-                user.setSex(resultSet.getBoolean("sex"));
-                user.setUsername(resultSet.getString("username"));
-                user.setRole(resultSet.getLong("role"));
-                user.setState(resultSet.getLong("state"));
-
-                /*将得到的user添加到要返回的数组中*/
-                users.add(user);
-            }
-        };
-
-        /*定义查询字符串*/
-        String query = "select id, name, sex, username, role, state from user";
-
-        /*使用query进行查询，并把查询的结果通过调用rowCallbackHandler.processRow()方法传递给rowCallbackHandler对象*/
-        jdbcTemplate.query(query, rowCallbackHandler);
-        return users;
+    public Page<User> findAll(
+            @RequestParam String username,
+            @RequestParam Long klassId,
+            @RequestParam Long role,
+            @RequestParam Long state,
+            @RequestParam int page,
+            @RequestParam int size) {
+        return this.userService.findAll(
+                username,
+                klassId,
+                role,
+                state,
+                PageRequest.of(page, size));
     }
 
     /**
@@ -122,12 +142,7 @@ public class UserController {
     @PostMapping
     @CrossOrigin("*")
     public void save(@RequestBody User user) {
-        String sql = String.format(
-                "insert into `user` (`name`, `username`, `sex`, `role`, `state`) values ('%s', '%s', %s, %s, %s)",
-                user.getName(), user.getUsername(), user.getSex().toString(), user.getRole().toString(), user.getState().toString()
-        );
-        logger.info(sql);
-        jdbcTemplate.execute(sql);
+        this.userService.save(user);
     }
 
     /**

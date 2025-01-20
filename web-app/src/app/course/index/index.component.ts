@@ -26,7 +26,7 @@ export class IndexComponent implements OnInit {
    // 每页默认五条
    size = 5;
    // 初始化一个有0条数据的
- 
+
    searchParameters = {
      schoolId: 0,
      klassId: 0,
@@ -36,16 +36,16 @@ export class IndexComponent implements OnInit {
      page: this.page,
      size: this.size
    };
- 
+
    courses: Course[] = [
     new Course({
-      id: '1', 
-      name: '高数', 
+      id: '1',
+      name: '高数',
       term: new Term(
-        1, 
-        '2024秋', 
-        new School(1, '河北工业大学'), 
-        new Date(2024, 9, 9), 
+        1,
+        '2024秋',
+        new School(1, '河北工业大学'),
+        new Date(2024, 9, 9),
         new Date(2025, 0, 23)
       ),
       klass: new Klass(1, '计科234', new School(1, '河北工业大学')),
@@ -60,19 +60,19 @@ export class IndexComponent implements OnInit {
      size: this.size,
      numberOfElements: 0
    });
- 
-   me : User = new User(1,'zhangsan', '张三', '', true, 1, 1, new Klass(1,'计234', new School(1, '河北工业大学')));
+
+   me : User = new User(1,'zhangsan', '张三', 3, 'yunzhi', true, 1, new Klass(1,'计234', new School(1, '河北工业大学')));
    beLogout = new EventEmitter<void>();
- 
+
    terms = new Array<Term>();
    term : Term = new Term(
-    1, 
-    '2024秋', 
-    new School(1, '河北工业大学'), 
-    new Date(2024, 9, 9), 
+    1,
+    '2024秋',
+    new School(1, '河北工业大学'),
+    new Date(2024, 9, 9),
     new Date(2025, 0, 23));
    clazzes = new Array<Klass>();
- 
+
    days = [
      {name: '周一', value: 1},
      {name: '周二', value: 2},
@@ -90,7 +90,7 @@ export class IndexComponent implements OnInit {
      {name: '第五大节', value: 5}
    ];
    protected role: number | undefined;
- 
+
    constructor(private httpClient: HttpClient,
                private dialog: MatDialog,
                private shareService: ShareService,
@@ -110,7 +110,7 @@ export class IndexComponent implements OnInit {
        }
      );
    }
- 
+
    ngOnInit() {
      const sessionRole = window.sessionStorage.getItem('role');
      if (sessionRole !== 'true') {
@@ -120,23 +120,23 @@ export class IndexComponent implements OnInit {
      // 使用默认值 page = 0 调用loadByPage()方法
      this.loadByPage();
    }
- 
+
    onPage(page: number): void {
      this.loadByPage(page);
    }
- 
+
    // 方法来获取天的名称
    getDayName(value: number): string {
      const day = this.days.find(d => d.value === value);
      return day ? day.name : '';
    }
- 
+
    // 方法来获取时间段的名称
    getPeriodName(value: number): string {
      const period = this.periods.find(p => p.value === value);
      return period ? period.name : '';
    }
- 
+
    loadByPage(page = 1): void {
      console.log('触发loadByPage方法');
      const httpParams = new HttpParams().append('page', page.toString())
@@ -158,7 +158,7 @@ export class IndexComponent implements OnInit {
       });
 
    }
- 
+
    onDelete(index: number, id: number): void {
      this.sweetAlertService.showWarning('', '', 'warning')
        .then(isConfirmed => {
@@ -181,18 +181,18 @@ export class IndexComponent implements OnInit {
          }
        });
    }
- 
+
    openAddDialog(): void {
      const dialogRef = this.dialog.open(AddComponent, {
        width: '900px',
        height: '700px',
      });
- 
+
      dialogRef.afterClosed().subscribe(() => {
        this.loadByPage(this.page);
      });
    }
- 
+
    openEditDialog(id: String): void {
      console.log('edit dialog');
      console.log(id);
@@ -201,12 +201,12 @@ export class IndexComponent implements OnInit {
        height: '700px',
        data:{id: id}
      });
- 
+
      dialogRef.afterClosed().subscribe(() => {
        this.loadByPage(this.page);
      });
    }
- 
+
   //  addLesson(courseId: number): void {
   //    console.log('addLesson');
   //    const userId = this.me?.id;
@@ -228,7 +228,7 @@ export class IndexComponent implements OnInit {
   //      }
   //    );
   //  }
- 
+
    onSubmit(form: NgForm, page = 1) {
      console.log('调用了search');
      if (form.valid) {
@@ -256,7 +256,7 @@ export class IndexComponent implements OnInit {
        );
      }
    }
- 
+
    private handleInvalidToken(): void {
      this.sweetAlertService.showLogoutWarning('登录失效', 'warning');
      setTimeout(() => {
@@ -273,7 +273,7 @@ export class IndexComponent implements OnInit {
        );
      }, 1500);
    }
- 
+
   //  getClazzBySchoolId(schoolId: number) {
   //    this.courseService.getClazzBySchoolId(schoolId)
   //      .subscribe(clazzes => {
@@ -282,7 +282,7 @@ export class IndexComponent implements OnInit {
   //        console.error('获取班级失败', error);
   //      });
   //  }
- 
+
   //  getTermsBySchoolId(schoolId: number) {
   //    this.courseService.getTermsBySchoolId(schoolId)
   //      .subscribe(terms => {
@@ -291,7 +291,7 @@ export class IndexComponent implements OnInit {
   //        console.error('获取学期失败', error);
   //      });
   //  }
- 
+
   //  onSchoolChange(schoolId: number) {
   //    this.searchParameters.school = schoolId;
   //    console.log(this.searchParameters.school);

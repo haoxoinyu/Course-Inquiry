@@ -1,16 +1,19 @@
 package com.mengyunzhi.springBootStudy.service;
 
 import com.mengyunzhi.springBootStudy.entity.Klass;
-import com.mengyunzhi.springBootStudy.entity.School;
 import com.mengyunzhi.springBootStudy.entity.User;
 import com.mengyunzhi.springBootStudy.filter.TokenFilter;
 import com.mengyunzhi.springBootStudy.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -88,6 +91,16 @@ public class UserServiceImpl implements UserService {
         return userOptional.get();
     }
 
+    @Override
+    public Page<User> findAll(String username, Long klassId, Long role, Long state, @NotNull Pageable pageable) {
+        Assert.notNull(pageable, "Pageable不能为null");
+
+        Klass klass = new Klass();
+        klass.setId(klassId);
+
+        return this.userRepository.findAll(username, klass, role, state, pageable);
+    }
+
     /**
      * 获取某个用户
      *
@@ -121,6 +134,16 @@ public class UserServiceImpl implements UserService {
         oldUser.setState(newUser.getState());
         oldUser.setKlass(newUser.getKlass());
         return this.userRepository.save(oldUser);
+    }
+
+    @Override
+    public void save(User user) {
+        this.userRepository.save(user);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        this.userRepository.deleteById(id);
     }
 
     public List<User> findByKlassId(Long klassId) {

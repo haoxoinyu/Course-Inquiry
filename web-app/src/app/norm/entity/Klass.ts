@@ -6,8 +6,8 @@ import {FormControl, FormGroup, ɵFormGroupRawValue, ɵGetProperty, ɵTypedOrUnt
  */
 export class Klass {
   id: number | undefined;
-  name: string | undefined;
-  school: School | undefined;
+  name?: string | undefined;
+  school?: School | undefined;
 
   /**
    * 构造函数
@@ -15,7 +15,7 @@ export class Klass {
    * @param name 名称
    * @param school 学校
    */
-  constructor(id: number | undefined, name: string | undefined, school: School | undefined) {
+  constructor(id: number | undefined, name?: string, school?: School) {
     this.id = id;
     this.name = name;
     this.school = school;

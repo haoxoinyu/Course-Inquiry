@@ -6,14 +6,14 @@ import { HttpClientModule } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 
-fdescribe('Course EditComponent', () => {
+describe('Course EditComponent', () => {
   let component: EditComponent;
   let fixture: ComponentFixture<EditComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ EditComponent ],
-      imports: [ 
+      imports: [
         ReactiveFormsModule,
         MatDialogModule,
         HttpClientModule,
@@ -37,7 +37,7 @@ fdescribe('Course EditComponent', () => {
     fixture.detectChanges();
   });
 
-  fit('should create', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 });

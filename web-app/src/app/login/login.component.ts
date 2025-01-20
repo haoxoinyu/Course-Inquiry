@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {UserService} from '../service/user.service';
+import {SweetAlertService} from "../service/sweet-alert.service";
 
 @Component({
   selector: 'app-login',
@@ -10,7 +11,8 @@ import {UserService} from '../service/user.service';
 export class LoginComponent implements OnInit {
   formGroup: FormGroup | undefined;
 
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService,
+              private sweetAlertService: SweetAlertService,) { }
 
   ngOnInit() {
     this.formGroup = new FormGroup({
@@ -30,6 +32,7 @@ export class LoginComponent implements OnInit {
         this.userService.setIsLogin(true);
       } else {
         console.log('用户名密码错误');
+        this.sweetAlertService.showError('登录失败', '用户名密码错误', 'error');
       }
     });
   }
