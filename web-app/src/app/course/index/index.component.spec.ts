@@ -4,6 +4,8 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {RouterTestingModule} from '@angular/router/testing';
 import {HttpClientTestingModule} from "@angular/common/http/testing";
 import { MatDialogModule } from '@angular/material/dialog';
+import { KlassModule } from 'src/app/klass/klass.module';
+import { SchoolSelectComponent } from 'src/app/klass/school-select/school-select.component';
 
 fdescribe('course IndexComponent', () => {
   let component: IndexComponent;
@@ -11,13 +13,14 @@ fdescribe('course IndexComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ IndexComponent ],
+      declarations: [ IndexComponent, SchoolSelectComponent],
       imports: [
         ReactiveFormsModule,
         FormsModule,
         RouterTestingModule,
         HttpClientTestingModule,
-        MatDialogModule
+        MatDialogModule,
+        KlassModule
       ],
       teardown: {
         destroyAfterEach: false
