@@ -28,10 +28,10 @@ export class IndexComponent implements OnInit {
    // 初始化一个有0条数据的
  
    searchParameters = {
-     schoolId: 1,
-     klassId: 1,
-     termId: 1,
-     userId: 1,
+     schoolId: 0,
+     klassId: 0,
+     termId: 0,
+     userId: 0,
      name: '',
      page: this.page,
      size: this.size
@@ -52,7 +52,7 @@ export class IndexComponent implements OnInit {
       week: [1,2,3],
       day: [1],
       period: [1],
-      sory: 1
+      sory: 1,
     })]
    pageData = new Page<Course>({
      content: this.courses,
@@ -148,6 +148,9 @@ export class IndexComponent implements OnInit {
         this.page = page;
         console.log('课表组件接收到返回数据，重新设置pageData');
         this.pageData = pageData;
+        this.pageData.content.forEach(course => {
+          course.klass = course.users[0].klass as Klass;
+        });
         console.log(pageData);
       },
       error => {

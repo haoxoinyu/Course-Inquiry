@@ -21,9 +21,9 @@ export class AddComponent implements OnInit {
   private url = 'api/course/add';
   course = {
     name: '',
-    school_id: null as unknown as number,
-    term_id: null as unknown as number,
-    clazz_id: null as unknown as number,
+    school_id: 1,
+    term_id: 1,
+    clazz_id: 1,
     user_id: null as unknown as number,
     sory: 1,
     week: [],
@@ -40,7 +40,7 @@ export class AddComponent implements OnInit {
   semesterStartDate: Date | undefined;
   semesterEndDate: Date | undefined;
 
-  weeks: number[] = [];
+  weeks: number[] = [1,2,3];
   days = [
     {name: '周一', value: 1},
     {name: '周二', value: 2},
@@ -76,20 +76,31 @@ export class AddComponent implements OnInit {
   }
 
   onSubmit(): void {
+    // const newCourse = {
+    //   name: this.course.name,
+    //   sory: this.course.sory,
+    //   week: this.course.week,
+    //   day: this.course.day,
+    //   period: this.course.period,
+    //   schoolId: this.course.school_id,
+    //   clazz_id: this.course.clazz_id,
+    //   term_id: this.course.term_id,
+    //   user: this.course.user_id
+    // };
     const newCourse = {
-      name: this.course.name,
-      sory: this.course.sory,
-      week: this.course.week,
-      day: this.course.day,
-      period: this.course.period,
-      school: new School(1,''),
-      clazz_id: this.course.clazz_id,
-      term_id: this.course.term_id,
-      user: this.course.user_id
-    };
+      name: '物理',
+        sory: 1,
+        week: [1,2],
+        day: 3,
+        period: 3,
+        schoolId: 1,
+        clazz_id: 1,
+        term_id: 1,
+        userId: 1
+    }
     console.log(newCourse.sory);
     console.log(newCourse);
-    this.httpClient.post(this.url, newCourse)
+    this.courseService.add(newCourse)
       .subscribe(clazz => {
         this.dialogRef.close(newCourse);
         this.sweetAlertService.showSuccess('新增成功！', 'success');

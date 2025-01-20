@@ -3,6 +3,7 @@ import {Course} from '../norm/entity/Course';
 import {Observable} from 'rxjs';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Page} from '../norm/entity/page';
+import { User } from '../norm/entity/User';
 
 @Injectable({
   providedIn: 'root'
@@ -61,5 +62,36 @@ export class CourseService {
       .set('page', params.page.toString())
       .set('size', params.size.toString());
     return this.httpClient.get<Page<Course>>(this.url, {params: queryParams});
+  }
+
+  /**
+   * 增加新课程
+   * 
+   * 
+   ***/
+  add(course:  {
+    name: string,
+    sory: number,
+    week: number[],
+    day: number,
+    period: number,
+    schoolId: number,
+    clazz_id: number,
+    term_id: number,
+    userId: number
+  }): Observable<void> {
+
+    let newCourse = {
+      name: course.name,
+      sory: course.sory,
+      week: course.week,
+      day: [course.day],
+      period: [course.day],
+      schoolId: course.schoolId,
+      klassId: course.clazz_id,
+      termId: course.term_id,
+      userId: course.userId
+    }
+    return this.httpClient.post<void>(this.url + '/add', newCourse);
   }
 }
