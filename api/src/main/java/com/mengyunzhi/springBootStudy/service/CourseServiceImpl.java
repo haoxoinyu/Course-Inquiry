@@ -72,6 +72,7 @@ public class CourseServiceImpl implements CourseService {
         System.out.println("service" + termId);
         Klass klass = new Klass();
         klass.setId(klassId);
+        System.out.println("service klassId: "+ klass.getId());
         School school = new School();
         school.setId(schoolId);
         Term term = new Term();
