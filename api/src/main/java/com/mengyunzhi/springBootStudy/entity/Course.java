@@ -18,6 +18,8 @@ public class Course {
     @Column(unique = true, nullable = false)
     private String name = "";
 
+    @Column(nullable = false)
+    private Long sory;
     @ElementCollection
     @CollectionTable(name = "course_day", joinColumns = @JoinColumn(name = "course_id"))
     @Column(name = "day")
@@ -38,6 +40,14 @@ public class Course {
 
     @ManyToMany
     private List<User> users = new ArrayList<>();
+
+    public Long getSory() {
+        return sory;
+    }
+
+    public void setSory(Long sory) {
+        this.sory = sory;
+    }
 
     public Long getId() {
         return id;
