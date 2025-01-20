@@ -2,6 +2,7 @@ package com.mengyunzhi.springBootStudy.repository;
 
 import com.mengyunzhi.springBootStudy.entity.Klass;
 import com.mengyunzhi.springBootStudy.entity.School;
+import com.mengyunzhi.springBootStudy.entity.Klass;
 import com.mengyunzhi.springBootStudy.entity.User;
 import com.mengyunzhi.springBootStudy.repository.spec.KlassSpecs;
 import com.mengyunzhi.springBootStudy.repository.spec.UserSpecs;
@@ -14,6 +15,8 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.util.Assert;
 
 import javax.validation.constraints.NotNull;
+
+import java.util.List;
 
 /**
  * 用户仓库
@@ -46,4 +49,6 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long>, 
      * @return
      */
     User findByUsername(String username);
+
+    List<User> findByKlass(Klass klass);
 }

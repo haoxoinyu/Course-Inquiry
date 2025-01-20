@@ -15,6 +15,7 @@ import org.springframework.util.Assert;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -144,5 +145,11 @@ public class UserServiceImpl implements UserService {
     public void deleteById(Long id) {
         this.userRepository.deleteById(id);
     }
-}
+
+    public List<User> findByKlassId(Long klassId) {
+        Klass klass = new Klass();
+        klass.setId(klassId);
+        return this.userRepository.findByKlass(klass);
+    }
+ }
 

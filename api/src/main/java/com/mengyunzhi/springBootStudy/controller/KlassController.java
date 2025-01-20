@@ -12,6 +12,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * 班级控制器
  */
@@ -62,6 +64,15 @@ public class KlassController {
                 name,
                 schoolId,
                 PageRequest.of(page, size));
+    }
+
+    @GetMapping("/getKlassesBySchoolId")
+    @CrossOrigin("*")
+    public Page<Klass> getKlassesBySchoolId(@RequestParam Long schoolId) {
+        return this.klassService.findAll(
+                "",
+                schoolId,
+                PageRequest.of(0, 10000000));
     }
 
     @PostMapping

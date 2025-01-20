@@ -42,4 +42,6 @@ public class UserSpecs {
             return Specification.where(null);
         }
     }
+
+
 }

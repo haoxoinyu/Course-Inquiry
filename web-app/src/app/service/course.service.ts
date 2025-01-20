@@ -70,15 +70,15 @@ export class CourseService {
    * 
    ***/
   add(course:  {
-    name: string,
-    sory: number,
-    week: number[],
-    day: number,
-    period: number,
-    schoolId: number,
-    clazz_id: number,
-    term_id: number,
-    userId: number
+    name?: string | null,
+    sory?: number | null,
+    week?: (number | null)[],
+    day?: number  | null,
+    period?: number | null,
+    schoolId?: number | null,
+    clazz_id?: number | null,
+    term_id?: number | null,
+    userId?: number | null
   }): Observable<void> {
 
     let newCourse = {

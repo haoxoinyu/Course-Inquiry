@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {User} from '../norm/entity/User';
+import { Page } from '../norm/entity/page';
 
 @Injectable({
   providedIn: 'root'
@@ -118,6 +119,13 @@ export class UserService {
   update(id: number | undefined, user: User | undefined): Observable<User> {
     const url = `http://localhost:8080/User/${id}`;
     return this.httpClient.put<User>(url, user);
+  }
+
+  getUsersByKlassId(klassId: number): Observable<User[]> {
+    const url = 'http://localhost:8080/User/getUsersByKlassId';
+    const queryParams = new HttpParams()
+      .set('klassId', klassId? klassId.toString() : '')
+    return this.httpClient.get<User[]>(url, {params: queryParams});
   }
 
   /**

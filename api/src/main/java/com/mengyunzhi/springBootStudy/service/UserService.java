@@ -8,6 +8,8 @@ import org.springframework.data.domain.Pageable;
 
 import javax.validation.constraints.NotNull;
 
+import java.util.List;
+
 /**
  * 用户
  * @author 梦云智
@@ -91,5 +93,7 @@ public interface UserService {
      * @return 用户
      */
     User update(Long id, User user);
+
+    List<User> findByKlassId(Long klassId);
 }
 
