@@ -49,7 +49,7 @@ export class AddComponent implements OnInit {
   terms = new Array<Term>();
   term = new Term(1, '', new School(1, ''), new Date(), new Date());
   clazzes : Klass[] = [new Klass(1, '',undefined)];
-  users = new Array<User>(new User(1,'', '', ''));
+  users = new Array<User>(new User(1,'', '', 1,''));
 
   semesterStartDate: Date | undefined;
   semesterEndDate: Date | undefined;
