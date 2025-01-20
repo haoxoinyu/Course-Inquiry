@@ -69,14 +69,15 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public Page<Course> findAll(String name, Long schoolId, Long klassId, Long termId, Long userId, Pageable pageable) {
+        System.out.println("service" + termId);
         Klass klass = new Klass();
         klass.setId(klassId);
         School school = new School();
-        klass.setId(schoolId);
+        school.setId(schoolId);
         Term term = new Term();
-        klass.setId(termId);
+        term.setId(termId);
         User user = new User();
-        klass.setId(userId);
+        user.setId(userId);
         return this.courseRepository.findAll(name, school, klass, term, user, pageable);
     }
 
