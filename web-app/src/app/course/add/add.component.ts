@@ -128,8 +128,9 @@ export class AddComponent implements OnInit {
       });
   }
 
-  onSchoolChange(schoolId: number) {
-    this.course.school_id = schoolId;
+  onSchoolChange(event: Event) {
+    console.log("schollSelect: event", event);
+    // this.course.school_id = event.;
     console.log(this.course.school_id);
     this.getClazzBySchoolId(this.course.school_id);
     this.getTermsBySchoolId(this.course.school_id);
