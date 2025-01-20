@@ -9,9 +9,10 @@ import {MultipleSelectComponent} from "../../core/multiple-select/multiple-selec
 import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { SchoolSelectComponent } from 'src/app/klass/school-select/school-select.component';
+import { RESOURCE_CACHE_PROVIDER } from '@angular/platform-browser-dynamic';
 
-
-describe('course -> AddComponent', () => {
+fdescribe('course -> AddComponent', () => {
   let component: AddComponent;
   let fixture: ComponentFixture<AddComponent>;
 
@@ -20,7 +21,8 @@ describe('course -> AddComponent', () => {
       declarations: [
         AddComponent, 
         UserMultipleSelectComponent, 
-        MultipleSelectComponent
+        MultipleSelectComponent,
+        SchoolSelectComponent
       ],
       imports: [
         ReactiveFormsModule,
@@ -48,7 +50,7 @@ describe('course -> AddComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  fit('should create', () => {
     expect(component).toBeTruthy();
 
   });

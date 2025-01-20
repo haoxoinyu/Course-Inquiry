@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Term} from "../norm/entity/Term";
+import { Page } from '../norm/entity/page';
 
 @Injectable({
   providedIn: 'root'
@@ -94,7 +95,9 @@ export class TermService {
    * 通过学校id获取所属所有学期
    * @param schoolId 
    * */
-   getTermsBySchoolId(schoolId: number): Observable<Term[]> {
-    return this.httpClient.get<Term[]>(this.url + '/' +  String(schoolId));
-  }
+    getTermsBySchoolId(schoolId: number): Observable<Page<Term>> {
+      const queryParams = new HttpParams()
+        .set('schoolId', schoolId? schoolId.toString() : '')
+      return this.httpClient.get<Page<Term>>(this.url + '/getTermsBySchoolId', {params: queryParams});
+    }
 }

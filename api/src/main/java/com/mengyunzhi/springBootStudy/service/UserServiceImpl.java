@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -121,5 +122,11 @@ public class UserServiceImpl implements UserService {
         oldUser.setKlass(newUser.getKlass());
         return this.userRepository.save(oldUser);
     }
-}
+
+    public List<User> findByKlassId(Long klassId) {
+        Klass klass = new Klass();
+        klass.setId(klassId);
+        return this.userRepository.findByKlass(klass);
+    }
+ }
 

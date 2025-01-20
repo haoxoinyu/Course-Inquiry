@@ -26,4 +26,6 @@ public class UserSpecs {
         }
         return (Specification<User>) (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("klass").as(Klass.class), klass);
     }
+
+
 }

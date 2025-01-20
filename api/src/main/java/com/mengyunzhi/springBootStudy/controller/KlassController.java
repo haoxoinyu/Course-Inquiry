@@ -46,6 +46,15 @@ public class KlassController {
                 PageRequest.of(page, size));
     }
 
+    @GetMapping("/getKlassesBySchoolId")
+    @CrossOrigin("*")
+    public Page<Klass> getKlassesBySchoolId(@RequestParam Long schoolId) {
+        return this.klassService.findAll(
+                "",
+                schoolId,
+                PageRequest.of(0, 10000000));
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void save(@RequestBody Klass klass) {

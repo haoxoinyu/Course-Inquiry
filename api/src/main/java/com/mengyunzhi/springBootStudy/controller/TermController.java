@@ -1,5 +1,6 @@
 package com.mengyunzhi.springBootStudy.controller;
 
+import com.mengyunzhi.springBootStudy.entity.Klass;
 import com.mengyunzhi.springBootStudy.entity.Term;
 import com.mengyunzhi.springBootStudy.service.TermService;
 import org.slf4j.Logger;
@@ -31,6 +32,15 @@ public class TermController {
     @ResponseStatus(HttpStatus.OK)
     public Term get(@PathVariable Long id) {
         return this.termService.getById(id);
+    }
+
+    @GetMapping("/getTermsBySchoolId")
+    @CrossOrigin("*")
+    public Page<Term> getTermsBySchoolId(@RequestParam Long schoolId) {
+        return this.termService.findAll(
+                "",
+                schoolId,
+                PageRequest.of(0, 10000000));
     }
 
     @GetMapping

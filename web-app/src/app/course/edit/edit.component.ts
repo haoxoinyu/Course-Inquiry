@@ -196,7 +196,7 @@ get school_id() {
 getClazzBySchoolId(schoolId: number) {
   this.klassService.getClazzBySchoolId(schoolId)
     .subscribe(clazzes => {
-      this.clazzes = clazzes;
+      // this.clazzes = clazzes;
     }, error => {
       console.error('获取班级失败', error);
     });
@@ -205,7 +205,7 @@ getClazzBySchoolId(schoolId: number) {
 getTermsBySchoolId(schoolId: number) {
   this.termService.getTermsBySchoolId(schoolId)
     .subscribe(terms => {
-      this.terms = terms;
+      // this.terms = terms;
     }, error => {
       console.error('获取学期失败', error);
     });

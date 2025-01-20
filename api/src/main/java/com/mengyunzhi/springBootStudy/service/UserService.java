@@ -4,6 +4,8 @@ import com.mengyunzhi.springBootStudy.entity.Klass;
 import com.mengyunzhi.springBootStudy.entity.School;
 import com.mengyunzhi.springBootStudy.entity.User;
 
+import java.util.List;
+
 /**
  * 用户
  * @author 梦云智
@@ -61,5 +63,7 @@ public interface UserService {
      * @return 用户
      */
     User update(Long id, User user);
+
+    List<User> findByKlassId(Long klassId);
 }
 

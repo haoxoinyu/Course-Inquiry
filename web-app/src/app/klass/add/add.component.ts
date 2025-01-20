@@ -36,10 +36,11 @@ export class AddComponent implements OnInit {
   }
 
   onSubmit(): void {
-    console.log('on submit');
+   
     const url = 'http://localhost:8080/Klass';
     const klass = new Klass(undefined, this.formGroup.get('name')?.value!,
       this.school); // 确保这里使用的是正确的表单值
+      console.log('on submit', klass);
     this.httpClient.post(url, klass)
       .subscribe(() => {
         console.log('保存成功');

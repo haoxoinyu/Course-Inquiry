@@ -144,4 +144,15 @@ public class UserController {
         System.out.println(user);
         return this.userService.update(id, user);
     }
+
+    /**
+     * 通过klassId获取相关用户
+     *
+     * **/
+    @GetMapping("/getUsersByKlassId")
+    @CrossOrigin("*")
+    public List<User> getUsersByKlassId(@RequestParam Long klassId) {
+        return this.userService.findByKlassId(klassId);
+
+    }
 }

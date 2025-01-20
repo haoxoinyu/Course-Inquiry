@@ -2,11 +2,11 @@
   <h2>新增课程</h2>
 </div>
 <hr>
-<form class="container-sm" style="margin: 40px 0px 0px 0px">
+<form class="container-sm" style="margin: 40px 0px 0px 0px" [formGroup]="formGroup">
   <div class="mb-3 row">
     <label class="col-sm-2 col-form-label">学校名称</label>
     <div class="col-sm-10">
-      <!-- <app-school-select (beChange)="onSchoolChange($event)"></app-school-select> -->
+      <app-school-select (selected)="onSchoolChange($event)"></app-school-select>
       <small class="text-danger"
              *ngIf="course.school_id === null">
         必须指定一个学校
@@ -16,8 +16,8 @@
   <div class="mb-3 row" *ngIf="course.school_id !== null">
     <label class="col-sm-2 col-form-label">班级名称</label>
     <div class="col-sm-10">
-      <select class="form-control" [(ngModel)]="course.clazz_id" name="course.clazz_id" id="course.clazz_id">
-        <option [ngValue]="null">所有班级</option>
+      <select class="form-control"  name="course.clazz_id" id="course.clazz_id" formControlName="klassId" (change)="onKlassChange(formGroup.get('klassId')!.value ?? 0)">
+        <option >所有班级</option>
         <option *ngFor="let clazz of clazzes" [value]="clazz.id">
           {{clazz.name}}
         </option>
@@ -31,7 +31,7 @@
   <div class="mb-3 row" *ngIf="course.school_id !== null">
     <label class="col-sm-2 col-form-label">学期</label>
     <div class="col-sm-10">
-      <select class="form-control" [(ngModel)]="course.term_id" (change)="onTermChange(course.term_id)" name="course.term_id" id="course.term_id">
+      <select class="form-control"  (change)="onTermChange(formGroup.get('termId')!.value ?? 0)" name="course.term_id" id="course.term_id" formControlName="termId">
         <option [ngValue]="null">所有学期</option>
         <option *ngFor="let term of terms" [value]="term.id">
           {{term.name}}
@@ -46,7 +46,7 @@
   <div class="mb-3 row">
     <label for="name" class="col-sm-2 col-form-label">课程名称</label>
     <div class="col-sm-10">
-      <input type="text" class="form-control" [(ngModel)]="course.name" name="name" id="name">
+      <input type="text" class="form-control"  name="name" id="name" formControlName="name">
       <small class="text-danger"
              *ngIf="course.name === ''">
         课程名称不能为空
@@ -59,24 +59,24 @@
       <div class="form-check form-check-inline">
         <input class="form-check-input" type="radio" id="sory-bi"
                name="sory"
-               [(ngModel)]="course.sory"
-               [value]="1">
+               [value]="1" 
+               formControlName="sory">
         <label class="form-check-label" for="sory-bi">必修</label>
       </div>
       <div class="form-check form-check-inline">
         <input class="form-check-input" type="radio" id="sory-option"
                name="sory"
-               [(ngModel)]="course.sory"
-               [value]="0">
+               [value]="0"
+               formControlName="sory">
         <label class="form-check-label" for="sory-option">选修</label>
       </div>
     </div>
   </div>
-  <div class="mb-3 row" *ngIf="course && course.sory === 0">
+  <div class="mb-3 row">
     <label class="col-sm-2 col-form-label">用户</label>
     <div class="col-sm-10">
-      <select class="form-control" [(ngModel)]="course.user_id" name="course.user_id" id="course.user_id">
-        <option [ngValue]="null">请选择用户</option>
+      <select class="form-control" name="course.user_id" id="course.user_id" formControlName="userId">
+        <option >请选择用户</option>
         <option *ngFor="let user of users" [value]="user.id">
           {{user.name}}
         </option>
@@ -90,7 +90,7 @@
   <div class="mb-3 row">
     <label for="name" class="col-sm-2 col-form-label">选择周数</label>
     <div class="col-sm-10">
-      <select [(ngModel)]="course.week" name="course.week">
+      <select name="course.week" formControlName="week" class="custom-select mr-sm-2">
           <option *ngFor="let week of weeks" [value]="week">{{ week }}</option>
         </select>
       </div>
@@ -98,31 +98,28 @@
   <div class="mb-3 row">
     <label for="name" class="col-sm-2 col-form-label">周几上课</label>
     <div class="col-sm-10">
-    <select [(ngModel)]="course.day" name="course.day">
-        <option *ngFor="let day of days" [value]="day.value">{{ day.name }}</option>
+    <select name="course.day" formControlName="day" class="custom-select mr-sm-2">
+        <option *ngFor="let day of days" [value]="day.value">{{ day.value }}</option>
       </select>
     </div>
   </div>
   <div class="mb-3 row">
     <label for="name" class="col-sm-2 col-form-label">上课节数</label>
     <div class="col-sm-10">
-      <select [(ngModel)]="course.period" name="course.period">
-        <option *ngFor="let period of periods" [value]="period.value">{{ period.name }}</option>
-      </select>
+      <select class="custom-select mr-sm-2" id="section" name="section" formControlName="period">
+        <option selected disabled value="">请选择课程节次</option>
+        <option [value]="1">第一大节</option>
+        <option [value]="2">第二大节</option>
+        <option [value]="3">第三大节</option>
+        <option [value]="4">第四大节</option>
+        <option [value]="5">第五大节</option>
+    </select>
     </div>
   </div>
   <div class="mb-3 row" style="margin: 20px 0px 0px 0px">
     <div class="col-sm-3 offset-sm-1" style="margin: 0px 0px 0px 200px">
       <button appLoading class="btn btn-primary" (click)="onSubmit()"
-              [disabled]="course.name === '' ||
-                          course.sory === null ||
-                          (course.sory === 0 && course.user_id === null) ||
-                          course.school_id === null ||
-                          course.clazz_id === null ||
-                          course.term_id === null ||
-                          course.week === null ||
-                          course.day === null ||
-                          course.period === null"><i class="fa fa-save"></i>保存
+              [disabled]="formGroup.invalid"><i class="fa fa-save"></i>保存
       </button>
     </div>
     <div class="col-sm-3 offset-sm-1">
