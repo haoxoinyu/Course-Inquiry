@@ -1,7 +1,6 @@
 import {ApiInjector, MockApiInterface, RequestOptions} from '@yunzhi/ng-mock-api';
 import {Term} from "../app/norm/entity/Term";
 import {HttpParams} from "@angular/common/http";
-import {Assert, randomNumber, randomString} from '@yunzhi/utils';
 import {generatePage} from '@yunzhi/ng-common';
 import {School} from "../app/norm/entity/School";
 

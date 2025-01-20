@@ -26,8 +26,18 @@ public class KlassServiceImpl implements KlassService {
     }
 
     @Override
+    public List<Klass> getAll() {
+        return this.klassRepository.findAll();
+    }
+
+    @Override
     public Page<Klass> findAll(Pageable pageable) {
         return this.klassRepository.findAll(pageable);
+    }
+
+    @Override
+    public List<Klass> getKlassBySchool(School school) {
+        return this.klassRepository.findBySchoolId(school);
     }
 
     @Override

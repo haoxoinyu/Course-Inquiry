@@ -12,6 +12,11 @@ export class KlassService {
   constructor(private httpClient: HttpClient) {
   }
 
+  all(): Observable<Klass[]> {
+    const url = 'http://localhost:8080/Klass/list';
+    return this.httpClient.get<Klass[]>(url);
+  }
+
   /**
    * 分页
    * @param params name:名称,page:第几页,size:每页大小
@@ -81,9 +86,14 @@ export class KlassService {
     return this.httpClient.delete<void>(url);
   }
 
+
+  getKlassBySchoolId(schoolId: number): Observable<Array<Klass>> {
+    return this.httpClient.get<Array<Klass>>(`http://localhost:8080/Klass/getKlassBySchoolId/${schoolId}`);
+  }
+
   /**
    * 通过学校id获取所属所有班级
-   * @param schoolId 
+   * @param schoolId
    * */
   getClazzBySchoolId(schoolId: number): Observable<Klass[]> {
     return this.httpClient.get<Klass[]>(this.url + '/' +  String(schoolId));

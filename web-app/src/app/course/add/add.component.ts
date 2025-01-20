@@ -102,8 +102,8 @@ export class AddComponent implements OnInit {
     console.log(newCourse);
     this.courseService.add(newCourse)
       .subscribe(clazz => {
-        this.dialogRef.close(newCourse);
-        this.sweetAlertService.showSuccess('新增成功！', 'success');
+          this.dialogRef.close(newCourse);
+          this.sweetAlertService.showSuccess('新增成功！', 'success');
         },
         error => {
           if (error.error.error === '课程已存在') {
