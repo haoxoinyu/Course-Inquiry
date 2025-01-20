@@ -13,15 +13,15 @@ import { SchoolSelectComponent } from 'src/app/klass/school-select/school-select
 import { RESOURCE_CACHE_PROVIDER } from '@angular/platform-browser-dynamic';
 import { KlassModule } from 'src/app/klass/klass.module';
 
-fdescribe('course -> AddComponent', () => {
+describe('course -> AddComponent', () => {
   let component: AddComponent;
   let fixture: ComponentFixture<AddComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
-        AddComponent, 
-        UserMultipleSelectComponent, 
+        AddComponent,
+        UserMultipleSelectComponent,
         MultipleSelectComponent,
         SchoolSelectComponent
       ],
@@ -52,7 +52,7 @@ fdescribe('course -> AddComponent', () => {
     fixture.detectChanges();
   });
 
-  fit('should create', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
 
   });

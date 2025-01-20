@@ -5,9 +5,12 @@ import com.mengyunzhi.springBootStudy.repository.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 @Service
 public class CourseServiceImpl implements CourseService {
@@ -79,6 +82,21 @@ public class CourseServiceImpl implements CourseService {
         User user = new User();
         user.setId(userId);
         return this.courseRepository.findAll(name, school, klass, term, user, pageable);
+    }
+
+    @Override
+    public Page<Course> findCoursesByCriteria(Long termId, String courseName, Long sory, Long userId, Pageable pageable) {
+        Term term = new Term();
+        term.setId(termId);
+
+        User user = new User();
+        user.setId(userId);
+        return courseRepository.find(term, courseName, sory, user, pageable);
+    }
+
+    @Override
+    public ArrayList<Course> getCoursesByTermId(Long termId, Long sory) {
+        return new ArrayList<>(courseRepository.getCoursesByTermId(termId, sory));
     }
 
 }
