@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Inject, OnInit} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
 import {School} from '../../norm/entity/School';
 import {Term} from '../../norm/entity/Term';
 import {Klass} from '../../norm/entity/Klass';
@@ -16,6 +16,7 @@ import {User} from '../../norm/entity/User';
 import { KlassService } from 'src/app/service/klass.service';
 import { TermService } from 'src/app/service/term.service';
 import { SchoolService } from 'src/app/service/school.service';
+import { MatSelectChange } from '@angular/material/select';
 
 @Component({
   selector: 'app-edit',
@@ -43,7 +44,7 @@ export class EditComponent implements OnInit {
     userId: new FormControl(0, Validators.required),
     klassId: new FormControl(0, Validators.required),
     sory: new FormControl(0, Validators.required),
-    week: new FormControl(0, Validators.required),
+    week:  new FormControl([] as number [], Validators.required),
     day: new FormControl(0, Validators.required),
     period: new FormControl(0, Validators.required)
   })
@@ -93,30 +94,45 @@ constructor(private httpClient: HttpClient,
 ngOnInit(): void {
   this.courseService.getById(this.data.id)
     .subscribe((course) => {
-      // this.formGroup.get('name')!.setValue(course.name),
-      // this.formGroup.get('sory')!.setValue(course.sory),
-      // this.formGroup.get('week')!.setValue(),
-      // this.formGroup.get('day')!.setValue(course.day),
-      // this.formGroup.get('period')!.setValue(),
-      // this.formGroup.get('schoolId')!.setValue(), 
-      // this.formGroup.get('klassId')!.setValue(),
-      // this.formGroup.get('termId')!.setValue(),
-      // this.formGroup.get('userId')!.setValue()
+      this.onSchoolChange(course.term.school!);
+      this.onTermChange(course.term.id!);
+      this.onKlassChange(course.users[0]!.klass!.id!)
+      this.course.name = course.name;
+      this.course.user_id = course.users[0].id;
+      this.schools.push(course.term.school!);
+      this.formGroup.get('name')!.setValue(course.name),
+      this.formGroup.get('sory')!.setValue(course.sory),
+      this.updateWeekFromControl(course.week),
+      this.formGroup.get('day')!.setValue(course.day[0]),
+      this.formGroup.get('period')!.setValue(course.period[0]),
+      this.formGroup.get('schoolId')!.setValue(course.term.school!.id), 
+      this.formGroup.get('klassId')!.setValue(course.users[0]!.klass!.id as number),
+      this.formGroup.get('termId')!.setValue(course.term.id as number)
+      this.formGroup.get('userId')?.setValue(course.users[0].id)
+      console.log(this.formGroup.get('day')!.value)
     })
 }
-onSubmit(): void {
-  const newCourse = {
-    name: this.formGroup.get('name')!.value,
-      sory: this.formGroup.get('sory')!.value,
-      week: [this.formGroup.get('week')!.value],
-      day: this.formGroup.get('day')!.value,
-      period: this.formGroup.get('period')!.value,
-      schoolId: this.formGroup.get('schoolId')!.value,
-      clazz_id: this.formGroup.get('klassId')!.value,
-      term_id: this.formGroup.get('termId')!.value,
-      userId: this.formGroup.get('userId')!.value
+  updateWeekFromControl(weeks:number[]) {
+    weeks.forEach(week => {
+      (this.formGroup.get('week')!.value as number[]).push(week);
+    })
+    console.log(this.formGroup.get('week')!.value)
   }
-  this.courseService.add(newCourse)
+onSubmit(): void {
+  console.log(this.formGroup.get('week')!.value)
+  const newCourse = {
+      id: this.data.id,
+      name: this.formGroup.get('name')!.value!,
+      sory: this.formGroup.get('sory')!.value!,
+      week: this.formGroup.get('week')!.value!,
+      day: this.formGroup.get('day')!.value,
+      period: this.formGroup.get('period')!.value!,
+      schoolId: this.formGroup.get('schoolId')!.value!,
+      clazz_id: this.formGroup.get('klassId')!.value!,
+      term_id: this.formGroup.get('termId')!.value!,
+      userId: this.formGroup.get('userId')!.value!
+  }
+  this.courseService.update(newCourse)
     .subscribe(clazz => {
         this.dialogRef.close(newCourse);
         this.sweetAlertService.showSuccess('新增成功！', 'success');
@@ -185,6 +201,8 @@ onTermChange(termId: number) {
       console.error('获取学期失败', error);
     });
 }
+
+
 calculateWeeks(): void {
   this.weeks = [];
   const oneDay = 1000 * 60 * 60 * 24;
