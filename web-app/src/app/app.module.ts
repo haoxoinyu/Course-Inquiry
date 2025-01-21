@@ -17,13 +17,14 @@ import {SexPipe} from './norm/sex.pipe';
 import {ChangePasswordComponent} from "./personal-center/change-password/change-password.component";
 import {MatDialogModule} from "@angular/material/dialog";
 import {ApiDemoModule} from "../api/api-demo.module";
+import {CourseScheduleModule} from './course-schedule/course-schedule.module';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavComponent,
     WelcomeComponent,
-    LoginComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -33,7 +34,8 @@ import {ApiDemoModule} from "../api/api-demo.module";
     RouterModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
-    MatDialogModule
+    MatDialogModule,
+    CourseScheduleModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: AuthTokenInterceptor, multi: true}

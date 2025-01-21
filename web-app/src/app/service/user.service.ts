@@ -3,6 +3,7 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {User} from '../norm/entity/User';
 import {School} from "../norm/entity/School";
+import {map} from "rxjs/operators";
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,7 @@ export class UserService {
   /** 数据源对应的订阅服务 */
   public isLogin$: Observable<boolean>;
   private isLoginCacheKey = 'isLogin';
+  private currentUserUrl = 'http://localhost:8080/User/me'; // 获取当前登录用户信息的API URL
 
   constructor(private httpClient: HttpClient) {
     const isLogin: string = window.sessionStorage?.getItem(this.isLoginCacheKey)!;
@@ -32,6 +34,11 @@ export class UserService {
     return this.httpClient.post<boolean>(url, {username, password});
   }
 
+  getCurrentUser(): Observable<any> {
+    return this.httpClient.get(this.currentUserUrl).pipe(
+      map(response => response)
+    );
+  }
   /**
    * 设置登录状态
    * @param isLogin 登录状态
