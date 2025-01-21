@@ -19,7 +19,6 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./add.component.sass']
 })
 export class AddComponent implements OnInit {
-  private url = 'api/course/add';
   course = {
     name: '',
     school_id: null as unknown as number,
