@@ -8,7 +8,7 @@ import {SchoolSelectComponent} from "../../klass/school-select/school-select.com
 import {CoreModule} from "../../core/core.module";
 import { KlassModule } from 'src/app/klass/klass.module';
 
-fdescribe('course IndexComponent', () => {
+describe('course IndexComponent', () => {
   let component: IndexComponent;
   let fixture: ComponentFixture<IndexComponent>;
 
@@ -37,7 +37,7 @@ fdescribe('course IndexComponent', () => {
     fixture.detectChanges();
   });
 
-  fit('should create', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
     fixture.detectChanges();
   });
