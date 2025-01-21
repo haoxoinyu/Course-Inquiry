@@ -94,4 +94,11 @@ export class CourseService {
     }
     return this.httpClient.post<void>(this.url + '/add', newCourse);
   }
+
+  getById(courseId: number): Observable<Course> {
+    /* 初始化查询参数 */
+    const queryParams = new HttpParams()
+    .set('courseId', courseId ? courseId.toString() : '')
+    return this.httpClient.get<Course>(this.url + "/findById", {params: queryParams})
+  }
 }

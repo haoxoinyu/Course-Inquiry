@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.Optional;
 
 @Service
 public class CourseServiceImpl implements CourseService {
@@ -100,4 +101,8 @@ public class CourseServiceImpl implements CourseService {
         return new ArrayList<>(courseRepository.getCoursesByTermId(termId, sory));
     }
 
+    @Override
+    public Optional<Course> findById(Long courseId) {
+        return this.courseRepository.findById(courseId);
+    }
 }
