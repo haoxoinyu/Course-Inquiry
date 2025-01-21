@@ -11,6 +11,8 @@ import { LoginComponent } from './login/login.component';
 import {AuthTokenInterceptor} from './core/auth-token-interceptor';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatDialogModule} from "@angular/material/dialog";
+import {ApiDemoModule} from "../api/api-demo.module";
+import {CourseScheduleModule} from './course-schedule/course-schedule.module';
 import {SoryPipe} from "./norm/sory.pipe";
 import { MatSelect, MatSelectModule } from '@angular/material/select';
 
@@ -19,7 +21,7 @@ import { MatSelect, MatSelectModule } from '@angular/material/select';
     AppComponent,
     NavComponent,
     WelcomeComponent,
-    LoginComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -30,6 +32,7 @@ import { MatSelect, MatSelectModule } from '@angular/material/select';
     ReactiveFormsModule,
     BrowserAnimationsModule,
     MatDialogModule,
+    CourseScheduleModule,
     MatSelectModule
   ],
   providers: [
