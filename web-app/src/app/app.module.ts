@@ -12,6 +12,7 @@ import {AuthTokenInterceptor} from './core/auth-token-interceptor';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatDialogModule} from "@angular/material/dialog";
 import {SoryPipe} from "./norm/sory.pipe";
+import { MatSelect, MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import {SoryPipe} from "./norm/sory.pipe";
     RouterModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
-    MatDialogModule
+    MatDialogModule,
+    MatSelectModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: AuthTokenInterceptor, multi: true}

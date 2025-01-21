@@ -130,8 +130,6 @@ export class IndexComponent implements OnInit {
    }
 
    loadByPage(page = 1): void {
-     const httpParams = new HttpParams().append('page', page.toString())
-       .append('size', this.size.toString());
      this.courseService.page(this.searchParameters)
       .subscribe(pageData => {
         // 在请求数据之后设置当前页
