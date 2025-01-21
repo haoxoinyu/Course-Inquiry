@@ -5,10 +5,12 @@ import com.mengyunzhi.springBootStudy.entity.School;
 import com.mengyunzhi.springBootStudy.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 用户
@@ -29,7 +31,7 @@ public interface UserService {
      * @param password 密码
      * @return 成功 true
      */
-    boolean login(String username, String password);
+    ResponseEntity<Map<String, Object>> login(String username, String password);
 
     /**
      * 验证密码的有效性
@@ -38,6 +40,13 @@ public interface UserService {
      * @return 有效 true
      */
     boolean validatePassword(User user, String password);
+
+    /**
+     * 验证用户状态
+     * @param user
+     * @return
+     */
+    boolean validateState(User user);
 
     /**
      * 用户注销

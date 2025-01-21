@@ -30,7 +30,7 @@ export class UserService {
    * @param password 密码
    * @return 登录成功:true; 登录失败: false。
    */
-  login(username: string, password: string): Observable<boolean> {
+  login(username: string, password: string): Observable<any> {
     const url = 'http://localhost:8080/User/login';
     return this.httpClient.post<boolean>(url, {username, password});
   }

@@ -49,8 +49,8 @@ export class AddComponent implements OnInit {
   schools = new Array<School>();
   terms = new Array<Term>();
   term = new Term(1, '', new School(1, ''), new Date(), new Date());
-  clazzes : Klass[] = [new Klass(1, '',undefined)];
-  users = new Array<User>(new User(1,'', '', 1,''));
+  clazzes: Klass[] = [new Klass(1, '', undefined)];
+  users = new Array<User>(new User(1, '', '', 1, ''));
 
   semesterStartDate: Date | undefined;
   semesterEndDate: Date | undefined;
@@ -83,7 +83,7 @@ export class AddComponent implements OnInit {
               private klassService: KlassService,
               private termService: TermService,
               private schoolService: SchoolService) {
-               }
+  }
 
   ngOnInit() {
     // 获取所有学校
@@ -94,14 +94,14 @@ export class AddComponent implements OnInit {
   onSubmit(): void {
     const newCourse = {
       name: this.formGroup.get('name')!.value,
-        sory: this.formGroup.get('sory')!.value,
-        week: this.formGroup.get('week')!.value!,
-        day: this.formGroup.get('day')!.value,
-        period: this.formGroup.get('period')!.value,
-        schoolId: this.formGroup.get('schoolId')!.value,
-        clazz_id: this.formGroup.get('klassId')!.value,
-        term_id: this.formGroup.get('termId')!.value,
-        userId: this.formGroup.get('userId')!.value
+      sory: this.formGroup.get('sory')!.value,
+      week: [this.formGroup.get('week')!.value],
+      day: this.formGroup.get('day')!.value,
+      period: this.formGroup.get('period')!.value,
+      schoolId: this.formGroup.get('schoolId')!.value,
+      clazz_id: this.formGroup.get('klassId')!.value,
+      term_id: this.formGroup.get('termId')!.value,
+      userId: this.formGroup.get('userId')!.value
     }
     console.log("newCourse", newCourse)
     this.courseService.add(newCourse)
@@ -140,6 +140,7 @@ export class AddComponent implements OnInit {
         this.users = data;
       })
   }
+
   getTermsBySchoolId(schoolId: number) {
     this.termService.getTermsBySchoolId(schoolId)
       .subscribe(data => {
@@ -196,7 +197,6 @@ export class AddComponent implements OnInit {
       this.weeks.push(i);
     }
   }
-
   onSelectionChange(event: MatSelectChange): void {
     this.formGroup.get('week')?.setValue([]);
     (event.value as number[]).forEach((value)=> {
