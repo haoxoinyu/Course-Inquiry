@@ -11,6 +11,8 @@ import { LoginComponent } from './login/login.component';
 import {AuthTokenInterceptor} from './core/auth-token-interceptor';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatDialogModule} from "@angular/material/dialog";
+import {ApiDemoModule} from "../api/api-demo.module";
+import {CourseScheduleModule} from './course-schedule/course-schedule.module';
 import {SoryPipe} from "./norm/sory.pipe";
 
 @NgModule({
@@ -18,7 +20,7 @@ import {SoryPipe} from "./norm/sory.pipe";
     AppComponent,
     NavComponent,
     WelcomeComponent,
-    LoginComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -28,7 +30,8 @@ import {SoryPipe} from "./norm/sory.pipe";
     RouterModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
-    MatDialogModule
+    MatDialogModule,
+    CourseScheduleModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: AuthTokenInterceptor, multi: true}
