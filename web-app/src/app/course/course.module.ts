@@ -9,6 +9,8 @@ import {CoreModule} from '../core/core.module';
 import { IndexComponent } from './index/index.component';
 import { EditComponent } from './edit/edit.component';
 import {UserModule} from '../user/user.module';
+import { SchoolSelectComponent } from '../klass/school-select/school-select.component';
+import { KlassModule } from '../klass/klass.module';
 
 @NgModule({
   declarations: [AddComponent, UserMultipleSelectComponent, IndexComponent, EditComponent],
@@ -18,7 +20,8 @@ import {UserModule} from '../user/user.module';
     ReactiveFormsModule,
     UserModule,
     CoreModule,
-    FormsModule
+    FormsModule,
+    KlassModule
   ]
 })
 export class CourseModule { }

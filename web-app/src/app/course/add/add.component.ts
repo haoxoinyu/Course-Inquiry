@@ -11,6 +11,7 @@ import {UserService} from '../../service/user.service';
 import { KlassService } from 'src/app/service/klass.service';
 import { TermService } from 'src/app/service/term.service';
 import { SchoolService } from 'src/app/service/school.service';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-add',
@@ -30,12 +31,25 @@ export class AddComponent implements OnInit {
     day: null as unknown as number,
     period: null as unknown as number
   };
+
+  formGroup = new FormGroup({
+    name: new FormControl('', Validators.required),
+    schoolId: new FormControl(0, Validators.required),
+    termId: new FormControl(0, Validators.required),
+    userId: new FormControl(0, Validators.required),
+    klassId: new FormControl(0, Validators.required),
+    sory: new FormControl(0, Validators.required),
+    week: new FormControl(0, Validators.required),
+    day: new FormControl(0, Validators.required),
+    period: new FormControl(0, Validators.required)
+  })
+
   value = '';
   schools = new Array<School>();
   terms = new Array<Term>();
   term = new Term(1, '', new School(1, ''), new Date(), new Date());
-  clazzes = new Array<Klass>();
-  users = new Array<User>();
+  clazzes : Klass[] = [new Klass(1, '',undefined)];
+  users = new Array<User>(new User(1,'', '', 1,''));
 
   semesterStartDate: Date | undefined;
   semesterEndDate: Date | undefined;
@@ -67,7 +81,8 @@ export class AddComponent implements OnInit {
               private courseService: CourseService,
               private klassService: KlassService,
               private termService: TermService,
-              private schoolService: SchoolService) { }
+              private schoolService: SchoolService) {
+               }
 
   ngOnInit() {
     // 获取所有学校
@@ -77,22 +92,20 @@ export class AddComponent implements OnInit {
 
   onSubmit(): void {
     const newCourse = {
-      name: this.course.name,
-      sory: this.course.sory,
-      week: this.course.week,
-      day: this.course.day,
-      period: this.course.period,
-      school: new School(1,''),
-      clazz_id: this.course.clazz_id,
-      term_id: this.course.term_id,
-      user: this.course.user_id
-    };
-    console.log(newCourse.sory);
-    console.log(newCourse);
-    this.httpClient.post(this.url, newCourse)
+      name: this.formGroup.get('name')!.value,
+        sory: this.formGroup.get('sory')!.value,
+        week: [this.formGroup.get('week')!.value],
+        day: this.formGroup.get('day')!.value,
+        period: this.formGroup.get('period')!.value,
+        schoolId: this.formGroup.get('schoolId')!.value,
+        clazz_id: this.formGroup.get('klassId')!.value,
+        term_id: this.formGroup.get('termId')!.value,
+        userId: this.formGroup.get('userId')!.value
+    }
+    this.courseService.add(newCourse)
       .subscribe(clazz => {
-        this.dialogRef.close(newCourse);
-        this.sweetAlertService.showSuccess('新增成功！', 'success');
+          this.dialogRef.close(newCourse);
+          this.sweetAlertService.showSuccess('新增成功！', 'success');
         },
         error => {
           if (error.error.error === '课程已存在') {
@@ -112,36 +125,46 @@ export class AddComponent implements OnInit {
 
   getClazzBySchoolId(schoolId: number) {
     this.klassService.getClazzBySchoolId(schoolId)
-      .subscribe(clazzes => {
-        this.clazzes = clazzes;
+      .subscribe(data => {
+        this.clazzes = data.content;
       }, error => {
         console.error('获取班级失败', error);
       });
   }
 
+  getUsersByKlassId(klassId: number) {
+    this.userService.getUsersByKlassId(klassId)
+      .subscribe((data) => {
+        this.users = data;
+      })
+  }
   getTermsBySchoolId(schoolId: number) {
     this.termService.getTermsBySchoolId(schoolId)
-      .subscribe(terms => {
-        this.terms = terms;
+      .subscribe(data => {
+        this.terms = data.content;
       }, error => {
         console.error('获取学期失败', error);
       });
   }
 
-  onSchoolChange(schoolId: number) {
-    this.course.school_id = schoolId;
-    console.log(this.course.school_id);
-    this.getClazzBySchoolId(this.course.school_id);
-    this.getTermsBySchoolId(this.course.school_id);
+  onSchoolChange(school: School) {
+    this.course.school_id = school.id;
+    this.formGroup.get('schoolId')?.setValue(school.id);
+    this.getClazzBySchoolId(school.id);
+    this.getTermsBySchoolId(school.id);
+  }
+
+  onKlassChange(klassId: number) {
+    this.course.clazz_id = klassId;
+    this.formGroup.get('klassId')?.setValue(klassId);
+    this.getUsersByKlassId(klassId);
   }
 
   onTermChange(termId: number) {
     this.course.term_id = termId;
-    console.log(this.course.term_id);
     this.termService.getTermById(termId)
       .subscribe(term => {
-        console.log(term);
-        this.semesterEndDate = term.startTime;
+        this.semesterEndDate = term.endTime;
         this.semesterStartDate = term.startTime;
         this.calculateWeeks();
       }, error => {
@@ -159,34 +182,17 @@ export class AddComponent implements OnInit {
   // }
 
   calculateWeeks(): void {
+    this.weeks = [];
     const oneDay = 1000 * 60 * 60 * 24;
     const startTime = new Date(this.semesterStartDate ?? new Date());
     const endTime = new Date(this.semesterEndDate ?? new Date());
     const diffInMilliseconds = endTime.getTime() - startTime.getTime();
     const diffInDays = Math.ceil(diffInMilliseconds / oneDay); // 使用ceil确保包含最后一天
     const numberOfWeeks = Math.ceil(diffInDays / 7);
-
     // 创建周数数组
     for (let i = 1; i <= numberOfWeeks; i++) {
       this.weeks.push(i);
     }
-    console.log(this.weeks);
   }
 
-  private handleInvalidToken(): void {
-    this.sweetAlertService.showLogoutWarning('登录失效', 'warning');
-    setTimeout(() => {
-      window.sessionStorage.removeItem('login');
-      this.httpClient.post('/api/Login/logout', {}).subscribe(
-        () => {
-          console.log('logout');
-          this.beLogout.emit();
-          window.location.href = 'http://127.0.0.1:8088/';
-        },
-        error => {
-          console.error('注销失败', error);
-        }
-      );
-    }, 1500);
-  }
 }

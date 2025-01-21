@@ -8,18 +8,22 @@ import {HttpClientTestingModule} from "@angular/common/http/testing";
 import {MultipleSelectComponent} from "../../core/multiple-select/multiple-select.component";
 import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { SchoolSelectComponent } from 'src/app/klass/school-select/school-select.component';
+import { RESOURCE_CACHE_PROVIDER } from '@angular/platform-browser-dynamic';
+import { KlassModule } from 'src/app/klass/klass.module';
 
-
-fdescribe('course -> AddComponent', () => {
+describe('course -> AddComponent', () => {
   let component: AddComponent;
   let fixture: ComponentFixture<AddComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
-        AddComponent, 
-        UserMultipleSelectComponent, 
-        MultipleSelectComponent
+        AddComponent,
+        UserMultipleSelectComponent,
+        MultipleSelectComponent,
+        SchoolSelectComponent
       ],
       imports: [
         ReactiveFormsModule,
@@ -27,7 +31,9 @@ fdescribe('course -> AddComponent', () => {
         HttpClientTestingModule,
         MatDialogModule,
         MatSelectModule,
-        FormsModule
+        FormsModule,
+        BrowserAnimationsModule,
+        KlassModule
       ],
       providers: [
         { provide: MatDialogRef, useValue: {} },
@@ -46,7 +52,7 @@ fdescribe('course -> AddComponent', () => {
     fixture.detectChanges();
   });
 
-  fit('should create', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
 
   });

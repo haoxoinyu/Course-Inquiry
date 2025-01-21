@@ -2,7 +2,11 @@ package com.mengyunzhi.springBootStudy.service;
 
 
 import com.mengyunzhi.springBootStudy.entity.Course;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
+import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -54,4 +58,19 @@ public interface CourseService {
      * @param klass 新的课程信息
      */
     void update(Long id, Course klass);
+
+    /**
+     * 综合查询
+     * @param name 课程名
+     * @param klassId 班级id
+     * @param schoolId 学校id
+     * @param termId 学期id
+     * @param userId 学生id
+     * @param pageable 分页参数
+     * */
+    Page<Course> findAll(String name, Long schoolId, Long klassId, Long termId, Long userId, @NotNull Pageable pageable);
+
+    Page<Course> findCoursesByCriteria(Long termId, String courseName, Long sory, Long userId, @NotNull Pageable pageable);
+
+    ArrayList<Course> getCoursesByTermId(Long termId, Long sory);
 }

@@ -1,7 +1,6 @@
 import {ApiInjector, MockApiInterface, RequestOptions} from '@yunzhi/ng-mock-api';
-import {Term} from "../app/norm/entity/Term";
-import {HttpParams} from "@angular/common/http";
-import {Assert, randomNumber, randomString} from '@yunzhi/utils';
+import {Term} from '../app/norm/entity/Term';
+import {HttpParams} from '@angular/common/http';
 import {generatePage} from '@yunzhi/ng-common';
 import {School} from "../app/norm/entity/School";
 
@@ -23,13 +22,11 @@ export class TermApi implements MockApiInterface {
           const size: number = sizeStr ? Number(sizeStr) : 10; // 默认为10
           const name = params.get('name') ? params.get('name') : '';
 
-          Assert.isInteger(page, 'page类型不正确');
-          Assert.isInteger(size, 'size类型不正确');
 
           return generatePage<Term>(page, size, index => {
             return {
               id: 1,
-              name: name ? randomString(name, 2) : randomString(this.names[Math.floor(Math.random() * this.names.length)]),
+              name: 'name',
               school:
                 {
                   name: '消炎药'

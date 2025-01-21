@@ -14,6 +14,8 @@ import {UserService} from '../../service/user.service';
 import {Term} from '../../norm/entity/Term';
 import {Klass} from '../../norm/entity/Klass';
 import { School } from 'src/app/norm/entity/School';
+import { KlassService } from 'src/app/service/klass.service';
+import { TermService } from 'src/app/service/term.service';
 
 @Component({
   selector: 'app-index',
@@ -26,31 +28,33 @@ export class IndexComponent implements OnInit {
    // 每页默认五条
    size = 5;
    // 初始化一个有0条数据的
- 
+
    searchParameters = {
-     school: null as unknown as number,
-     clazz: null as unknown as number,
-     term: null as unknown as number,
-     userId: null as unknown as number,
-     name: ''
+     schoolId: 0,
+     klassId: 0,
+     termId: 0,
+     userId: 0,
+     name: '',
+     page: this.page,
+     size: this.size
    };
- 
+
    courses: Course[] = [
     new Course({
-      id: '1', 
-      name: '高数', 
+      id: '1',
+      name: '高数',
       term: new Term(
-        1, 
-        '2024秋', 
-        new School(1, '河北工业大学'), 
-        new Date(2024, 9, 9), 
+        1,
+        '2024秋',
+        new School(1, '河北工业大学'),
+        new Date(2024, 9, 9),
         new Date(2025, 0, 23)
       ),
       klass: new Klass(1, '计科234', new School(1, '河北工业大学')),
       week: [1,2,3],
       day: [1],
       period: [1],
-      sory: 1
+      sory: 1,
     })]
    pageData = new Page<Course>({
      content: this.courses,
@@ -58,19 +62,19 @@ export class IndexComponent implements OnInit {
      size: this.size,
      numberOfElements: 0
    });
- 
-   me : User = new User(1,'zhangsan', '张三', '', true, 1, 1, new Klass(1,'计234', new School(1, '河北工业大学')));
+
+   me : User = new User(1,'zhangsan', '张三', 3, 'yunzhi', true, 1, new Klass(1,'计234', new School(1, '河北工业大学')));
    beLogout = new EventEmitter<void>();
- 
+
    terms = new Array<Term>();
    term : Term = new Term(
-    1, 
-    '2024秋', 
-    new School(1, '河北工业大学'), 
-    new Date(2024, 9, 9), 
+    1,
+    '2024秋',
+    new School(1, '河北工业大学'),
+    new Date(2024, 9, 9),
     new Date(2025, 0, 23));
    clazzes = new Array<Klass>();
- 
+
    days = [
      {name: '周一', value: 1},
      {name: '周二', value: 2},
@@ -88,27 +92,17 @@ export class IndexComponent implements OnInit {
      {name: '第五大节', value: 5}
    ];
    protected role: number | undefined;
- 
+
    constructor(private httpClient: HttpClient,
                private dialog: MatDialog,
                private shareService: ShareService,
                private sweetAlertService: SweetAlertService,
                private courseService: CourseService,
-               private userService: UserService) {
-     this.userService.me().subscribe(
-       user => {
-         this.me = user;
-         this.shareService.setData(user);
-         this.searchParameters.userId = user.id;
-       },
-       error => {
-         if (error.error.error === '无效的token') {
-           this.handleInvalidToken();
-         }
-       }
-     );
+               private userService: UserService,
+               private klassService: KlassService,
+               private termService: TermService) {
    }
- 
+
    ngOnInit() {
      const sessionRole = window.sessionStorage.getItem('role');
      if (sessionRole !== 'true') {
@@ -118,42 +112,42 @@ export class IndexComponent implements OnInit {
      // 使用默认值 page = 0 调用loadByPage()方法
      this.loadByPage();
    }
- 
+
    onPage(page: number): void {
      this.loadByPage(page);
    }
- 
+
    // 方法来获取天的名称
    getDayName(value: number): string {
      const day = this.days.find(d => d.value === value);
      return day ? day.name : '';
    }
- 
+
    // 方法来获取时间段的名称
    getPeriodName(value: number): string {
      const period = this.periods.find(p => p.value === value);
      return period ? period.name : '';
    }
- 
+
    loadByPage(page = 1): void {
-     console.log('触发loadByPage方法');
      const httpParams = new HttpParams().append('page', page.toString())
        .append('size', this.size.toString());
-     console.log(this.searchParameters);
-     this.httpClient.post<Page<Course>>('/api/course', this.searchParameters, {params: httpParams})
-       .subscribe(pageData => {
-           // 在请求数据之后设置当前页
-           this.page = page;
-           console.log('课表组件接收到返回数据，重新设置pageData');
-           this.pageData = pageData;
-           console.log(pageData);
-         },
-         error => {
-           console.error('请求数据失败', error);
-         }
-       );
+     this.courseService.page(this.searchParameters)
+      .subscribe(pageData => {
+        // 在请求数据之后设置当前页
+        this.page = page;
+        console.log('课表组件接收到返回数据，重新设置pageData');
+        this.pageData = pageData;
+        this.pageData.content.forEach(course => {
+          course.klass = course.users[0].klass as Klass;
+        });
+      },
+      error => {
+        console.error('请求数据失败', error);
+      });
+
    }
- 
+
    onDelete(index: number, id: number): void {
      this.sweetAlertService.showWarning('', '', 'warning')
        .then(isConfirmed => {
@@ -176,32 +170,32 @@ export class IndexComponent implements OnInit {
          }
        });
    }
- 
+
    openAddDialog(): void {
      const dialogRef = this.dialog.open(AddComponent, {
-       width: '1000px',
-       height: '370px',
+       width: '900px',
+       height: '700px',
      });
- 
+
      dialogRef.afterClosed().subscribe(() => {
        this.loadByPage(this.page);
      });
    }
- 
-   openEditDialog(id: number): void {
+
+   openEditDialog(id: String): void {
      console.log('edit dialog');
      console.log(id);
-     this.shareService.setId(id);
      const dialogRef = this.dialog.open(EditComponent, {
        width: '900px',
-       height: '400px',
+       height: '700px',
+       data:{id: id}
      });
- 
+
      dialogRef.afterClosed().subscribe(() => {
        this.loadByPage(this.page);
      });
    }
- 
+
   //  addLesson(courseId: number): void {
   //    console.log('addLesson');
   //    const userId = this.me?.id;
@@ -223,35 +217,18 @@ export class IndexComponent implements OnInit {
   //      }
   //    );
   //  }
- 
+
    onSubmit(form: NgForm, page = 1) {
      console.log('调用了search');
      if (form.valid) {
-       const school = form.value.school_id;
-       const clazz = form.value.clazz_id;
-       const term = form.value.term_id;
-       const name = form.value.name;
-       console.log('提交的查询参数:', { school, clazz, term, name });
-       const httpParams = new HttpParams()
-         .append('page', this.page.toString())
-         .append('size', this.size.toString());
-       this.httpClient.post<Page<Course>>('/api/course', this.searchParameters, { params: httpParams })
-         .subscribe(
-         pageData => {
-           // 在请求数据之后设置当前页
-           this.page = page;
-           console.log('course组件接收到查询返回数据，重新设置pageData');
-           console.log(pageData);
-           this.pageData = pageData;
-           this.loadByPage(page);
-         },
-         error => {
-           console.error('请求数据失败', error);
-         }
-       );
+       this.searchParameters.klassId = form.value.klassId;
+       this.searchParameters.termId = form.value.term_id;
+       this.searchParameters.name = form.value.name;
+       console.log('提交的查询参数:', this.searchParameters);
+      this.loadByPage()
      }
    }
- 
+
    private handleInvalidToken(): void {
      this.sweetAlertService.showLogoutWarning('登录失效', 'warning');
      setTimeout(() => {
@@ -268,29 +245,31 @@ export class IndexComponent implements OnInit {
        );
      }, 1500);
    }
- 
-  //  getClazzBySchoolId(schoolId: number) {
-  //    this.courseService.getClazzBySchoolId(schoolId)
-  //      .subscribe(clazzes => {
-  //        this.clazzes = clazzes;
-  //      }, error => {
-  //        console.error('获取班级失败', error);
-  //      });
-  //  }
- 
-  //  getTermsBySchoolId(schoolId: number) {
-  //    this.courseService.getTermsBySchoolId(schoolId)
-  //      .subscribe(terms => {
-  //        this.terms = terms;
-  //      }, error => {
-  //        console.error('获取学期失败', error);
-  //      });
-  //  }
- 
-  //  onSchoolChange(schoolId: number) {
-  //    this.searchParameters.school = schoolId;
-  //    console.log(this.searchParameters.school);
-  //    this.getClazzBySchoolId(this.searchParameters.school);
-  //    this.getTermsBySchoolId(this.searchParameters.school);
-  //  }
+
+   getClazzBySchoolId(schoolId: number) {
+    this.klassService.getClazzBySchoolId(schoolId)
+      .subscribe(data => {
+        this.clazzes = data.content;
+      }, error => {
+        console.error('获取班级失败', error);
+      });
+  }
+
+  getTermsBySchoolId(schoolId: number) {
+    this.termService.getTermsBySchoolId(schoolId)
+      .subscribe(data => {
+        this.terms = data.content;
+      }, error => {
+        console.error('获取学期失败', error);
+      });
+  }
+
+  onSchoolChange(school: School) {
+    this.searchParameters.schoolId = school.id;
+    this.searchParameters.klassId = 0;
+    this.searchParameters.termId = 0;
+    this.searchParameters.name = '';
+    this.getClazzBySchoolId(school.id);
+    this.getTermsBySchoolId(school.id);
+  }
 }

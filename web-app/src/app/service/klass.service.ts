@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Klass} from '../norm/entity/Klass';
+import { Page } from '../norm/entity/page';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +11,11 @@ export class KlassService {
   private url = 'http://localhost:8080/Klass';
 
   constructor(private httpClient: HttpClient) {
+  }
+
+  all(): Observable<Klass[]> {
+    const url = 'http://localhost:8080/Klass/list';
+    return this.httpClient.get<Klass[]>(url);
   }
 
   /**
@@ -81,11 +87,18 @@ export class KlassService {
     return this.httpClient.delete<void>(url);
   }
 
+
+  getKlassBySchoolId(schoolId: number): Observable<Array<Klass>> {
+    return this.httpClient.get<Array<Klass>>(`http://localhost:8080/Klass/getKlassBySchoolId/${schoolId}`);
+  }
+
   /**
    * 通过学校id获取所属所有班级
-   * @param schoolId 
+   * @param schoolId
    * */
-  getClazzBySchoolId(schoolId: number): Observable<Klass[]> {
-    return this.httpClient.get<Klass[]>(this.url + '/' +  String(schoolId));
+  getClazzBySchoolId(schoolId: number): Observable<Page<Klass>> {
+    const queryParams = new HttpParams()
+      .set('schoolId', schoolId? schoolId.toString() : '')
+    return this.httpClient.get<Page<Klass>>(this.url + '/getKlassesBySchoolId', {params: queryParams});
   }
 }

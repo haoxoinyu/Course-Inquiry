@@ -2,6 +2,8 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Term} from "../norm/entity/Term";
+import { Page } from '../norm/entity/page';
+import {School} from "../norm/entity/School";
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +12,11 @@ export class TermService {
   private url = 'http://localhost:8080/Term';
 
   constructor(private httpClient: HttpClient) {
+  }
+
+  all(): Observable<Term[]> {
+    const url = 'http://localhost:8080/Term/list';
+    return this.httpClient.get<Term[]>(url);
   }
 
   /**
@@ -63,7 +70,7 @@ export class TermService {
   }
 
   /**
-   *获取某个学期 
+   *获取某个学期
    * @param id 学期id
    **/
    getTermById(id: number | undefined): Observable<Term> {
@@ -92,9 +99,11 @@ export class TermService {
 
    /**
    * 通过学校id获取所属所有学期
-   * @param schoolId 
+   * @param schoolId
    * */
-   getTermsBySchoolId(schoolId: number): Observable<Term[]> {
-    return this.httpClient.get<Term[]>(this.url + '/' +  String(schoolId));
-  }
+    getTermsBySchoolId(schoolId: number): Observable<Page<Term>> {
+      const queryParams = new HttpParams()
+        .set('schoolId', schoolId? schoolId.toString() : '')
+      return this.httpClient.get<Page<Term>>(this.url + '/getTermsBySchoolId', {params: queryParams});
+    }
 }

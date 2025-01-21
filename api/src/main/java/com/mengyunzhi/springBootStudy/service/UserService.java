@@ -3,6 +3,12 @@ package com.mengyunzhi.springBootStudy.service;
 import com.mengyunzhi.springBootStudy.entity.Klass;
 import com.mengyunzhi.springBootStudy.entity.School;
 import com.mengyunzhi.springBootStudy.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import javax.validation.constraints.NotNull;
+
+import java.util.List;
 
 /**
  * 用户
@@ -41,10 +47,36 @@ public interface UserService {
     void logout();
 
     /**
+     * 删除
+     *
+     * @param id ID
+     */
+    void deleteById(Long id);
+
+    /**
      * 我是谁
      * @return 当前登录用户。用户未登录则返回null
      */
     User me();
+
+    /**
+     * 综合查询
+     *
+     * @param username
+     * @param klassId
+     * @param role
+     * @param state
+     * @param pageable
+     * @return
+     */
+    Page<User> findAll(String username, Long klassId, Long role, Long state, @NotNull Pageable pageable);
+
+    /**
+     * 新增
+     *
+     * @param user 用户
+     */
+    void save(User user);
 
     /**
      * 通过ID获取用户
@@ -61,5 +93,7 @@ public interface UserService {
      * @return 用户
      */
     User update(Long id, User user);
+
+    List<User> findByKlassId(Long klassId);
 }
 

@@ -1,1 +1,118 @@
-<p>index works!</p>
+<div class="container-md main">
+  <div>
+    <div class="col-md-12">
+      <form class="form-inline d-flex justify-content-between" style="width: 1200px"
+            (ngSubmit)="onQuery()">
+        <div class="form-group mb-2">
+          <label class="mr-2">班级：</label>
+          <!-- 默认提示选项 -->
+          <select class="form-control" [(ngModel)]="params.klass_id" name="clazz_id" id="clazz_id">
+            <option [ngValue]="null">所有班级</option>
+            <optgroup *ngFor="let school of schools" label="{{school.name}}">
+              <option *ngFor="let klass of schoolKlassesMap[school.id]" [value]="klass.id">
+                {{klass.name}}
+              </option>
+            </optgroup>
+          </select>
+        </div>
+        <div class="form-group mb-2">
+          <label class="mr-2">角色：</label>
+          <select class="form-control" name="role" type="text"
+                  [(ngModel)]="params.role">
+            <option value=null>请选择</option>
+            <option value='1'>超级管理员</option>
+            <option value='2'>管理员</option>
+            <option value='3'>普通用户</option>
+          </select>
+        </div>
+        <div class="form-group mb-2">
+          <label class="mr-2">状态：</label>
+          <select class="form-control" name="state" type="text"
+                  [(ngModel)]="params.state">
+            <option value=null>请选择</option>
+            <option value='1'>已启用</option>
+            <option value='2'>已冻结</option>
+          </select>
+        </div>
+        <div class="form-group mb-2">
+          <label class="mr-2">用户名：</label>
+          <input name="username" type="text" class="form-control"  placeholder="用户名..."
+                 [(ngModel)]="params.username">
+        </div>
+        <div class="form-group mb-2">
+          <button class="btn btn-outline-success mb-2" type="submit">查询</button>
+        </div>
+      </form>
+    </div>
+    <div class="col-md" style="margin: -53px 0px 0px 1250px; width: 120px">
+      <button class="btn btn-primary mr-2" (click)="openAddDialog()"><span class="oi oi-plus"></span>新增</button>
+    </div>
+  </div>
+
+  <table class="table">
+    <thead>
+    <tr>
+      <th>序号</th>
+      <th>姓名</th>
+      <th>用户名</th>
+      <th>性别</th>
+      <th>学校</th>
+      <th>班级</th>
+      <th>角色</th>
+      <th>状态</th>
+      <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let user of pageUser!.content; index as index">
+      <td>{{index + 1}}</td>
+      <td>{{user.name}}</td>
+      <td>{{user.username}}</td>
+      <td>{{user.sex | sex}}</td>
+      <td>{{user.klass?.school?.name}}</td>
+      <td>{{user.klass?.name}}</td>
+      <td>{{user.role | role}}</td>
+      <td>{{user.state | state}}</td>
+      <td>
+        <div class="btn-inline" *ngIf="user.id === me!.id || user!.role! > me!.role">
+          <a class="btn btn-sm btn-info button" (click)="openEditDialog(user)">
+            <span class="oi oi-pencil"></span>编辑
+          </a>
+        </div>
+        <div class="btn-inline" *ngIf="user!.role! > me!.role">
+        <span class="btn btn-sm btn-danger" (click)="onDelete(user)">
+            <span class="oi oi-trash"></span>删除
+        </span>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <div *ngIf="pageUser" class="row">
+    <div class="col-4" id="pageInfo">
+      第{{params.page + 1}}/{{pageUser.totalPages}}页 每页{{params.size}}条
+    </div>
+    <div class="col-8">
+      <nav>
+        <ul class="pagination">
+          <li class="page-item" [ngClass]="{'disabled': params.page === 0}" (click)="onPage(0)">
+            <span class="page-link">首页</span>
+          </li>
+          <li class="page-item" [ngClass]="{'disabled': params.page === 0}" (click)="onPage(params.page - 1)">
+            <span class="page-link">上一页</span>
+          </li>
+          <li class="page-item" [ngClass]="{'active': params.page === page}" *ngFor="let page of pages" (click)="onPage(page)">
+            <span class="page-link" *ngIf="page !== params.page">{{page + 1}}</span>
+            <span class="page-link" *ngIf="page === params.page">{{page + 1}}<span class="sr-only">(current)</span></span>
+          </li>
+          <li class="page-item" [ngClass]="{'disabled': params.page === pageUser.totalPages - 1}" (click)="onPage(params.page + 1)">
+            <span class="page-link">下一页</span>
+          </li>
+          <li class="page-item" [ngClass]="{'disabled': params.page === pageUser.totalPages - 1}" (click)="onPage(pageUser.totalPages - 1)">
+            <span class="page-link">尾页</span>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>

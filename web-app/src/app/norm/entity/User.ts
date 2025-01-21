@@ -7,9 +7,9 @@ export class User {
   id: number;
   name: string;
   username: string;
+  role: number;
   password: string | undefined;
   sex: boolean | undefined;
-  role: number | undefined;
   state: number | undefined;
   klass: Klass | undefined;
 
@@ -23,7 +23,7 @@ export class User {
    * @param role 角色
    * @param state 状态
    */
-  constructor(id: number, username: string, name: string, password: string, sex?: boolean, role?: number, state?: number, klass?: Klass) {
+  constructor(id: number, username: string, name: string, role: number, password: string, sex?: boolean, state?: number, klass?: Klass) {
     this.id = id;
     this.name = name;
     this.username = username;

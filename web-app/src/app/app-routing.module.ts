@@ -36,7 +36,11 @@ const routes: Routes = [
   {
     path: 'courseSchedule',
     component: CourseScheduleComponent
-  }
+  },
+  {
+    path: 'myCourse',
+    loadChildren: () => import('./my-course/my-course.module').then(mod => mod.MyCourseModule)
+  },
 ];
 
 @NgModule({

@@ -9,15 +9,11 @@ import { NavComponent } from './nav/nav.component';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { LoginComponent } from './login/login.component';
 import {AuthTokenInterceptor} from './core/auth-token-interceptor';
-import { PersonalCenterComponent } from './personal-center/personal-center.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {RolePipe} from './norm/role.pipe';
-import {StatePipe} from './norm/state.pipe';
-import {SexPipe} from './norm/sex.pipe';
-import {ChangePasswordComponent} from "./personal-center/change-password/change-password.component";
 import {MatDialogModule} from "@angular/material/dialog";
 import {ApiDemoModule} from "../api/api-demo.module";
 import {CourseScheduleModule} from './course-schedule/course-schedule.module';
+import {SoryPipe} from "./norm/sory.pipe";
 
 @NgModule({
   declarations: [
@@ -40,7 +36,7 @@ import {CourseScheduleModule} from './course-schedule/course-schedule.module';
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: AuthTokenInterceptor, multi: true}
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule {
 }

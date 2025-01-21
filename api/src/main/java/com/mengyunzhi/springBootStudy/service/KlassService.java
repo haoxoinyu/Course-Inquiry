@@ -1,10 +1,12 @@
 package com.mengyunzhi.springBootStudy.service;
 
 import com.mengyunzhi.springBootStudy.entity.Klass;
+import com.mengyunzhi.springBootStudy.entity.School;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * 班级服务
@@ -19,12 +21,27 @@ public interface KlassService {
     void deleteById(Long id);
 
     /**
+     * 获取所有学校列表
+     *
+     * @return
+     */
+    List<Klass> getAll();
+
+    /**
      * 查询分页信息
      *
      * @param pageable 分页条件
      * @return 分页数据
      */
     Page<Klass> findAll(Pageable pageable);
+
+    /**
+     * 通过学校查找班级
+     *
+     * @param school
+     * @return
+     */
+    List<Klass> getKlassBySchool(School school);
 
     /**
      * 综合查询

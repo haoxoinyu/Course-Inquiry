@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * 班级服务实现
@@ -26,8 +27,18 @@ public class KlassServiceImpl implements KlassService {
     }
 
     @Override
+    public List<Klass> getAll() {
+        return this.klassRepository.findAll();
+    }
+
+    @Override
     public Page<Klass> findAll(Pageable pageable) {
         return this.klassRepository.findAll(pageable);
+    }
+
+    @Override
+    public List<Klass> getKlassBySchool(School school) {
+        return this.klassRepository.findBySchoolId(school);
     }
 
     @Override
