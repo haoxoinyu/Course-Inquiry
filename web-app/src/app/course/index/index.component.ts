@@ -23,12 +23,13 @@ import { TermService } from 'src/app/service/term.service';
   styleUrls: ['./index.component.sass']
 })
 export class IndexComponent implements OnInit {
-   // 默认显示第一条数据
+   // 默认显示第一页数据
    page = 0;
    // 每页默认五条
    size = 5;
+   //显示的在首页的页码
+   pages = [];
    // 初始化一个有0条数据的
-
    searchParameters = {
      schoolId: 0,
      klassId: 0,
@@ -38,6 +39,7 @@ export class IndexComponent implements OnInit {
      page: this.page,
      size: this.size
    };
+
 
    courses: Course[] = [
     new Course({
@@ -56,11 +58,15 @@ export class IndexComponent implements OnInit {
       period: [1],
       sory: 1,
     })]
+
    pageData = new Page<Course>({
      content: this.courses,
      number: this.page,
      size: this.size,
-     numberOfElements: 0
+     numberOfElements: 0,
+     totalPages: 1,
+     first: true,
+     last: false
    });
 
    me : User = new User(1,'zhangsan', '张三', 3, 'yunzhi', true, 1, new Klass(1,'计234', new School(1, '河北工业大学')));
@@ -108,7 +114,6 @@ export class IndexComponent implements OnInit {
      if (sessionRole !== 'true') {
        this.role = 3;
      }
-     console.log('课程组件调用ngOnInit()');
      // 使用默认值 page = 0 调用loadByPage()方法
      this.loadByPage();
    }
@@ -129,16 +134,20 @@ export class IndexComponent implements OnInit {
      return period ? period.name : '';
    }
 
-   loadByPage(page = 1): void {
+   loadByPage(page?: number): void {
+    this.searchParameters.page = page ?? 0;
      this.courseService.page(this.searchParameters)
       .subscribe(pageData => {
         // 在请求数据之后设置当前页
-        this.page = page;
-        console.log('课表组件接收到返回数据，重新设置pageData');
+        this.page = page ?? 0;
+
+        console.log('课表组件接收到返回数据，重新设置pageData',pageData );
         this.pageData = pageData;
+        this.definePageData();
         this.pageData.content.forEach(course => {
           course.klass = course.users[0].klass as Klass;
         });
+        console.log("pageData", this.pages)
       },
       error => {
         console.error('请求数据失败', error);
@@ -269,5 +278,30 @@ export class IndexComponent implements OnInit {
     this.searchParameters.name = '';
     this.getClazzBySchoolId(school.id);
     this.getTermsBySchoolId(school.id);
+  }
+
+  definePageData() {
+    let begin;
+    let maxCount;
+    this.pages = [];
+    if (this.pageData.totalPages >= 7) {
+      maxCount = 7;
+       // 起始页为当前页-3.比如当前页为10，则应该由7页开始
+      begin = this.pageData.number - 3;
+      if (begin < 1) {
+        // 判断是否越界，可以删除下一行代码查看错误的效果
+        begin = 1;
+      } else if (begin > this.pageData.totalPages - 7) {
+        // 判断是否越界，可以删除下一行代码查看错误的效果
+
+        begin = this.pageData.totalPages - 7 + 1;
+      };
+    } else {
+      maxCount = this.pageData.totalPages;
+      begin = 0;
+    }
+    for (let i = 1; i <=  maxCount; begin++, i++) {
+      (this.pages as number[]).push(begin);
+    }
   }
 }
