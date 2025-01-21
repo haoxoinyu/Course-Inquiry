@@ -114,4 +114,12 @@ public class CourseSpecs {
             return (Specification<Course>) (Root<Course> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) -> criteriaBuilder.like(root.get("name").as(String.class), String.format("%%%s%%", name));
         }
     }
+
+    public static Specification<Course> Sory(Long sory) {
+        if (sory != null) {
+            return (Specification<Course>) (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("sory").as(Long.class), sory);
+        } else {
+            return Specification.where(null);
+        }
+    }
 }

@@ -4,8 +4,9 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {RouterTestingModule} from '@angular/router/testing';
 import {HttpClientTestingModule} from "@angular/common/http/testing";
 import { MatDialogModule } from '@angular/material/dialog';
+import {SchoolSelectComponent} from "../../klass/school-select/school-select.component";
+import {CoreModule} from "../../core/core.module";
 import { KlassModule } from 'src/app/klass/klass.module';
-import { SchoolSelectComponent } from 'src/app/klass/school-select/school-select.component';
 
 fdescribe('course IndexComponent', () => {
   let component: IndexComponent;
@@ -20,6 +21,7 @@ fdescribe('course IndexComponent', () => {
         RouterTestingModule,
         HttpClientTestingModule,
         MatDialogModule,
+        CoreModule,
         KlassModule
       ],
       teardown: {

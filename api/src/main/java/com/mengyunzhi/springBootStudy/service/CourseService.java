@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -69,6 +70,10 @@ public interface CourseService {
      * @param pageable 分页参数
      * */
     Page<Course> findAll(String name, Long schoolId, Long klassId, Long termId, Long userId, @NotNull Pageable pageable);
+
+    Page<Course> findCoursesByCriteria(Long termId, String courseName, Long sory, Long userId, @NotNull Pageable pageable);
+
+    ArrayList<Course> getCoursesByTermId(Long termId, Long sory);
 
     /**
      * 通过id寻找course
