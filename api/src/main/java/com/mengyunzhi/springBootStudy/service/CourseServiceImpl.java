@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CourseServiceImpl implements CourseService {
@@ -82,4 +83,8 @@ public class CourseServiceImpl implements CourseService {
         return this.courseRepository.findAll(name, school, klass, term, user, pageable);
     }
 
+    @Override
+    public Optional<Course> findById(Long courseId) {
+        return this.courseRepository.findById(courseId);
+    }
 }

@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 课程
@@ -68,4 +69,11 @@ public interface CourseService {
      * @param pageable 分页参数
      * */
     Page<Course> findAll(String name, Long schoolId, Long klassId, Long termId, Long userId, @NotNull Pageable pageable);
+
+    /**
+     * 通过id寻找course
+     *
+     * @param courseId 课程id
+     **/
+    Optional<Course> findById(Long courseId);
 }
