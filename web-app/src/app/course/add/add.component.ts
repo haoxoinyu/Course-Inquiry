@@ -49,8 +49,8 @@ export class AddComponent implements OnInit {
   schools = new Array<School>();
   terms = new Array<Term>();
   term = new Term(1, '', new School(1, ''), new Date(), new Date());
-  clazzes : Klass[] = [new Klass(1, '',undefined)];
-  users = new Array<User>(new User(1,'', '', 1,''));
+  clazzes: Klass[] = [new Klass(1, '', undefined)];
+  users = new Array<User>(new User(1, '', '', 1, ''));
 
   semesterStartDate: Date | undefined;
   semesterEndDate: Date | undefined;
@@ -83,7 +83,7 @@ export class AddComponent implements OnInit {
               private klassService: KlassService,
               private termService: TermService,
               private schoolService: SchoolService) {
-               }
+  }
 
   ngOnInit() {
     // 获取所有学校
@@ -140,6 +140,7 @@ export class AddComponent implements OnInit {
         this.users = data;
       })
   }
+
   getTermsBySchoolId(schoolId: number) {
     this.termService.getTermsBySchoolId(schoolId)
       .subscribe(data => {
@@ -203,4 +204,5 @@ export class AddComponent implements OnInit {
       (this.formGroup.get('week')!.value as number[]).push(value);
     });
   }
+
 }
