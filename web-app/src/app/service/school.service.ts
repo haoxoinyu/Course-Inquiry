@@ -51,7 +51,7 @@ export class SchoolService {
    * 1. 其它人可以通过 订阅 操作来获取该对象后续发送的值。
    * 2. 该对象如果发送值，那么该值的类型必然是School。
    */
-  save(school: ɵTypedOrUntyped<{ name: FormControl<string | null> }, ɵFormGroupValue<{ name: FormControl<string | null> }>, any>): Observable<School> {
+  save(school: ɵTypedOrUntyped<{ name: FormControl<string | null> }, ɵFormGroupValue<{ name: FormControl<string | null> }>, any>): Observable<any> {
     const url = 'http://localhost:8080/School';
     return this.httpClient.post<School>(url, school);
   }
@@ -71,7 +71,7 @@ export class SchoolService {
    * @param id id
    * @param school 学校
    */
-  update(id: number, school: School): Observable<School> {
+  update(id: number, school: School): Observable<any> {
     const url = `http://localhost:8080/School/${id}`;
     return this.httpClient.put<School>(url, school);
   }
@@ -80,7 +80,7 @@ export class SchoolService {
    * 删除学校
    * @param id 学校id
    */
-  deleteById(id: number): Observable<void> {
+  deleteById(id: number): Observable<any> {
     const url = `http://localhost:8080/School/${id}`;
     return this.httpClient.delete<void>(url);
   }

@@ -43,9 +43,12 @@ export class EditComponent implements OnInit {
   update(school: School) {
     this.schoolService.update(school.id, school).subscribe(
       (result) => {
-        this.school = result;
-        this.dialogRef.close();
-        this.sweetAlertService.showSuccess('编辑成功', "success");
+        if(result.message === "该学校已存在") {
+          this.sweetAlertService.showError('编辑失败', '该学校已存在', 'error')
+        } else {
+          this.dialogRef.close();
+          this.sweetAlertService.showSuccess('编辑成功', "success");
+        }
       },
       (error) => {
         console.error('Error updating school:', error);

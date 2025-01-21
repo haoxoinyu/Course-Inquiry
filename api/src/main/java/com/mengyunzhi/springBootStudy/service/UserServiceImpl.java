@@ -88,7 +88,7 @@ public class UserServiceImpl implements UserService {
             return false;
         }
 
-        return user.getState().equals(1);
+        return user.getState().equals(1L);
     }
 
     @Override

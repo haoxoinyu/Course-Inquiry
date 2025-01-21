@@ -4,9 +4,11 @@ import com.mengyunzhi.springBootStudy.entity.Klass;
 import com.mengyunzhi.springBootStudy.entity.School;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 学校服务
@@ -19,7 +21,14 @@ public interface SchoolService {
      * @param school 保存前的学校
      * @return 保存后的学校
      */
-    School save(School school);
+    ResponseEntity<Map<String, Object>> save(School school);
+
+    /**
+     * 验证
+     * @param school
+     * @return
+     */
+    boolean validateSchool(@NotNull School school);
 
     /**
      * 获取所有学校列表
@@ -57,11 +66,11 @@ public interface SchoolService {
      * @param school 更新的学校信息
      * @return 学校
      */
-    School update(Long id, School school);
+    ResponseEntity<Map<String, Object>> update(Long id, School school);
 
     /**
      * 删除学校
      * @param id 学校id
      */
-    void deleteById(@NotNull Long id);
+    ResponseEntity<Map<String, Object>> deleteById(@NotNull Long id);
 }
