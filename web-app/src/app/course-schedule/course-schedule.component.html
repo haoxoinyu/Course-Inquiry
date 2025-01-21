@@ -4,17 +4,14 @@
         <thead>
         <tr>
           <th>节次/星期</th>
-          <th *ngFor="let day of days; let i = index" class="multi-line-th">
-            {{ day.name }} <br> {{ dates[i] }}
+          <th>
+            星期一
           </th>
         </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let period of periods">
-          <td>{{ period.name }}</td>
-          <td *ngFor="let day of days">
-            {{ courseTable[day.value - 1][period.value - 1] || '-' }}
-          </td>
+        <tr>
+          <td>第一大节</td>
         </tr>
         </tbody>
       </table>
