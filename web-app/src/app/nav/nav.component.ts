@@ -31,7 +31,7 @@ export class NavComponent implements OnInit {
       this.menus.push({url: 'course', name: '课程管理'});
       this.menus.push({url: 'myCourse', name: '我的课程'});
       this.menus.push({url: 'courseSchedule', name: '课程查询'});
-      this.menus.push({url: 'school', name: '行程查询'});
+      this.menus.push({url: 'schedule', name: '行程查询'});
       this.menus.push({url: 'personalCenter', name: '个人中心'});
     });
     this.title = '教务管理系统';
