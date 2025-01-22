@@ -25,6 +25,9 @@
         <small class="text-danger" *ngIf="formGroup?.get('name')?.errors?.['maxlength']">
           学期名称不能超过40个字符
         </small>
+        <small *ngIf="formGroup.get('name')?.hasError('nameExists')" class="text-danger">
+          该学期名称已存在，请使用其他名称。
+        </small>
       </div>
     </div>
     <div class="mb-3 row">

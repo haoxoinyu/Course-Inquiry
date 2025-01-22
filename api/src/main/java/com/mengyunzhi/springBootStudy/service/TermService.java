@@ -1,6 +1,5 @@
 package com.mengyunzhi.springBootStudy.service;
 
-import com.mengyunzhi.springBootStudy.entity.Klass;
 import com.mengyunzhi.springBootStudy.entity.Term;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -45,8 +44,9 @@ public interface TermService {
      * 新增
      *
      * @param term 班级
+     * @return
      */
-    void save(Term term);
+    Term save(Term term);
 
     /**
      * 更新班级
@@ -55,4 +55,7 @@ public interface TermService {
      * @param term 新的班级信息
      */
     void update(Long id, Term term);
+
+    // 检查学期名称是否存在
+    boolean checkIfNameExists(String name);
 }

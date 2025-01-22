@@ -1,9 +1,8 @@
 package com.mengyunzhi.springBootStudy.service;
 
-import com.mengyunzhi.springBootStudy.entity.Klass;
+import com.mengyunzhi.springBootStudy.Exception.TermAlreadyExistsException;
 import com.mengyunzhi.springBootStudy.entity.School;
 import com.mengyunzhi.springBootStudy.entity.Term;
-import com.mengyunzhi.springBootStudy.repository.KlassRepository;
 import com.mengyunzhi.springBootStudy.repository.TermRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -54,8 +53,14 @@ public class TermServiceImpl implements TermService {
     }
 
     @Override
-    public void save(Term term) {
-        this.termRepository.save(term);
+    public Term save(Term term) {
+        if (termRepository.existsByName(term.getName())) {
+            // 如果存在，抛出自定义异常
+            throw new TermAlreadyExistsException("学期名称已存在，请使用其他名称");
+        }
+
+        // 如果不存在，则保存学期
+        return termRepository.save(term);
     }
 
     /**
@@ -73,5 +78,11 @@ public class TermServiceImpl implements TermService {
         oldTerm.setName(term.getName());
         oldTerm.setSchool(term.getSchool());
         termRepository.save(oldTerm);
+    }
+
+    // 检查学期名称是否存在
+    @Override
+    public boolean checkIfNameExists(String name) {
+        return termRepository.existsByName(name);
     }
 }

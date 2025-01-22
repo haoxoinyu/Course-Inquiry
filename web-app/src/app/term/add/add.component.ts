@@ -6,6 +6,8 @@ import { SweetAlertService } from '../../service/sweet-alert.service';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {Term} from "../../norm/entity/Term";
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import {TermService} from "../../service/term.service";
+import {uniqueNameValidator} from "../../validator/uniqueNameValidator";
 
 @Component({
   selector: 'app-add',
@@ -18,6 +20,8 @@ export class AddComponent implements OnInit {
   school: School | undefined;
   /*当该值不为空时，可以显示在前台并提示用户*/
   message: string | undefined;
+  errorMessage: string = '';  // 用于存储错误消息
+  isNameExists: boolean = false;  // 用于存储学期名称是否存在的结果
 
   // 开始时间过滤器：只允许选择周一
   isMondayValidator: ValidatorFn = (control: AbstractControl) => {
@@ -44,7 +48,7 @@ export class AddComponent implements OnInit {
       Validators.required,
       Validators.minLength(2),
       Validators.maxLength(40)
-    ]),
+    ], [uniqueNameValidator(this.termService)]),
     school: new FormGroup({
       id: new FormControl('', Validators.required),
       name: new FormControl('', Validators.required),
@@ -56,10 +60,23 @@ export class AddComponent implements OnInit {
   constructor(private httpClient: HttpClient,
               private sweetAlertService: SweetAlertService,
               public dialogRef: MatDialogRef<AddComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: any) {
+              @Inject(MAT_DIALOG_DATA) public data: any,
+              private termService: TermService) {
   }
 
   ngOnInit() {
+    if (this.formGroup.valid) {
+      const termName = this.formGroup.get('name')?.value;
+      this.termService.save({ name: termName }).subscribe({
+        next: (response) => {
+          alert('学期添加成功');
+          this.formGroup.reset();  // 重置表单
+        },
+        error: (error) => {
+          this.errorMessage = error.error;  // 显示后端返回的错误信息
+        }
+      });
+    }
   }
 
   onSubmit(): void {
@@ -125,4 +142,6 @@ export class AddComponent implements OnInit {
       return null;
     };
   }
+
+  protected readonly FormGroup = FormGroup;
 }

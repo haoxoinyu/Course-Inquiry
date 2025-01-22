@@ -1,5 +1,6 @@
 package com.mengyunzhi.springBootStudy.controller;
 
+import com.mengyunzhi.springBootStudy.Exception.TermAlreadyExistsException;
 import com.mengyunzhi.springBootStudy.entity.Klass;
 import com.mengyunzhi.springBootStudy.entity.Term;
 import com.mengyunzhi.springBootStudy.service.TermService;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -59,8 +61,15 @@ public class TermController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void save(@RequestBody Term term) {
-        this.termService.save(term);
+    // 添加学期
+    public ResponseEntity<String> save(@RequestBody Term term) {
+        try {
+            termService.save(term);  // 调用服务层方法添加学期
+            return ResponseEntity.ok("学期添加成功");
+        } catch (TermAlreadyExistsException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(e.getMessage());  // 返回学期名称已存在的错误消息
+        }
     }
 
     /**

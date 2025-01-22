@@ -1,15 +1,17 @@
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
+import {catchError, Observable, of} from 'rxjs';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Term} from "../norm/entity/Term";
 import { Page } from '../norm/entity/page';
 import {School} from "../norm/entity/School";
+import {FormControl, ɵValue} from "@angular/forms";
 
 @Injectable({
   providedIn: 'root'
 })
 export class TermService {
   private url = 'http://localhost:8080/Term';
+  private apiUrl = 'http://localhost:8080/api/terms/check-name';  // 后端 API 地址
 
   constructor(private httpClient: HttpClient) {
   }
@@ -54,7 +56,7 @@ export class TermService {
    * 1. 其它人可以通过 订阅 操作来获取该对象后续发送的值。
    * 2. 该对象如果发送值，那么该值的类型必然是Klass。
    */
-  save(school: Term): Observable<Term> {
+  save(school: { name: string | null | undefined }): Observable<Term> {
     const url = 'http://localhost:8080/Term';
     return this.httpClient.post<Term>(url, school);
   }
@@ -106,4 +108,9 @@ export class TermService {
         .set('schoolId', schoolId? schoolId.toString() : '')
       return this.httpClient.get<Page<Term>>(this.url + '/getTermsBySchoolId', {params: queryParams});
     }
+
+  // 检查学期名称是否存在
+  checkIfNameExists(name: string | null | undefined): Observable<boolean> {
+    return this.httpClient.get<boolean>(`${this.apiUrl}/${name}`);
+  }
 }

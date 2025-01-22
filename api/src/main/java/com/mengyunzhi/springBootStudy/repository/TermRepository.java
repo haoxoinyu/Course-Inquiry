@@ -34,4 +34,7 @@ public interface TermRepository extends PagingAndSortingRepository<Term, Long>, 
     }
 
     List<Term> findAllByNameContains(String name);
+
+    boolean existsByName(String name);
+
 }

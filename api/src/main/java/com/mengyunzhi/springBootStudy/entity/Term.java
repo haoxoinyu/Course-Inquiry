@@ -14,6 +14,7 @@ public class Term {
     @ManyToOne
     private School school;
 
+    @Column(nullable = false, unique = true)  // 确保学期名称是唯一的
     private String name;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "GMT+8")
