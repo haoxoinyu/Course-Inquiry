@@ -9,9 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 学校控制器
@@ -43,7 +45,7 @@ public class SchoolController {
     @PostMapping
     @CrossOrigin("*")
     @ResponseStatus(HttpStatus.CREATED)
-    public School save(@RequestBody School school) {
+    public ResponseEntity<Map<String, Object>> save(@RequestBody School school) {
         // 进行令牌认证与分发
         return schoolService.save(school);
     }
@@ -61,14 +63,14 @@ public class SchoolController {
 
     @PutMapping("{id}")
     @CrossOrigin("*")
-    public School update(@PathVariable Long id, @RequestBody School school) {
+    public ResponseEntity<Map<String, Object>> update(@PathVariable Long id, @RequestBody School school) {
         return this.schoolService.update(id, school);
     }
 
     @DeleteMapping("{id}")
     @CrossOrigin("*")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteById(@PathVariable Long id) {
-        this.schoolService.deleteById(id);
+    public ResponseEntity<Map<String, Object>> deleteById(@PathVariable Long id) {
+        return this.schoolService.deleteById(id);
     }
 }

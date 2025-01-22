@@ -87,6 +87,7 @@ public class UserServiceImpl implements UserService {
         if (user == null || user.getPassword() == null) {
             return false;
         }
+
         return user.getState().equals(1);
     }
 

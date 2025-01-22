@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import {UserService} from "./user.service";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SweetAlertService {
 
