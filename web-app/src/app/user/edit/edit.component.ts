@@ -100,9 +100,12 @@ export class EditComponent implements OnInit {
     };
     this.userService.update(this.newUser!.id, this.newUser).subscribe({
       next: (result) => {
-        this.user = result;
-        this.dialogRef.close();
-        this.sweetAlertService.showSuccess('编辑成功', "success");
+        if(result.message === "该用户已存在") {
+          this.sweetAlertService.showError('编辑失败', '该用户已存在', 'error')
+        } else {
+          this.dialogRef.close();
+          this.sweetAlertService.showSuccess('编辑成功', "success");
+        }
       },
       error: (error) => {
         console.error('Error updating class:', error);

@@ -3,6 +3,7 @@ package com.mengyunzhi.springBootStudy.service;
 import com.mengyunzhi.springBootStudy.entity.Klass;
 import com.mengyunzhi.springBootStudy.entity.School;
 import com.mengyunzhi.springBootStudy.entity.Term;
+import com.mengyunzhi.springBootStudy.entity.User;
 import com.mengyunzhi.springBootStudy.repository.SchoolRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -60,8 +61,19 @@ public class SchoolServiceImpl implements SchoolService {
                 .setParameter("name", school.getName())
                 .getResultList();
 
-        // 如果查询结果不为空，则表示数据库中已经存在相同的School
-        return result.isEmpty();
+        // 如果查询结果为空，则表示没有重复的学校名称，返回true
+        if (result.isEmpty()) {
+            return true;
+        }
+
+        // 如果查询到一条数据且schoolId相同，则返回true
+        if (result.size() == 1) {
+            School existingSchool = result.get(0);
+            return existingSchool.getId().equals(school.getId());
+        }
+
+        // 如果查询到多条数据或schoolId不同，则返回false
+        return false;
     }
 
     @Override

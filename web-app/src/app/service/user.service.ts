@@ -124,7 +124,7 @@ export class UserService {
    * @param id id
    * @param user 学校
    */
-  update(id: number | undefined, user: User | undefined): Observable<User> {
+  update(id: number | undefined, user: User | undefined): Observable<any> {
     const url = `http://localhost:8080/User/${id}`;
     return this.httpClient.put<User>(url, user);
   }

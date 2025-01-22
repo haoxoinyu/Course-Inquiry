@@ -1,16 +1,15 @@
 package com.mengyunzhi.springBootStudy.service;
 
 import com.mengyunzhi.springBootStudy.controller.CourseUserRequest;
-import com.mengyunzhi.springBootStudy.entity.Course;
-import com.mengyunzhi.springBootStudy.entity.CourseUser;
-import com.mengyunzhi.springBootStudy.entity.CourseUserId;
-import com.mengyunzhi.springBootStudy.entity.User;
+import com.mengyunzhi.springBootStudy.entity.*;
 import com.mengyunzhi.springBootStudy.repository.CourseRepository;
 import com.mengyunzhi.springBootStudy.repository.CourseUserRepository;
 import com.mengyunzhi.springBootStudy.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class CourseUserServiceImpl implements CourseUserService {
@@ -58,6 +57,13 @@ public class CourseUserServiceImpl implements CourseUserService {
 
         // 保存到数据库
         courseUserRepository.save(courseUser);
+    }
+
+    @Override
+    public List<CourseUser> findByUserId(Long userId) {
+        User user = new User();
+        user.setId(userId);
+        return this.courseUserRepository.findByUser(user);
     }
 
 }

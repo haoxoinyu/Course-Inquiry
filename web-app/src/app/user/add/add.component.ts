@@ -78,10 +78,13 @@ export class AddComponent implements OnInit {
   );
     console.log(user);// 确保这里使用的是正确的表单值
     this.httpClient.post(url, user)
-      .subscribe(() => {
-        console.log('保存成功');
-        this.dialogRef.close();
-        this.sweetAlertService.showSuccess('新增成功', "success");
+      .subscribe((data: any) => {
+        if (data.message === "该用户已存在") {
+          this.sweetAlertService.showError('新增失败', '该用户已存在', 'error');
+        } else{
+          this.dialogRef.close();
+          this.sweetAlertService.showSuccess('新增成功', "success");
+        }
       }, (response) => {
         console.log(`向${url}发起的post请求发生错误` + response);
         this.setMessage(AddComponent.errorMessage);
