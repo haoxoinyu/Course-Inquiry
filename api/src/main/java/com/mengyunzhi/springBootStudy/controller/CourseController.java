@@ -21,6 +21,7 @@ public class CourseController {
     @Autowired
     CourseService courseService;
     private static final Logger logger = LoggerFactory.getLogger(CourseController.class);
+
     @GetMapping
     public Page<Course> findAll(
             @RequestParam(required = false) String name,
@@ -31,9 +32,14 @@ public class CourseController {
             @RequestParam int page,
             @RequestParam int size
     ) {
-        Page<Course> tset = this.courseService.findAll(name, schoolId, klassId, termId, userId, PageRequest.of(page, size));
-        Long scholl = schoolId;
-        return tset;
+        return this.courseService.findAll(name, schoolId, klassId, termId, userId, PageRequest.of(page, size));
+    }
+
+    @GetMapping("/findById")
+    @CrossOrigin("*")
+    public Course findById(@RequestParam Long courseId) {
+        return this.courseService.findById(courseId).get();
+
     }
 
     @PostMapping("add")
@@ -53,10 +59,30 @@ public class CourseController {
         course.setUsers(userList);
         course.setTerm(term);
         this.courseService.save(course);
+    }
 
+    @PutMapping("/updateCourse")
+    public void update(@RequestBody newCourse updateCourse) {
+        Course course = new Course();
+        Term term = new Term();
+        term.setId(updateCourse.getTermId());
+        User user = new User();
+        user.setId(updateCourse.getUserId());
+        List<User> userList = new ArrayList<>();
+        userList.add(user);
+        course.setTerm(term);
+        course.setId(updateCourse.getId());
+        course.setPeriod(updateCourse.getPeriod());
+        course.setWeek(updateCourse.getWeek());
+        course.setUsers(userList);
+        course.setDay(updateCourse.getDay());
+        course.setSory(updateCourse.getSory());
+        course.setName(updateCourse.getName());
+        this.courseService.update(updateCourse.getId(), course);
     }
 }
 class newCourse{
+    private Long id;
     private String name ;
     private Long sory;
     private List<Integer> week;
@@ -66,6 +92,10 @@ class newCourse{
     private Long klassId;
     private Long termId;
     private Long userId;
+
+    public Long getId() {
+        return id;
+    }
 
     public List<Integer> getDay() {
         return day;

@@ -12,6 +12,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SchoolSelectComponent } from 'src/app/klass/school-select/school-select.component';
 import { RESOURCE_CACHE_PROVIDER } from '@angular/platform-browser-dynamic';
 import { KlassModule } from 'src/app/klass/klass.module';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { CoreModule } from 'src/app/core/core.module';
 
 describe('course -> AddComponent', () => {
   let component: AddComponent;
@@ -31,9 +33,11 @@ describe('course -> AddComponent', () => {
         HttpClientTestingModule,
         MatDialogModule,
         MatSelectModule,
+        MatFormFieldModule,
         FormsModule,
         BrowserAnimationsModule,
-        KlassModule
+        KlassModule,
+        CoreModule
       ],
       providers: [
         { provide: MatDialogRef, useValue: {} },
