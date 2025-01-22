@@ -6,6 +6,7 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {HttpClientTestingModule} from "@angular/common/http/testing";
 import {RouterTestingModule} from "@angular/router/testing";
 import {MatDialogModule} from "@angular/material/dialog";
+import {SchoolSelectComponent} from "../klass/school-select/school-select.component";
 
 describe('CourseScheduleComponent', () => {
   let component: CourseScheduleComponent;
@@ -13,7 +14,9 @@ describe('CourseScheduleComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CourseScheduleComponent ],
+      declarations: [ CourseScheduleComponent,
+        SchoolSelectComponent  // 添加组件
+      ],
       imports: [
         HttpClientTestingModule,
         RouterTestingModule,
