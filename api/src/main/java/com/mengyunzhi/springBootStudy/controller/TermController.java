@@ -9,7 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 /**
  * 班级控制器
@@ -24,8 +27,8 @@ public class TermController {
 
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id) {
-        termService.deleteById(id);
+    public ResponseEntity<Map<String, Object>> delete(@PathVariable Long id) {
+        return termService.deleteById(id);
     }
 
     @GetMapping("{id}")
@@ -59,8 +62,8 @@ public class TermController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void save(@RequestBody Term term) {
-        this.termService.save(term);
+    public ResponseEntity<Map<String, Object>> save(@RequestBody Term term) {
+        return this.termService.save(term);
     }
 
     /**
@@ -71,7 +74,7 @@ public class TermController {
      */
     @PutMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@PathVariable Long id, @RequestBody Term term) {
-        this.termService.update(id, term);
+    public ResponseEntity<Map<String, Object>> update(@PathVariable Long id, @RequestBody Term term) {
+        return this.termService.update(id, term);
     }
 }

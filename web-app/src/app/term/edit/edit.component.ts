@@ -92,7 +92,7 @@ export class EditComponent implements OnInit {
    */
   onSubmit(): void {
     this.term = {
-      id: this.formGroup?.get('school')?.get('id')?.value,
+      id: this.term.id,
       name: this.formGroup?.get('name')?.value,
       school: this.formGroup?.get('school')?.value,
       startTime: this.formGroup?.get('startTime')?.value,
@@ -101,13 +101,18 @@ export class EditComponent implements OnInit {
     console.log(this.term);
     this.termService.update(this.term.id, this.term).subscribe({
       next: (result) => {
-        this.term = result;
-        this.dialogRef.close();
-        this.sweetAlertService.showSuccess('Edit successful', "success");
+        if (result.message === "该学期已存在") {
+          this.sweetAlertService.showError('编辑失败', '该学期已存在', 'error');
+        } else if (result.message === "已存在相似时间的学期") {
+          this.sweetAlertService.showError('编辑失败', '已存在相似时间的学期', 'error');
+        } else{
+          this.dialogRef.close();
+          this.sweetAlertService.showSuccess('编辑成功', "success");
+        }
       },
       error: (error) => {
         console.error('Error updating class:', error);
-        this.sweetAlertService.showError('Edit failed', '', error);
+        this.sweetAlertService.showError('编辑失败', '', error);
       }
     });
   }

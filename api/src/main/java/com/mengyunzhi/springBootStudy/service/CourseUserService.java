@@ -1,9 +1,7 @@
 package com.mengyunzhi.springBootStudy.service;
 
 import com.mengyunzhi.springBootStudy.controller.CourseUserRequest;
-import com.mengyunzhi.springBootStudy.entity.CourseUser;
-import com.mengyunzhi.springBootStudy.entity.School;
-import com.mengyunzhi.springBootStudy.entity.User;
+import com.mengyunzhi.springBootStudy.entity.CourseUsers;
 
 import java.util.List;
 
@@ -13,5 +11,5 @@ public interface CourseUserService {
 
     void addCourseUser(CourseUserRequest request);
 
-    List<CourseUser> findByUserId(Long userId);
+    List<CourseUsers> findByUserId(Long userId);
 }

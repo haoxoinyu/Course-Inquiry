@@ -7,7 +7,6 @@ import com.mengyunzhi.springBootStudy.repository.CourseUserRepository;
 import com.mengyunzhi.springBootStudy.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -46,21 +45,21 @@ public class CourseUserServiceImpl implements CourseUserService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         // 创建新的 CourseUser 实体并设置 Course 和 User
-        CourseUser courseUser = new CourseUser();
+        CourseUsers courseUsers = new CourseUsers();
 
         // 创建一个新的 CourseUserId 并设置到 courseUser 中
         CourseUserId courseUserId = new CourseUserId(request.getCourseId(), request.getUserId());
-        courseUser.setId(courseUserId); // 设置复合主键
+        courseUsers.setId(courseUserId); // 设置复合主键
 
-        courseUser.setCourse(course);
-        courseUser.setUser(user);
+        courseUsers.setCourse(course);
+        courseUsers.setUser(user);
 
         // 保存到数据库
-        courseUserRepository.save(courseUser);
+        courseUserRepository.save(courseUsers);
     }
 
     @Override
-    public List<CourseUser> findByUserId(Long userId) {
+    public List<CourseUsers> findByUserId(Long userId) {
         User user = new User();
         user.setId(userId);
         return this.courseUserRepository.findByUser(user);

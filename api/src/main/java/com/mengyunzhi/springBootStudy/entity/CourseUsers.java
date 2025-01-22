@@ -3,7 +3,7 @@ package com.mengyunzhi.springBootStudy.entity;
 import javax.persistence.*;
 @Entity
 @Table(name = "course_users")
-public class CourseUser {
+public class CourseUsers {
 
     @EmbeddedId
     private CourseUserId id;
@@ -19,7 +19,7 @@ public class CourseUser {
     private User user;
 
     // 默认构造函数（JPA 必须）
-    public CourseUser() {
+    public CourseUsers() {
     }
 
     // Getters 和 Setters

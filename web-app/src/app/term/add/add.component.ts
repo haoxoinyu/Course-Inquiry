@@ -49,8 +49,8 @@ export class AddComponent implements OnInit {
       id: new FormControl('', Validators.required),
       name: new FormControl('', Validators.required),
     }),
-    startTime: new FormControl('', [Validators.required, this.isMondayValidator]),
-    endTime: new FormControl('', [Validators.required, this.isSundayValidator]),
+    startTime: new FormControl(null as unknown as Date, [Validators.required, this.isMondayValidator]),
+    endTime: new FormControl(null as unknown as Date, [Validators.required, this.isSundayValidator]),
   }, { validators: this.validateDateRange() });
 
   constructor(private httpClient: HttpClient,
@@ -66,12 +66,18 @@ export class AddComponent implements OnInit {
     console.log('on submit');
     const url = 'http://localhost:8080/Term';
     const term = new Term(undefined, this.formGroup.get('name')?.value!,
-      this.school, new Date(), new Date()); // 确保这里使用的是正确的表单值
+      this.school, this.formGroup.get('startTime')?.value!, this.formGroup.get('endTime')?.value!); // 确保这里使用的是正确的表单值
+    console.log('on submit', term);
     this.httpClient.post(url, term)
-      .subscribe(() => {
-        console.log('保存成功');
-        console.log(term);
-        this.sweetAlertService.showSuccess('新增成功', "success");
+      .subscribe((data: any) => {
+        if (data.message === "该学期已存在") {
+          this.sweetAlertService.showError('新增失败', '该学期已存在', 'error');
+        } else if (data.message === "已存在相似时间的学期") {
+          this.sweetAlertService.showError('新增失败', '已存在相似时间的学期', 'error');
+        } else{
+          this.dialogRef.close();
+          this.sweetAlertService.showSuccess('新增成功', "success");
+        }
       }, (response) => {
         console.log(`向${url}发起的post请求发生错误` + response);
         this.setMessage(AddComponent.errorMessage);

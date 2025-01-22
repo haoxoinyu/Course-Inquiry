@@ -1,6 +1,6 @@
 package com.mengyunzhi.springBootStudy.service;
 
-import com.mengyunzhi.springBootStudy.entity.CourseUser;
+import com.mengyunzhi.springBootStudy.entity.CourseUsers;
 import com.mengyunzhi.springBootStudy.entity.Klass;
 import com.mengyunzhi.springBootStudy.entity.User;
 import com.mengyunzhi.springBootStudy.filter.TokenFilter;
@@ -230,10 +230,10 @@ public class UserServiceImpl implements UserService {
         User user = this.userRepository.findById(id).get();
 
         // 检查班级是否有用户
-        List<CourseUser> courseUserList = this.courseUserService.findByUserId(user.getId());
+        List<CourseUsers> courseUserList = this.courseUserService.findByUserId(user.getId());
         if (!courseUserList.isEmpty()) {
-            for (CourseUser courseUser : courseUserList) {
-                this.courseUserService.deleteCourseUser(courseUser.getId().getCourseId(), courseUser.getId().getUserId());
+            for (CourseUsers courseUsers : courseUserList) {
+                this.courseUserService.deleteCourseUser(courseUsers.getId().getCourseId(), courseUsers.getId().getUserId());
             }
         }
 
