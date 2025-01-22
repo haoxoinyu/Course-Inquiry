@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.List;
@@ -31,11 +33,14 @@ public class SchoolServiceImpl implements SchoolService {
     @Autowired
     TermService termService;
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
     @Override
     public ResponseEntity<Map<String, Object>> save(School school) {
         Map<String, Object> response = new HashMap<>();
 
-        if(this.validateSchool(school)){
+        if(!this.validateSchool(school)){
             response.put("status", "error");
             response.put("message", "该学校已存在");
             return ResponseEntity.ok(response);
@@ -48,7 +53,16 @@ public class SchoolServiceImpl implements SchoolService {
     }
 
     @Override
-    public boolean validateSchool(School school) { return school.getName().equals(school.getName()); }
+    public boolean validateSchool(School school) {
+        // 使用数据库查询，验证是否已经存在相同的Klass
+        String hql = "FROM School s WHERE s.name = :name";
+        List<School> result = entityManager.createQuery(hql, School.class)
+                .setParameter("name", school.getName())
+                .getResultList();
+
+        // 如果查询结果不为空，则表示数据库中已经存在相同的School
+        return result.isEmpty();
+    }
 
     @Override
     public Page<School> findAll(Pageable pageable) {
@@ -78,7 +92,7 @@ public class SchoolServiceImpl implements SchoolService {
 
         Map<String, Object> response = new HashMap<>();
 
-        if(this.validateSchool(school)){
+        if(!this.validateSchool(school)){
             response.put("status", "error");
             response.put("message", "该学校已存在");
             return ResponseEntity.ok(response);

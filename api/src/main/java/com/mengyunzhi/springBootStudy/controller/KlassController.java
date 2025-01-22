@@ -10,9 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 班级控制器
@@ -30,8 +32,8 @@ public class KlassController {
 
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id) {
-        klassService.deleteById(id);
+    public ResponseEntity<Map<String, Object>> delete(@PathVariable Long id) {
+        return klassService.deleteById(id);
     }
 
     @GetMapping("{id}")
@@ -77,8 +79,8 @@ public class KlassController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void save(@RequestBody Klass klass) {
-        this.klassService.save(klass);
+    public ResponseEntity<Map<String, Object>> save(@RequestBody Klass klass) {
+        return this.klassService.save(klass);
     }
 
     /**
@@ -89,7 +91,7 @@ public class KlassController {
      */
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@PathVariable Long id, @RequestBody Klass klass) {
-        this.klassService.update(id, klass);
+    public ResponseEntity<Map<String, Object>> update(@PathVariable Long id, @RequestBody Klass klass) {
+        return this.klassService.update(id, klass);
     }
 }

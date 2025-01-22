@@ -85,17 +85,21 @@ export class IndexComponent implements OnInit {
       .then(isConfirmed => {
         if (isConfirmed) {
           this.klassService.deleteById(klass.id)
-            .subscribe(() => {
-              this.pageKlass.content.forEach((value, key) => {
-                if (value === klass) {
-                  this.pageKlass.content.splice(key, 1);
-                  this.sweetAlertService.showSuccess('删除成功', "success");
-                  if (this.pageKlass.content.length === 0 && this.params.page > 0) {
-                    this.params.page--;
-                    this.loadData();
+            .subscribe((data) => {
+              if (data.message === "该班级仍有用户未清空") {
+                this.sweetAlertService.showError('删除失败', '该班级仍有用户未清空', 'error');
+              } else {
+                this.pageKlass.content.forEach((value, key) => {
+                  if (value === klass) {
+                    this.pageKlass.content.splice(key, 1);
+                    this.sweetAlertService.showSuccess('删除成功', "success");
+                    if (this.pageKlass.content.length === 0 && this.params.page > 0) {
+                      this.params.page--;
+                      this.loadData();
+                    }
                   }
-                }
-              });
+                });
+              }
             });
         }
       });

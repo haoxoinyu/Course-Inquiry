@@ -36,15 +36,19 @@ export class AddComponent implements OnInit {
   }
 
   onSubmit(): void {
-   
+
     const url = 'http://localhost:8080/Klass';
     const klass = new Klass(undefined, this.formGroup.get('name')?.value!,
       this.school); // 确保这里使用的是正确的表单值
       console.log('on submit', klass);
     this.httpClient.post(url, klass)
-      .subscribe(() => {
-        console.log('保存成功');
-        this.sweetAlertService.showSuccess('新增成功', "success");
+      .subscribe((data: any) => {
+        if (data.message === "该班级已存在") {
+          this.sweetAlertService.showError('新增失败', '该班级已存在', 'error');
+        } else{
+          this.dialogRef.close();
+          this.sweetAlertService.showSuccess('新增成功', "success");
+        }
       }, (response) => {
         console.log(`向${url}发起的post请求发生错误` + response);
         this.setMessage(AddComponent.errorMessage);
