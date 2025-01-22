@@ -7,11 +7,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.List;
 
 public interface CourseRepository extends PagingAndSortingRepository<Course, Long>, JpaSpecificationExecutor {
@@ -56,6 +54,14 @@ public interface CourseRepository extends PagingAndSortingRepository<Course, Lon
                 .and(CourseSpecs.belongToUser(user))
                 .and(CourseSpecs.Sory(sory));
         return this.findAll(specification, pageable);
+    }
+
+    default List<Course> findAll(School school, Klass klass, Term term, List<Integer> week){
+        Specification<Course> specification = CourseSpecs.belongToSchool(school)
+                .and(CourseSpecs.belongToTerm(term))
+                .and(CourseSpecs.belongToKlass(klass))
+                .and(CourseSpecs.belongToWeek(week));
+        return this.findAll(specification);
     }
 
     @Query("SELECT c FROM Course c WHERE c.term.id = ?1 AND c.sory = ?2")

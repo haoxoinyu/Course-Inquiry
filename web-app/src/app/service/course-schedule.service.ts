@@ -6,17 +6,18 @@ import {HttpClient} from '@angular/common/http';
   providedIn: 'root'
 })
 export class CourseScheduleService {
+  private url = 'http://localhost:8080/Course';
 
   constructor(private httpClient: HttpClient) { }
 
-  getCourseTable(schoolId: number, clazzId: number, termId: number, week: number): Observable<any> {
+  getCourseTable(schoolId: number, clazzId: number, termId: number, week: null): Observable<any> {
     const searchParameters = {
-      school: schoolId,
-      clazz: clazzId,
-      term: termId,
-      weekNumber: week
+      schoolId: schoolId,
+      clazzId: clazzId,
+      termId: termId,
+      week: week
     };
     console.log(searchParameters);
-    return this.httpClient.post(`/api/Schedule/`, searchParameters);
+    return this.httpClient.post(this.url + '/course-schedule', searchParameters);
   }
 }
