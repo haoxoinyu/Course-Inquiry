@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * 学期服务实现
@@ -40,6 +41,11 @@ public class TermServiceImpl implements TermService {
         school.setId(schoolId);
 
         return this.termRepository.findAll(name, school, pageable);
+    }
+
+    @Override
+    public List<Term> getTermBySchool(School school) {
+        return this.termRepository.findBySchoolId(school);
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.mengyunzhi.springBootStudy.repository;
 
+import com.mengyunzhi.springBootStudy.entity.Klass;
 import com.mengyunzhi.springBootStudy.entity.School;
 import com.mengyunzhi.springBootStudy.entity.Term;
 import com.mengyunzhi.springBootStudy.repository.spec.KlassSpecs;
@@ -31,6 +32,11 @@ public interface TermRepository extends PagingAndSortingRepository<Term, Long>, 
         Specification<Term> specification = TermSpecs.containingName(name)
                 .and(TermSpecs.belongToSchool(school));
         return this.findAll(specification, pageable);
+    }
+
+    default List<Term> findBySchoolId(School school) {
+        Specification<Term> specification = TermSpecs.belongToSchool(school);
+        return this.findAll(specification);
     }
 
     List<Term> findAllByNameContains(String name);
