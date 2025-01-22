@@ -95,7 +95,7 @@ export class AddComponent implements OnInit {
     const newCourse = {
       name: this.formGroup.get('name')!.value,
       sory: this.formGroup.get('sory')!.value,
-      week: [this.formGroup.get('week')!.value],
+      week: this.formGroup.get('week')!.value!,
       day: this.formGroup.get('day')!.value,
       period: this.formGroup.get('period')!.value,
       schoolId: this.formGroup.get('schoolId')!.value,
