@@ -134,6 +134,7 @@ export class IndexComponent implements OnInit {
      return period ? period.name : '';
    }
 
+
    loadByPage(page?: number): void {
     this.searchParameters.page = page ?? 0;
      this.courseService.page(this.searchParameters)

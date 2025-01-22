@@ -204,4 +204,5 @@ export class AddComponent implements OnInit {
       (this.formGroup.get('week')!.value as number[]).push(value);
     });
   }
+
 }
