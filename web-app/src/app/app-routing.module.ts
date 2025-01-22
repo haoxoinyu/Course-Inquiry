@@ -3,6 +3,7 @@ import {Routes, RouterModule} from '@angular/router';
 import {WelcomeComponent} from './welcome/welcome.component';
 import {LoginComponent} from "./login/login.component";
 import {CourseScheduleComponent} from "./course-schedule/course-schedule.component";
+import { scheduled } from 'rxjs';
 
 const routes: Routes = [
   {
@@ -12,6 +13,10 @@ const routes: Routes = [
   {
     path: 'personalCenter',
     loadChildren: () => import('./personal-center/personal-center.module').then(m => m.PersonalCenterModule)
+  },
+  {
+    path: 'schedule',
+    loadChildren: () => import('./schedule/schedule.module').then(schedule => schedule.ScheduleModule)
   },
   {
     path: 'user',

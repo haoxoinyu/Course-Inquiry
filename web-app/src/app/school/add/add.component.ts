@@ -32,9 +32,13 @@ export class AddComponent implements OnInit {
   onSubmit(): void {
     this.school = this.formGroup.value;
     console.log(this.formGroup.value);
-    this.schoolService.save(this.school).subscribe((school: School) => {
-      this.dialogRef.close();
-      this.sweetAlertService.showSuccess('新增成功', "success");
+    this.schoolService.save(this.school).subscribe((data) => {
+      if (data.message === "该学校已存在") {
+        this.sweetAlertService.showError('新增失败', '该学校已存在', 'error');
+      } else{
+        this.dialogRef.close();
+        this.sweetAlertService.showSuccess('新增成功', "success");
+      }
     });
   }
 

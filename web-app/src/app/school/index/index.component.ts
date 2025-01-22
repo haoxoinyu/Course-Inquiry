@@ -79,17 +79,24 @@ export class IndexComponent implements OnInit {
       .then(isConfirmed => {
         if (isConfirmed) {
           this.schoolService.deleteById(school.id)
-            .subscribe(() => {
-              this.pageSchool.content.forEach((value, key) => {
-                if (value === school) {
-                  this.pageSchool.content.splice(key, 1);
-                  this.sweetAlertService.showSuccess('删除成功', "success");
-                  if (this.pageSchool.content.length === 0 && this.params.page > 0) {
-                    this.params.page--;
-                    this.loadData();
+            .subscribe((data) => {
+              if (data.message === "该学校仍有班级未清空") {
+                this.sweetAlertService.showError('删除失败', '该学校仍有班级未清空', 'error');
+              } else if (data.message === "该学校仍有学期未清空") {
+                this.sweetAlertService.showError('删除失败', '该学校仍有学期未清空', 'error');
+              } else {
+                this.pageSchool.content.forEach((value, key) => {
+                  if (value === school) {
+                    this.pageSchool.content.splice(key, 1);
+                    this.sweetAlertService.showSuccess('删除成功', "success");
+                    if (this.pageSchool.content.length === 0 && this.params.page > 0) {
+                      this.params.page--;
+                      this.loadData();
+                    }
                   }
-                }
-              });
+                });
+              }
+
             });
         }
       });

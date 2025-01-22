@@ -11,7 +11,8 @@ import {UserService} from '../../service/user.service';
 import { KlassService } from 'src/app/service/klass.service';
 import { TermService } from 'src/app/service/term.service';
 import { SchoolService } from 'src/app/service/school.service';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatSelectChange } from '@angular/material/select';
 
 @Component({
   selector: 'app-add',
@@ -19,6 +20,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./add.component.sass']
 })
 export class AddComponent implements OnInit {
+
   course = {
     name: '',
     school_id: null as unknown as number,
@@ -38,7 +40,7 @@ export class AddComponent implements OnInit {
     userId: new FormControl(0, Validators.required),
     klassId: new FormControl(0, Validators.required),
     sory: new FormControl(0, Validators.required),
-    week: new FormControl(0, Validators.required),
+    week:  new FormControl([] as number [], Validators.required),
     day: new FormControl(0, Validators.required),
     period: new FormControl(0, Validators.required)
   })
@@ -47,8 +49,8 @@ export class AddComponent implements OnInit {
   schools = new Array<School>();
   terms = new Array<Term>();
   term = new Term(1, '', new School(1, ''), new Date(), new Date());
-  clazzes : Klass[] = [new Klass(1, '',undefined)];
-  users = new Array<User>(new User(1,'', '', 1,''));
+  clazzes: Klass[] = [new Klass(1, '', undefined)];
+  users = new Array<User>(new User(1, '', '', 1, ''));
 
   semesterStartDate: Date | undefined;
   semesterEndDate: Date | undefined;
@@ -81,7 +83,7 @@ export class AddComponent implements OnInit {
               private klassService: KlassService,
               private termService: TermService,
               private schoolService: SchoolService) {
-               }
+  }
 
   ngOnInit() {
     // 获取所有学校
@@ -93,7 +95,7 @@ export class AddComponent implements OnInit {
     const newCourse = {
       name: this.formGroup.get('name')!.value,
         sory: this.formGroup.get('sory')!.value,
-        week: [this.formGroup.get('week')!.value],
+        week: this.formGroup.get('week')!.value!,
         day: this.formGroup.get('day')!.value,
         period: this.formGroup.get('period')!.value,
         schoolId: this.formGroup.get('schoolId')!.value,
@@ -101,6 +103,7 @@ export class AddComponent implements OnInit {
         term_id: this.formGroup.get('termId')!.value,
         userId: this.formGroup.get('userId')!.value
     }
+    console.log("newCourse", newCourse)
     this.courseService.add(newCourse)
       .subscribe(clazz => {
           this.dialogRef.close(newCourse);
@@ -137,6 +140,7 @@ export class AddComponent implements OnInit {
         this.users = data;
       })
   }
+
   getTermsBySchoolId(schoolId: number) {
     this.termService.getTermsBySchoolId(schoolId)
       .subscribe(data => {
@@ -192,6 +196,13 @@ export class AddComponent implements OnInit {
     for (let i = 1; i <= numberOfWeeks; i++) {
       this.weeks.push(i);
     }
+  }
+
+  onSelectionChange(event: MatSelectChange): void {
+    this.formGroup.get('week')?.setValue([]);
+    (event.value as number[]).forEach((value)=> {
+      (this.formGroup.get('week')!.value as number[]).push(value);
+    });
   }
 
 }

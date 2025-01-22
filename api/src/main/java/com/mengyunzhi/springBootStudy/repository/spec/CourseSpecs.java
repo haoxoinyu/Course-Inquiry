@@ -20,24 +20,10 @@ public class CourseSpecs {
             return new Specification<Course>() {
                 @Override
                 public Predicate toPredicate(Root<Course> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-                    Join<Course, Term> termJoin = root.join("term");
-                    Join<Term, School> schoolJoin = termJoin.join("school");
+                    Join<Course, User> userJoin = root.join("users", JoinType.INNER);
+                    Join<User, Klass> klassJoin = userJoin.join("klass");
 
-                    //定义子查询语句
-                    Subquery<Long> subquery = criteriaQuery.subquery(Long.class);
-                    //构建子查询语句的from成分
-                    Root<School> schoolSubRoot = subquery.from(School.class);
-                    //join klass表
-                    Join<School, Klass> klassJoin = schoolSubRoot.join("klass"); // klass是School中Klass列表的属性名
-                    //子查询的select部分
-                    subquery.select(schoolSubRoot.get("id"));
-                    //构建where查询条件语句
-                    Predicate klassPredicate = criteriaBuilder.equal(klassJoin.get("id"), klass.getId()); // 比较Klass的ID
-                    subquery.where(klassPredicate);
-
-                    // 在主查询中使用IN子句来检查School的ID是否在子查询结果中，选择那些其School的id在子查询结果集中的Course实体
-                    Predicate inPredicate = criteriaBuilder.in(schoolJoin.get("id")).value(subquery);
-                    return inPredicate;
+                    return criteriaBuilder.equal(klassJoin.get("id"), klass.getId()) ;
                 }
             };
         }

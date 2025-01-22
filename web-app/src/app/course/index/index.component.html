@@ -42,7 +42,6 @@
       <a class="btn btn-primary mb-2" (click)="openAddDialog()"><i class="fas fa-plus"></i>新增</a>
     </div>
   </div>
-
   <br>
   <table class="table table-striped" style="width: 1550px">
     <thead>
@@ -84,5 +83,25 @@
     </tr>
     </tbody>
   </table>
-  <!-- <app-page [page]="pageData" (bePageChange)="onPage($event)"></app-page> -->
+  <nav>
+    <ul class="pagination">
+      <li class="page-item" [ngClass]="{'disabled': page === 0}" (click)="onPage(0)">
+        <span class="page-link">首页</span>
+      </li>
+      <li class="page-item" [ngClass]="{'disabled': page === 0}" (click)="onPage(page - 1)">
+        <span class="page-link">上一页</span>
+      </li>
+      <li class="page-item" [ngClass]="{'active': page === pageli}" *ngFor="let pageli of pages" (click)="onPage(pageli)">
+        <span class="page-link" *ngIf="page  !== pageli">{{pageli + 1}}</span>
+        <span class="page-link" *ngIf="page === pageli">{{pageli + 1}}<span class="sr-only">(current)</span></span>
+      </li>
+      <li class="page-item" [ngClass]="{'disabled': page === pageData.totalPages - 1}" (click)="onPage(page + 1)">
+        <span class="page-link">下一页</span>
+      </li>
+      <li class="page-item" [ngClass]="{'disabled': page === pageData.totalPages - 1}" (click)="onPage(pageData.totalPages - 1)">
+        <span class="page-link">尾页</span>
+      </li>
+
+    </ul>
+  </nav>
 </div>

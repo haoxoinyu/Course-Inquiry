@@ -1,10 +1,13 @@
 package com.mengyunzhi.springBootStudy.service;
 
+import com.mengyunzhi.springBootStudy.entity.Klass;
+import com.mengyunzhi.springBootStudy.entity.School;
 import com.mengyunzhi.springBootStudy.entity.Term;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 public interface TermService {
     /**
@@ -13,6 +16,8 @@ public interface TermService {
      * @param id 学期ID
      */
     void deleteById(Long id);
+
+    List<Term> getTermBySchool(School school);
 
     /**
      * 查询分页信息

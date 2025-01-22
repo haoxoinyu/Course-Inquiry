@@ -95,10 +95,46 @@ export class CourseService {
     return this.httpClient.post<void>(this.url + '/add', newCourse);
   }
 
+  /**
+   * 获取课程通过id
+   * @param id 课程id
+   * **/
   getById(courseId: number): Observable<Course> {
     /* 初始化查询参数 */
     const queryParams = new HttpParams()
     .set('courseId', courseId ? courseId.toString() : '')
-    return this.httpClient.get<Course>(this.url + "/findById", {params: queryParams})
+    return this.httpClient.get<Course>(this.url + '/findById', {params: queryParams})
+  }
+
+
+  /**
+   * 更新课程
+   * @param course 更新的信息
+   * **/
+  update(course:  {
+    id: number
+    name?: string | null,
+    sory?: number | null,
+    week?: (number | null)[],
+    day?: number  | null,
+    period?: number | null,
+    schoolId?: number | null,
+    clazz_id?: number | null,
+    term_id?: number | null,
+    userId?: number | null
+  }): Observable<void> {
+    let updateCourse = {
+      id: course.id,
+      name: course.name,
+      sory: course.sory,
+      week: course.week,
+      day: [course.day],
+      period: [course.day],
+      schoolId: course.schoolId,
+      klassId: course.clazz_id,
+      termId: course.term_id,
+      userId: course.userId
+    }
+    return this.httpClient.put<void>(this.url + '/updateCourse', updateCourse)
   }
 }

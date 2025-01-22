@@ -14,6 +14,7 @@ import {MatDialogModule} from "@angular/material/dialog";
 import {ApiDemoModule} from "../api/api-demo.module";
 import {CourseScheduleModule} from './course-schedule/course-schedule.module';
 import {SoryPipe} from "./norm/sory.pipe";
+import { MatSelect, MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import {SoryPipe} from "./norm/sory.pipe";
     ReactiveFormsModule,
     BrowserAnimationsModule,
     MatDialogModule,
-    CourseScheduleModule
+    CourseScheduleModule,
+    MatSelectModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: AuthTokenInterceptor, multi: true}

@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -42,17 +44,33 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean login(String username, String password) {
+    public ResponseEntity<Map<String, Object>> login(String username, String password) {
+        Map<String, Object> response = new HashMap<>();
         User user = this.userRepository.findByUsername(username);
         if (!this.validatePassword(user, password)) {
             // 认证不成功直接返回
-            return false;
+            response.put("status", "error");
+            response.put("message", "用户名或密码不正确");
+            return ResponseEntity.ok(response);
+        }
+        if (!this.validateState(user)) {
+            // 认证不成功直接返回
+            response.put("status", "error");
+            response.put("message", "用户已被冻结");
+            return ResponseEntity.ok(response);
         }
 
         // 认证成功，进行auth-token与userId的绑定绑定
-        logger.info("获取到的auth-token为" + this.request.getHeader("auth-token"));
-        this.authTokenUserIdHashMap.put(this.request.getHeader("auth-token"), user.getId());
-        return true;
+        String authToken = this.request.getHeader("auth-token");
+        logger.info("获取到的auth-token为" + authToken);
+        this.authTokenUserIdHashMap.put(authToken, user.getId());
+
+        response.put("status", "success");
+        response.put("message", "登录成功");
+        response.put("userId", user.getId());
+        response.put("authToken", authToken);
+
+        return ResponseEntity.ok(response);
     }
 
     @Override
@@ -62,6 +80,15 @@ public class UserServiceImpl implements UserService {
         }
 
         return user.getPassword().equals(password);
+    }
+
+    @Override
+    public boolean validateState(User user) {
+        if (user == null || user.getPassword() == null) {
+            return false;
+        }
+
+        return user.getState().equals(1);
     }
 
     @Override
@@ -146,6 +173,7 @@ public class UserServiceImpl implements UserService {
         this.userRepository.deleteById(id);
     }
 
+    @Override
     public List<User> findByKlassId(Long klassId) {
         Klass klass = new Klass();
         klass.setId(klassId);

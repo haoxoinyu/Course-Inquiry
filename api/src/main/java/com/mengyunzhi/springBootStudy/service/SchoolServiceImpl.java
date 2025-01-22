@@ -2,15 +2,19 @@ package com.mengyunzhi.springBootStudy.service;
 
 import com.mengyunzhi.springBootStudy.entity.Klass;
 import com.mengyunzhi.springBootStudy.entity.School;
+import com.mengyunzhi.springBootStudy.entity.Term;
 import com.mengyunzhi.springBootStudy.repository.SchoolRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import javax.validation.constraints.NotNull;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 学校服务实现
@@ -20,11 +24,31 @@ public class SchoolServiceImpl implements SchoolService {
     /*学校仓库*/
     @Autowired
     SchoolRepository schoolRepository;
+    
+    @Autowired
+    KlassService klassService;
+
+    @Autowired
+    TermService termService;
 
     @Override
-    public School save(School school) {
-        return this.schoolRepository.save(school);
+    public ResponseEntity<Map<String, Object>> save(School school) {
+        Map<String, Object> response = new HashMap<>();
+
+        if(this.validateSchool(school)){
+            response.put("status", "error");
+            response.put("message", "该学校已存在");
+            return ResponseEntity.ok(response);
+        } else {
+            this.schoolRepository.save(school);
+            response.put("status", "success");
+            response.put("message", "新增成功");
+            return ResponseEntity.ok(response);
+        }
     }
+
+    @Override
+    public boolean validateSchool(School school) { return school.getName().equals(school.getName()); }
 
     @Override
     public Page<School> findAll(Pageable pageable) {
@@ -49,16 +73,54 @@ public class SchoolServiceImpl implements SchoolService {
     }
 
     @Override
-    public School update(Long id, School school) {
+    public ResponseEntity<Map<String, Object>> update(Long id, School school) {
         School oldSchool = this.schoolRepository.findById(id).get();
-        return this.updateFields(school,oldSchool);
+
+        Map<String, Object> response = new HashMap<>();
+
+        if(this.validateSchool(school)){
+            response.put("status", "error");
+            response.put("message", "该学校已存在");
+            return ResponseEntity.ok(response);
+        } else {
+            this.updateFields(school,oldSchool);
+            response.put("status", "success");
+            response.put("message", "编辑成功");
+            return ResponseEntity.ok(response);
+        }
     }
 
     @Override
-    public void deleteById(@NotNull Long id) {
+    public ResponseEntity<Map<String, Object>> deleteById(@NotNull Long id) {
         Assert.notNull(id, "传入的ID不能为NULL");
+
+        Map<String, Object> response = new HashMap<>();
+
+        School school = this.schoolRepository.findById(id).get();
+
+        // 检查学校是否有班级
+        List<Klass> klassList = this.klassService.getKlassBySchool(school);
+        if (!klassList.isEmpty()) {
+            response.put("status", "error");
+            response.put("message", "该学校仍有班级未清空");
+            return ResponseEntity.ok(response);
+        }
+
+        // 检查学校是否有学期
+        List<Term> termList = this.termService.getTermBySchool(school);
+        if (!termList.isEmpty()) {
+            response.put("status", "error");
+            response.put("message", "该学校仍有学期未清空");
+            return ResponseEntity.ok(response);
+        }
+
+        // 如果班级和学期都已经清空，删除学校
         this.schoolRepository.deleteById(id);
+        response.put("status", "success");
+        response.put("message", "删除成功");
+        return ResponseEntity.ok(response);
     }
+
 
     /**
      * 更新学生

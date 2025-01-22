@@ -28,11 +28,14 @@ export class LoginComponent implements OnInit {
     const username = this.formGroup?.get('username')!.value;
     const password = this.formGroup?.get('password')!.value;
     this.userService.login(username, password).subscribe(result => {
-      if (result) {
-        this.userService.setIsLogin(true);
-      } else {
-        console.log('用户名密码错误');
+      if (result.message === "用户已被冻结") {
+        this.sweetAlertService.showInfo();
+      } else if (result.message === "用户名或密码不正确") {
         this.sweetAlertService.showError('登录失败', '用户名密码错误', 'error');
+      }
+      else {
+        this.sweetAlertService.showSuccess('登录成功', 'success');
+        this.userService.setIsLogin(true);
       }
     });
   }

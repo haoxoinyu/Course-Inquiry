@@ -90,9 +90,13 @@
   <div class="mb-3 row">
     <label for="name" class="col-sm-2 col-form-label">选择周数</label>
     <div class="col-sm-10">
-      <select name="course.week" formControlName="week" class="custom-select mr-sm-2">
-          <option *ngFor="let week of weeks" [value]="week">{{ week }}</option>
-        </select>
+      <mat-form-field>
+        <mat-select [multiple]="true" #multiSelect="matSelect" formControlName="week">
+          <mat-option *ngFor="let week of weeks" [value]="week">
+            {{ week }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
       </div>
   </div>
   <div class="mb-3 row">

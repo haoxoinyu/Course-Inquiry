@@ -68,6 +68,11 @@ public class CourseServiceImpl implements CourseService {
         Course oldCourse = courseRepository.findById(id).get();
         oldCourse.setName(course.getName());
         oldCourse.setTerm(course.getTerm());
+        oldCourse.setDay(course.getDay());
+        oldCourse.setSory(course.getSory());
+        oldCourse.setWeek(course.getWeek());
+        oldCourse.setUsers(course.getUsers());
+        oldCourse.setPeriod(course.getPeriod());
         courseRepository.save(oldCourse);
     }
 

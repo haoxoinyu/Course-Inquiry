@@ -1,0 +1,50 @@
+<div class="container-md main" style="margin-top: 120px;">
+    <div class="mt-4 mb-4">
+        <div class="row justify-content-center my-5"> <!-- 添加垂直间距 -->
+        <div class="col-md-6 text-center"> <!-- 控制宽度并居中文本 -->
+            <h2 class="display-4 special-heading" style="font-size: 50px;">行程表</h2>
+        </div>
+        </div>
+        <div>
+        <!-- 查询和增加按钮区域 -->
+        <form class="form-inline" (ngSubmit)="onSubmit()" [formGroup]="formGroup">
+            <!-- 查询日期 -->
+            <input class="form-control datetimepicker-input" type="date" name="date" id="date" formControlName="date"/>
+            <!-- 提交按钮 -->
+            <div class="form-group col-md-2">
+            <button type="submit" class="btn btn-outline-success" [disabled]="formGroup.invalid">&nbsp;<i class="fas fa-search"></i>查询</button>
+            </div>
+        </form>
+        </div>
+    </div>
+    <table class="table">
+        <tr>
+        <th class="th">时间</th>
+            <ng-container *ngFor="let day of weekDates; index as index">
+            <th class="th">{{getDayOfWeek(index)}}<br>{{day}}
+            </ng-container>
+        </tr>
+        <tr *ngFor="let section of sectionNumber">
+        <th class="th">
+            <ng-container [ngSwitch]="section">
+            <p *ngSwitchCase="1">8:30 - 10:05</p>
+            <p *ngSwitchCase="2">10:30 - 12:00</p>
+            <p *ngSwitchCase="3">14:00 - 15:30</p>
+            <p *ngSwitchCase="4">16:30 - 18:00</p>
+            <p *ngSwitchCase="5">20:00 - 21:00</p>
+            </ng-container>
+        </th>
+        <ng-container *ngFor="let date of dateNumber">
+            <td style="height: 158px;" class="td" id="monday-first">
+            <ng-container *ngFor="let obj of PeopleHaveCourse">
+                <ng-container *ngIf="obj.time === date + '-' + section">
+                <ng-container *ngFor="let student of obj.students">
+                    {{student}}
+                </ng-container>
+                </ng-container>
+            </ng-container>
+            </td>
+        </ng-container>
+        </tr>
+    </table>
+</div>

@@ -11,6 +11,8 @@ import { EditComponent } from './edit/edit.component';
 import {UserModule} from '../user/user.module';
 import { SchoolSelectComponent } from '../klass/school-select/school-select.component';
 import { KlassModule } from '../klass/klass.module';
+import { MatSelect, MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @NgModule({
   declarations: [AddComponent, UserMultipleSelectComponent, IndexComponent, EditComponent],
@@ -21,7 +23,9 @@ import { KlassModule } from '../klass/klass.module';
     UserModule,
     CoreModule,
     FormsModule,
-    KlassModule
+    KlassModule,
+    MatSelectModule,
+    MatFormFieldModule,
   ]
 })
 export class CourseModule { }
