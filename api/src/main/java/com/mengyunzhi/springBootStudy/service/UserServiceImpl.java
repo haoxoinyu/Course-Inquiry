@@ -1,5 +1,6 @@
 package com.mengyunzhi.springBootStudy.service;
 
+import com.mengyunzhi.springBootStudy.entity.CourseUsers;
 import com.mengyunzhi.springBootStudy.entity.Klass;
 import com.mengyunzhi.springBootStudy.entity.User;
 import com.mengyunzhi.springBootStudy.filter.TokenFilter;
@@ -13,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
 import java.util.HashMap;
@@ -29,6 +32,12 @@ public class UserServiceImpl implements UserService {
     private final HttpServletRequest request;
 
     private UserRepository userRepository;
+
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    @Autowired
+    CourseUserService courseUserService;
 
     @Autowired
     public UserServiceImpl(HttpServletRequest request, UserRepository userRepository) {
@@ -88,7 +97,7 @@ public class UserServiceImpl implements UserService {
             return false;
         }
 
-        return user.getState().equals(1);
+        return user.getState().equals(1L);
     }
 
     @Override
@@ -140,10 +149,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User update(Long id, User user) {
+    public ResponseEntity<Map<String, Object>> update(Long id, User user) {
+
         User oldUser = this.userRepository.findById(id).get();
-        System.out.println(oldUser);
-        return this.updateFields(user,oldUser);
+
+        Map<String, Object> response = new HashMap<>();
+
+        if(!this.validateUser(user)){
+            response.put("status", "error");
+            response.put("message", "该用户已存在");
+            return ResponseEntity.ok(response);
+        } else {
+            this.updateFields(user,oldUser);
+            response.put("status", "success");
+            response.put("message", "编辑成功");
+            return ResponseEntity.ok(response);
+        }
     }
 
     /**
@@ -164,13 +185,63 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void save(User user) {
-        this.userRepository.save(user);
+    public ResponseEntity<Map<String, Object>> save(User user) {
+        Map<String, Object> response = new HashMap<>();
+
+        if(!this.validateUser(user)){
+            response.put("status", "error");
+            response.put("message", "该用户已存在");
+            return ResponseEntity.ok(response);
+        } else {
+            this.userRepository.save(user);
+            response.put("status", "success");
+            response.put("message", "新增成功");
+            return ResponseEntity.ok(response);
+        }
     }
 
     @Override
-    public void deleteById(Long id) {
+    public boolean validateUser(User user) {
+        // 使用数据库查询，验证是否已经存在相同的User
+        String hql = "FROM User u WHERE u.username = :username";
+        List<User> result = entityManager.createQuery(hql, User.class)
+                .setParameter("username", user.getUsername())
+                .getResultList();
+
+        // 如果查询结果为空，则表示没有重复的用户名，返回true
+        if (result.isEmpty()) {
+            return true;
+        }
+
+        // 如果查询到一条数据且userId相同，则返回true
+        if (result.size() == 1) {
+            User existingUser = result.get(0);
+            return existingUser.getId().equals(user.getId());
+        }
+
+        // 如果查询到多条数据或userId不同，则返回false
+        return false;
+    }
+
+    @Override
+    public ResponseEntity<Map<String, Object>> deleteById(Long id) {
+        Map<String, Object> response = new HashMap<>();
+
+        User user = this.userRepository.findById(id).get();
+
+        // 检查班级是否有用户
+        List<CourseUsers> courseUserList = this.courseUserService.findByUserId(user.getId());
+        if (!courseUserList.isEmpty()) {
+            for (CourseUsers courseUsers : courseUserList) {
+                this.courseUserService.deleteCourseUser(courseUsers.getId().getCourseId(), courseUsers.getId().getUserId());
+            }
+        }
+
+        // 如果用户已经清空，删除班级
         this.userRepository.deleteById(id);
+        response.put("status", "success");
+        response.put("message", "删除成功");
+        return ResponseEntity.ok(response);
     }
 
     @Override

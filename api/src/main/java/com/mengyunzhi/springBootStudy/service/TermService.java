@@ -5,9 +5,11 @@ import com.mengyunzhi.springBootStudy.entity.School;
 import com.mengyunzhi.springBootStudy.entity.Term;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Map;
 
 public interface TermService {
     /**
@@ -15,7 +17,7 @@ public interface TermService {
      *
      * @param id 学期ID
      */
-    void deleteById(Long id);
+    ResponseEntity<Map<String, Object>> deleteById(Long id);
 
     List<Term> getTermBySchool(School school);
 
@@ -50,7 +52,7 @@ public interface TermService {
      *
      * @param term 班级
      */
-    void save(Term term);
+    ResponseEntity<Map<String, Object>> save(Term term);
 
     /**
      * 更新班级
@@ -58,5 +60,19 @@ public interface TermService {
      * @param id    预更新的班级ID
      * @param term 新的班级信息
      */
-    void update(Long id, Term term);
+    ResponseEntity<Map<String, Object>> update(Long id, Term term);
+
+    /**
+     * 验证
+     * @param term
+     * @return
+     */
+    boolean validateTermOnly(@NotNull Term term);
+
+    /**
+     * 验证
+     * @param term
+     * @return
+     */
+    boolean validateTermTime(@NotNull Term term);
 }

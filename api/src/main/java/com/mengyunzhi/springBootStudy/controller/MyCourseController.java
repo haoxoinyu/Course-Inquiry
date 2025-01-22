@@ -2,7 +2,6 @@ package com.mengyunzhi.springBootStudy.controller;
 
 
 import com.mengyunzhi.springBootStudy.entity.Course;
-import com.mengyunzhi.springBootStudy.entity.CourseUser;
 import com.mengyunzhi.springBootStudy.service.CourseService;
 import com.mengyunzhi.springBootStudy.service.CourseUserService;
 import org.slf4j.Logger;

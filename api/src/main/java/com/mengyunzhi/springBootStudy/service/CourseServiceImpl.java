@@ -107,6 +107,11 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    public ArrayList<Course> findByTermId(Long termId) {
+        return new ArrayList<>(courseRepository.findByTermId(termId));
+    }
+
+    @Override
     public Optional<Course> findById(Long courseId) {
         return this.courseRepository.findById(courseId);
     }

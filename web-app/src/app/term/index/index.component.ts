@@ -127,17 +127,22 @@ export class IndexComponent implements OnInit {
       .then(isConfirmed => {
         if (isConfirmed) {
           this.termService.deleteById(term.id)
-            .subscribe(() => {
-              this.pageTerm.content.forEach((value, key) => {
-                if (value === term) {
-                  this.pageTerm.content.splice(key, 1);
-                  this.sweetAlertService.showSuccess('删除成功', "success");
-                  if (this.pageTerm.content.length === 0 && this.params.page > 0) {
-                    this.params.page--;
+            .subscribe((data: any) => {
+              if (data.message === "该学期仍有课程未清空") {
+                this.sweetAlertService.showError('删除失败', '该学期仍有课程未清空', 'error');
+              } else {
+                this.pageTerm.content.forEach((value, key) => {
+                  if (value === term) {
+                    this.pageTerm.content.splice(key, 1);
+                    this.sweetAlertService.showSuccess('删除成功', "success");
+                    if (this.pageTerm.content.length === 0 && this.params.page > 0) {
+                      this.params.page--;
+                      this.loadData();
+                    }
                     this.loadData();
                   }
-                }
-              });
+                });
+              }
             });
         }
       });

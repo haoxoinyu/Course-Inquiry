@@ -50,50 +50,9 @@ public class UserController {
 
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id) {
-        userService.deleteById(id);
+    public ResponseEntity<Map<String, Object>> delete(@PathVariable Long id) {
+        return userService.deleteById(id);
     }
-
-//    @GetMapping
-//    @CrossOrigin("*")
-//    public List<User> getAll() {
-//        logger.info("调用UserController的getAll方法");
-//        /*初始化不固定大小的数组*/
-//        List<User> users = new ArrayList<>();
-//
-//        /* 定义实现了RowCallbackHandler接口的对象*/
-//        RowCallbackHandler rowCallbackHandler = new RowCallbackHandler() {
-//            /**
-//             * 该方法用于执行jdbcTemplate.query后的回调，每行数据回调1次。比如User表中有两行数据，则回调此方法两次。
-//             *
-//             * @param resultSet 查询结果，每次一行
-//             * @throws SQLException 查询出错时，将抛出此异常，暂时不处理。
-//             */
-//            @Override
-//            public void processRow(ResultSet resultSet) throws SQLException {
-//                User user = new User();
-//                /*获取字段id，并转换为Long类型返回*/
-//                user.setId(resultSet.getLong("id"));
-//                /*获取字段name，并转换为String类型返回*/
-//                user.setName(resultSet.getString("name"));
-//                /*获取字段sex，并转换为布尔类型返回*/
-//                user.setSex(resultSet.getBoolean("sex"));
-//                user.setUsername(resultSet.getString("username"));
-//                user.setRole(resultSet.getLong("role"));
-//                user.setState(resultSet.getLong("state"));
-//
-//                /*将得到的user添加到要返回的数组中*/
-//                users.add(user);
-//            }
-//        };
-//
-//        /*定义查询字符串*/
-//        String query = "select id, name, sex, username, role, state from user";
-//
-//        /*使用query进行查询，并把查询的结果通过调用rowCallbackHandler.processRow()方法传递给rowCallbackHandler对象*/
-//        jdbcTemplate.query(query, rowCallbackHandler);
-//        return users;
-//    }
 
     @GetMapping
     @CrossOrigin("*")
@@ -143,8 +102,8 @@ public class UserController {
      */
     @PostMapping
     @CrossOrigin("*")
-    public void save(@RequestBody User user) {
-        this.userService.save(user);
+    public ResponseEntity<Map<String, Object>> save(@RequestBody User user) {
+        return this.userService.save(user);
     }
 
     /**
@@ -156,9 +115,7 @@ public class UserController {
      */
     @PutMapping("{id}")
     @CrossOrigin("*")
-    public User update(@PathVariable Long id, @RequestBody User user) {
-        System.out.println(id);
-        System.out.println(user);
+    public ResponseEntity<Map<String, Object>> update(@PathVariable Long id, @RequestBody User user) {
         return this.userService.update(id, user);
     }
 

@@ -146,7 +146,18 @@ public class KlassServiceImpl implements KlassService {
                 .setParameter("schoolId", klass.getSchool().getId())
                 .getResultList();
 
-        // 如果查询结果不为空，则表示数据库中已经存在相同的Klass
-        return result.isEmpty();
+        // 如果查询结果为空，则表示没有重复的班级名称，返回true
+        if (result.isEmpty()) {
+            return true;
+        }
+
+        // 如果查询到一条数据且klassId相同，则返回true
+        if (result.size() == 1) {
+            Klass existingKlass = result.get(0);
+            return existingKlass.getId().equals(klass.getId());
+        }
+
+        // 如果查询到多条数据或klassId不同，则返回false
+        return false;
     }
 }
