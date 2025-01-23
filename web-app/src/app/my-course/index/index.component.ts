@@ -70,10 +70,11 @@ export class IndexComponent implements OnInit {
   ngOnInit() {
     this.userService.me().subscribe((user) => {
       this.me = user;
+      this.params.user_id = user.id;
       console.log(user);
       this.getTermsBySchoolId();
+      this.loadData();
     });
-    this.loadData();
   }
 
   // 方法来获取天的名称
@@ -94,7 +95,7 @@ export class IndexComponent implements OnInit {
   loadData() {
     const queryParams = {
       term_id: this.params.term_id,
-      userId: this.me?.id,
+      userId: this.params.user_id,
       name: this.params.name,
       sory: this.params.sory,
       page: this.params.page,

@@ -7,6 +7,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import {SchoolSelectComponent} from "../../klass/school-select/school-select.component";
 import {CoreModule} from "../../core/core.module";
 import { KlassModule } from 'src/app/klass/klass.module';
+import {SoryPipe} from "../../norm/sory.pipe";
 
 describe('course IndexComponent', () => {
   let component: IndexComponent;
@@ -14,7 +15,7 @@ describe('course IndexComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ IndexComponent, SchoolSelectComponent],
+      declarations: [ IndexComponent, SchoolSelectComponent, SoryPipe],
       imports: [
         ReactiveFormsModule,
         FormsModule,
