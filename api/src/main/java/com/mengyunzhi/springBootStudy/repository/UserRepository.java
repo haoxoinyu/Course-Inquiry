@@ -7,7 +7,9 @@ import com.mengyunzhi.springBootStudy.entity.User;
 import com.mengyunzhi.springBootStudy.repository.spec.KlassSpecs;
 import com.mengyunzhi.springBootStudy.repository.spec.UserSpecs;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.CrudRepository;
@@ -40,7 +42,10 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long>, 
                 .and(UserSpecs.belongToKlass(klass))
                 .and(UserSpecs.Role(role)
                 .and(UserSpecs.State(state)));
-        return this.findAll(specification, pageable);
+        // 将排序规则加入Pageable，按role升序排列
+        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(Sort.Order.asc("role")));
+
+        return this.findAll(specification, sortedPageable);
     }
 
     /**
