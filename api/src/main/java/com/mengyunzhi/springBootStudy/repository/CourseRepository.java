@@ -60,4 +60,6 @@ public interface CourseRepository extends PagingAndSortingRepository<Course, Lon
 
     @Query("SELECT c FROM Course c WHERE c.term.id = ?1 AND c.sory = ?2")
     List<Course> getCoursesByTermId(Long termId, Long sory);
+
+    List<Course> findByUsers(List<User> userList);
 }

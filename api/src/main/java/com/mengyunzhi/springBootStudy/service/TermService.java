@@ -59,4 +59,9 @@ public interface TermService {
      * @param term 新的班级信息
      */
     void update(Long id, Term term);
+
+    /**
+     * 查找某一个时间段的学期
+     * **/
+
 }

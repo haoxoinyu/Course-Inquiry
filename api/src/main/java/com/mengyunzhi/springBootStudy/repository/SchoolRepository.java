@@ -2,6 +2,7 @@ package com.mengyunzhi.springBootStudy.repository;
 
 import com.mengyunzhi.springBootStudy.entity.Klass;
 import com.mengyunzhi.springBootStudy.entity.School;
+import com.mengyunzhi.springBootStudy.entity.Term;
 import com.mengyunzhi.springBootStudy.repository.spec.SchoolSpecs;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,4 +36,6 @@ public interface SchoolRepository extends PagingAndSortingRepository<School, Lon
 
     @Override
     List<School> findAll();
+
+
 }

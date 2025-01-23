@@ -13,6 +13,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.util.Assert;
 
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -40,4 +41,11 @@ public interface TermRepository extends PagingAndSortingRepository<Term, Long>, 
     }
 
     List<Term> findAllByNameContains(String name);
+
+    default List<Term> findTermsInRange(Date date) {
+        Specification<Term> specification = TermSpecs.greaterThanDate(date)
+                .and(TermSpecs.lessThanDate(date));
+        return this.findAll(specification);
+    };
+
 }

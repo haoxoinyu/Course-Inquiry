@@ -1,53 +1,117 @@
 package com.mengyunzhi.springBootStudy.service;
 
+import com.mengyunzhi.springBootStudy.entity.*;
+import com.mengyunzhi.springBootStudy.repository.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.DayOfWeek;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ScheduleImpl implements ScheduleService{
 
+    @Autowired
+    TermRepository termRepository;
+    @Autowired
+    SchoolRepository schoolRepository;
+    @Autowired
+    UserRepository userRepository;
+    @Autowired
+    KlassRepository klassRepository;
+    @Autowired
+    CourseRepository courseRepository;
+
     @Override
     public Long changeToMonday(String date) {
-        ZonedDateTime zonedDateTimeOfMonday;
+        LocalDate DateOfMonday;
         //创建一个可以处理时间字符串的控制器
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         //转化为可以操作的时间对象
-        LocalDateTime localDateTime = LocalDateTime.parse(date, formatter);
+        LocalDate localDate = LocalDate.parse(date, formatter);
         //转化为有时区的时间对象
-        ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.systemDefault());
         //获取传入时间的星期数
-        DayOfWeek dayOfWeek = zonedDateTime.getDayOfWeek();
+        DayOfWeek dayOfWeek = localDate.getDayOfWeek();
         switch (dayOfWeek) {
             case SUNDAY:
-                zonedDateTimeOfMonday = zonedDateTime.minusDays(6);
+                DateOfMonday = localDate.minusDays(6);
                 break;
             case MONDAY:
-                zonedDateTimeOfMonday = zonedDateTime;
+                DateOfMonday = localDate;
                 break;
             case TUESDAY:
-                zonedDateTimeOfMonday = zonedDateTime.minusDays(1);
+                DateOfMonday = localDate.minusDays(1);
                 break;
             case WEDNESDAY:
-                zonedDateTimeOfMonday = zonedDateTime.minusDays(2);
+                DateOfMonday = localDate.minusDays(2);
                 break;
             case THURSDAY:
-                zonedDateTimeOfMonday = zonedDateTime.minusDays(3);
+                DateOfMonday = localDate.minusDays(3);
                 break;
             case FRIDAY:
-                zonedDateTimeOfMonday = zonedDateTime.minusDays(4);
+                DateOfMonday = localDate.minusDays(4);
                 break;
             case SATURDAY:
-                zonedDateTimeOfMonday = zonedDateTime.minusDays(5);
+                DateOfMonday = localDate.minusDays(5);
                 break;
             default:
-                zonedDateTimeOfMonday = zonedDateTime;
+                DateOfMonday = localDate;
                 break;
         }
-        return zonedDateTimeOfMonday.toInstant().toEpochMilli();
+        LocalDateTime dateTime = DateOfMonday.atStartOfDay();
+        ZonedDateTime zonedDateTime = dateTime.atZone(ZoneId.systemDefault());
+        return zonedDateTime.toInstant().toEpochMilli();
     }
+
+    public List<UnbusyStudentsOfCurrentWeek> getUnbusyStudentsOfCurrentWeek(String date) {
+        //转化为周一
+        Long timestamp =this.changeToMonday(date);
+        //空闲的学生
+        List<UnbusyStudentsOfCurrentWeek> unbusyStudentsOfCurrentWeekList = new ArrayList<UnbusyStudentsOfCurrentWeek>();
+        Date formatDate = new Date(timestamp);
+        List<Term> inRangeTerms = this.termRepository.findTermsInRange(formatDate);
+
+        for(Term term : inRangeTerms){
+            //计算在这个学期是第几周
+            Date StartDate = term.getStartTime();
+            LocalDate localDate1 = StartDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate localDate2 = formatDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            Long offsetWeek = ChronoUnit.DAYS.between(localDate1, localDate2) / 7;
+            //查找关联学校
+
+            Optional<School> innnerSchool = this.schoolRepository.findById(term.getSchool().getId());
+            //查找关联班级
+            List<Klass> innerKlasses = this.klassRepository.findBySchool(innnerSchool.get());
+            for(Klass klass : innerKlasses) {
+                //查找关联学生
+                List<User> innerUsers = this.userRepository.findByKlass(klass);
+                for(User user : innerUsers) {
+                    List<User> userList = new ArrayList<User>();
+                    userList.add(user);
+                   List<Course> innerCourses = this.courseRepository.findByUsers(userList);
+                   for(Course course : innerCourses) {
+                       if(course.getWeek().contains(offsetWeek.intValue() + 2)) {
+                           //拼接时间段字符串
+                           List<Integer> dayList = course.getDay();
+                           for(Integer day: dayList) {
+                               for(Integer period : course.getPeriod()) {
+                                   String time = day + "-" + period;
+                                   UnbusyStudentsOfCurrentWeek unbusyStudentOfCurrentWeek = new UnbusyStudentsOfCurrentWeek(user, time);
+
+                                   unbusyStudentsOfCurrentWeekList.add(unbusyStudentOfCurrentWeek);
+                               }
+                           }
+                       }
+                   }
+                }
+            }
+        }
+        return  unbusyStudentsOfCurrentWeekList;
+    }
+
 }
