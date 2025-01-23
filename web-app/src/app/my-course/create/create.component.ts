@@ -107,16 +107,16 @@ export class CreateComponent {
     this.courseService.add(newCourse)
       .subscribe(clazz => {
           this.dialogRef.close(newCourse);
-          this.sweetAlertService.showSuccess('新增成功！', 'success');
+          this.sweetAlertService.showSuccess('添加成功！', 'success');
         },
         error => {
         console.log(error.error.message);
           if (error.error.message === '课程名称长度最小为2位') {
-            this.sweetAlertService.showError('新增失败', '课程名称长度最小为2位', 'error');
+            this.sweetAlertService.showError('添加失败', '课程名称长度最小为2位', 'error');
           } else if (error.error.error === '与已有课程的时间冲突') {
-            this.sweetAlertService.showError('新增失败', '与已有课程的时间冲突', 'error');
+            this.sweetAlertService.showError('添加失败', '与已有课程的时间冲突', 'error');
           } else {
-            this.sweetAlertService.showError('新增失败', '', 'error');
+            this.sweetAlertService.showError('添加失败', '', 'error');
           }
           console.log('保存失败', error);
         });

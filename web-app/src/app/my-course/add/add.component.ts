@@ -52,9 +52,15 @@ export class AddComponent implements OnInit{
       courseId: Number(this.courseUser.course_id),
     }
     console.log(this.newCourseUser);
-    this.myCourseService.save(this.newCourseUser).subscribe((courseUser: CourseUser) => {
-      this.dialogRef.close();
-      this.sweetAlertService.showSuccess('新增成功', "success");
+    this.myCourseService.save(this.newCourseUser).subscribe((data: any) => {
+      if (data.message === "该课程已存在") {
+        this.sweetAlertService.showError('新增失败', '该课程已存在', 'error');
+      } else if (data.message === "与已有课程时间冲突") {
+        this.sweetAlertService.showError('新增失败', '与已有课程时间冲突', 'error');
+      } else {
+        this.dialogRef.close();
+        this.sweetAlertService.showSuccess('新增成功', "success");
+      }
     });
   }
 
