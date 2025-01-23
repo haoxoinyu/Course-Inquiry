@@ -11,4 +11,6 @@ import java.util.List;
 @Repository
 public interface CourseUserRepository extends JpaRepository<CourseUsers, CourseUserId> {
     List<CourseUsers> findByUser(User user);
+
+    long countByCourseId(Long courseId);
 }

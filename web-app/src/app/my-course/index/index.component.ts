@@ -156,7 +156,7 @@ export class IndexComponent implements OnInit {
   openCreateDialog(): void {
     const dialogRef = this.dialog.open(CreateComponent, {
       width: '900px',
-      height: '350px',
+      height: '570px',
     });
 
     dialogRef.afterClosed().subscribe(() => {

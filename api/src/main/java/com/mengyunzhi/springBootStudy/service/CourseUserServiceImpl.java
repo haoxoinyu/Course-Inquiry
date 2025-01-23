@@ -38,8 +38,19 @@ public class CourseUserServiceImpl implements CourseUserService {
     public boolean deleteCourseUser(Long courseId, Long userId) {
         CourseUserId key = new CourseUserId(courseId, userId);
 
+        // 检查是否存在该关系
         if (courseUserRepository.existsById(key)) {
+            // 删除关系
             courseUserRepository.deleteById(key);
+
+            // 检查是否有其他用户选择了该课程
+            long count = courseUserRepository.countByCourseId(courseId);
+
+            // 如果没有其他用户选择了该课程，则删除课程
+            if (count == 0) {
+                courseRepository.deleteById(courseId);
+            }
+
             return true;
         } else {
             return false;
