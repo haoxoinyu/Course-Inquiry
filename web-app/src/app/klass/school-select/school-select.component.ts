@@ -24,6 +24,8 @@ export class SchoolSelectComponent implements ControlValueAccessor,OnInit {
 
   onChange: any = () => {};
   onTouched: any = () => {};
+  @Output()
+  beChange = new EventEmitter<number>();
   constructor() {
   }
 

@@ -20,7 +20,7 @@ describe('ScheduleComponent', () => {
         { provide: MAT_DIALOG_DATA, useValue: {} },
       ],
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(ScheduleComponent);
     component = fixture.componentInstance;

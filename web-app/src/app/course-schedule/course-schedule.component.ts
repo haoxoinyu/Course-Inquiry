@@ -1,5 +1,5 @@
 import {Component, EventEmitter, OnInit} from '@angular/core';
-import {NgForm} from '@angular/forms';
+import {FormControl, FormGroup, NgForm, Validators} from '@angular/forms';
 import {HttpClient} from '@angular/common/http';
 import {SweetAlertService} from '../service/sweet-alert.service';
 import {CourseService} from '../service/course.service';
@@ -9,6 +9,9 @@ import {Term} from "../norm/entity/Term";
 import {CourseScheduleService} from "../service/course-schedule.service";
 import {User} from "../norm/entity/User";
 import {UserService} from "../service/user.service";
+import {ScheduleService} from '../service/schedule.service';
+import {School} from "../norm/entity/School";
+import {KlassService} from "../service/klass.service";
 
 @Component({
   selector: 'app-course-schedule',
@@ -17,12 +20,17 @@ import {UserService} from "../service/user.service";
 })
 export class CourseScheduleComponent implements OnInit {
   courseTable: any[][] = []; // 确保已经初始化
-  klasses = new Array<Klass>();
+  semesterStartDate: Date = new Date();
+  semesterEndDate: Date = new Date();  // 初始化一个有0条数据的
+  searchParameters = {
+    schoolId: 0,
+    klassId: 0,
+    termId: 0,
+    week: null
+  };
+  clazzes = new Array<Klass>();
   terms = new Array<Term>();
-  firstChange = true;
-
   weeks: number[] = [];
-  dates: Date[] = [];
   days = [
     {name: '周一', value: 1},
     {name: '周二', value: 2},
@@ -39,24 +47,30 @@ export class CourseScheduleComponent implements OnInit {
     {name: '第四大节', value: 4},
     {name: '第五大节', value: 5}
   ];
-  searchParameters = {
-    school: null as unknown as number,
-    klass: null,
-    term: null,
-    week: null
-  };
 
-  beLogout = new EventEmitter<void>();
-
-  constructor(private courseScheduleService: CourseScheduleService,
-              private httpClient: HttpClient,
-              private userService: UserService,
+  constructor(private klassService: KlassService,
               private termService: TermService,
-              private sweetAlertService: SweetAlertService,
-              private courseService: CourseService) {
+              private courseScheduleService: CourseScheduleService,
+              private courseService: CourseService) { }
+
+  ngOnInit(): void {
   }
 
-  ngOnInit() {}
+  onSearchSubmit() {
+    console.log('调用了onSearchSubmit()方法');
+    console.log(this.searchParameters.schoolId);
+    console.log(this.searchParameters.klassId);
+    console.log(this.searchParameters.termId);
+    console.log(this.searchParameters.week);
+    this.courseScheduleService.getCourseTable(
+      this.searchParameters.schoolId,
+      this.searchParameters.klassId,
+      this.searchParameters.termId,
+      this.searchParameters.week
+    ).subscribe(data => {
+      this.processCourseData(data);
+    });
+  }
 
   processCourseData(courses: any[]) {
     // 初始化课表，最多7天，每天5个大节
@@ -74,5 +88,63 @@ export class CourseScheduleComponent implements OnInit {
         console.error('无效的课程表索引:', dayIndex, periodIndex);
       }
     });
+  }
+
+  onSchoolChange(school: School) {
+    this.searchParameters.schoolId = school.id;
+    this.searchParameters.klassId = 0;
+    this.searchParameters.termId = 0;
+    this.searchParameters.week = null;
+    this.getClazzBySchoolId(school.id);
+    this.getTermsBySchoolId(school.id);
+  }
+
+  onTermChange(id: number) {
+    this.searchParameters.week = null;
+    this.searchParameters.termId = id;
+    console.log(this.searchParameters.termId);
+    this.termService.getById(id)
+      .subscribe(term => {
+        console.log(term);
+        this.semesterEndDate = term.endTime;
+        this.semesterStartDate = term.startTime;
+        this.calculateWeeks();
+      }, error => {
+        console.error('获取学期失败', error);
+      });
+  }
+
+  calculateWeeks(): void {
+    const oneDay = 1000 * 60 * 60 * 24;
+    const startTime = new Date(this.semesterStartDate);
+    const endTime = new Date(this.semesterEndDate);
+    const diffInMilliseconds = endTime.getTime() - startTime.getTime();
+    const diffInDays = Math.ceil(diffInMilliseconds / oneDay); // 使用ceil确保包含最后一天
+    const numberOfWeeks = Math.ceil(diffInDays / 7);
+
+    this.weeks = [];
+    // 创建周数数组
+    for (let i = 1; i <= numberOfWeeks; i++) {
+      this.weeks.push(i);
+    }
+    console.log(this.weeks);
+  }
+
+  getClazzBySchoolId(schoolId: number) {
+    this.klassService.getClazzBySchoolId(schoolId)
+      .subscribe(data => {
+        this.clazzes = data.content;
+      }, error => {
+        console.error('获取班级失败', error);
+      });
+  }
+
+  getTermsBySchoolId(schoolId: number) {
+    this.termService.getTermsBySchoolId(schoolId)
+      .subscribe(data => {
+        this.terms = data.content;
+      }, error => {
+        console.error('获取学期失败', error);
+      });
   }
 }

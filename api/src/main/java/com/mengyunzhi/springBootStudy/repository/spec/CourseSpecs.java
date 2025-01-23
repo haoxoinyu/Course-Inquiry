@@ -4,6 +4,8 @@ import com.mengyunzhi.springBootStudy.entity.*;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
+import java.util.List;
+
 public class CourseSpecs {
 
     /**
@@ -105,6 +107,22 @@ public class CourseSpecs {
             return (Specification<Course>) (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("sory").as(Long.class), sory);
         } else {
             return Specification.where(null);
+        }
+    }
+
+    /**
+     * 根据周数查询课程
+     * @param week 周数
+     * @return Specification<Course>
+     */
+    public static Specification<Course> belongToWeek(List<Integer> week) {
+        if (week == null) {
+            return Specification.where(null);
+        } else {
+            return (Specification<Course>) (Root<Course> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) -> {
+                // 检查 week 列表中是否包含指定的周数
+                return criteriaBuilder.isMember(week, root.get("week"));
+            };
         }
     }
 }
