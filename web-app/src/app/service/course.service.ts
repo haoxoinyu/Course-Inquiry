@@ -4,6 +4,7 @@ import {Observable} from 'rxjs';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Page} from '../norm/entity/page';
 import { User } from '../norm/entity/User';
+import {Term} from "../norm/entity/Term";
 
 @Injectable({
   providedIn: 'root'
@@ -66,8 +67,8 @@ export class CourseService {
 
   /**
    * 增加新课程
-   * 
-   * 
+   *
+   *
    ***/
   add(course:  {
     name?: string | null,
@@ -105,7 +106,6 @@ export class CourseService {
     .set('courseId', courseId ? courseId.toString() : '')
     return this.httpClient.get<Course>(this.url + '/findById', {params: queryParams})
   }
-
 
   /**
    * 更新课程

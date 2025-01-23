@@ -1,19 +1,68 @@
 <div class="container-md main">
+  <div class="col-md-8">
+    <form class="form-inline d-flex justify-content-between" style="width: 1050px"
+          (ngSubmit)="onSearchSubmit()">
+      <div class="form-group mb-2">
+        <label class="mr-2">学校：</label>
+        <!-- 默认提示选项 -->
+        <app-school-select (selected)="onSchoolChange($event)"></app-school-select>
+      </div>
+      <div class="form-group mb-2">
+        <label class="mr-2">班级：</label>
+        <select class="form-control" [(ngModel)]="searchParameters.klassId" name="clazz_id" id="clazz_id">
+          <option [ngValue]="0">所有班级</option>
+          <option *ngFor="let clazz of clazzes" [value]="clazz.id">
+            {{clazz.name}}
+          </option>
+        </select>
+      </div>
+      <div class="form-group mb-2">
+        <label class="mr-2">学期：</label>
+        <select class="form-control" [(ngModel)]="searchParameters.termId" (change)="onTermChange(searchParameters.termId)" name="term_id" id="term_id">
+          <option [ngValue]="0">所有学期</option>
+          <option *ngFor="let term of terms" [value]="term.id">
+            {{term.name}}
+          </option>
+        </select>
+      </div>
+      <div class="form-group mb-2">
+        <label class="mr-2">周数：</label>
+        <select class="form-control" [(ngModel)]="searchParameters.week" name="week" id="week">
+          <option [ngValue]=null>所有周数</option>
+          <option *ngFor="let week of weeks" [value]="week">
+            {{week}}
+          </option>
+        </select>
+      </div>
+      <div class="form-group mb-2">
+        <button class="btn btn-success mb-2" type="submit"
+                [disabled]="searchParameters.schoolId === null ||
+                searchParameters.klassId === null ||
+                searchParameters.termId === null ||
+                searchParameters.week === null ">查询</button>
+      </div>
+    </form>
+  </div>
   <div class="col-8">
+    <div *ngIf="courseTable.length > 0">
       <table style="width: 1500px;margin-left: -200px">
         <thead>
         <tr>
           <th>节次/星期</th>
-          <th>
-            星期一
+          <th *ngFor="let day of days; let i = index" class="multi-line-th">
+            {{ day.name }}
           </th>
         </tr>
         </thead>
         <tbody>
-        <tr>
-          <td>第一大节</td>
+        <tr *ngFor="let period of periods">
+          <td>{{ period.name }}</td>
+          <td *ngFor="let day of days">
+            {{ courseTable[day.value - 1][period.value - 1] || '-' }}
+          </td>
         </tr>
         </tbody>
       </table>
+    </div>
   </div>
 </div>

@@ -83,4 +83,6 @@ public interface CourseService {
      * @param courseId 课程id
      **/
     Optional<Course> findById(Long courseId);
+
+    List<Course> findAll(Long schoolId, Long klassId, Long termId, List<Integer> week);
 }
