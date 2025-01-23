@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * 我的课程控制器
@@ -62,9 +63,8 @@ public class MyCourseController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<String> addCourseToUser(@RequestBody CourseUserRequest request) {
-        courseUserService.addCourseUser(request);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Map<String, Object>> addCourseToUser(@RequestBody CourseUserRequest request) {
+        return courseUserService.addCourseUser(request);
     }
 
     @DeleteMapping
