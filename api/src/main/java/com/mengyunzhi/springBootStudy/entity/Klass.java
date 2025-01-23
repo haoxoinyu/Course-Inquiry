@@ -1,6 +1,7 @@
 package com.mengyunzhi.springBootStudy.entity;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Klass {
@@ -13,8 +14,12 @@ public class Klass {
 
     private String name;
 
+
     public Klass() {
     }
+
+
+
 
     public Long getId() {
         return id;

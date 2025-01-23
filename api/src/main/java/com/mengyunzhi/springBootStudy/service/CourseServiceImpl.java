@@ -2,29 +2,83 @@ package com.mengyunzhi.springBootStudy.service;
 
 import com.mengyunzhi.springBootStudy.entity.*;
 import com.mengyunzhi.springBootStudy.repository.CourseRepository;
+import com.mengyunzhi.springBootStudy.repository.KlassRepository;
+import com.mengyunzhi.springBootStudy.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.function.Predicate;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
+import org.springframework.http.ResponseEntity;
 @Service
 public class CourseServiceImpl implements CourseService {
     private CourseRepository courseRepository;
+    private UserRepository userRepository;
+    private KlassRepository klassRepository;
+    Map<String, Object> response = new HashMap<>();
 
     @Autowired
-    public CourseServiceImpl(CourseRepository courseRepository) {
+    public CourseServiceImpl(CourseRepository courseRepository, UserRepository userRepository, KlassRepository klassRepository) {
         this.courseRepository = courseRepository;
+        this.userRepository = userRepository;
+        this.klassRepository = klassRepository;
     }
 
     @Override
-    public Course save(Course course) {
-        return this.courseRepository.save(course);
+    public ResponseEntity<Map<String, Object>> save(Course course) {
+            if(course.getSory() == 1L) {
+                Optional<User> user = this.userRepository.findById(course.getUsers().get(0).getId());
+                Optional<Klass> klass = this.klassRepository.findById(user.get().getKlass().getId());
+                List<User> userList = new ArrayList<>();
+                List<User> allUSer = java.util.stream.StreamSupport.stream(this.userRepository.findAll().spliterator(), false)
+                        .collect(Collectors.toList());
+                for(User user1 : allUSer) {
+                    if(user1.getKlass().getId() == user.get().getId()) {
+                        userList.add(user1);
+                    }
+                }
+                //全部检查是否全班已经有人这个时间段有课
+                for(User inneruser : userList) {
+                    User newuser = new User();
+                    newuser.setId(inneruser.getId());
+                    List<User> userContain = new ArrayList<>();
+                    userContain.add(newuser);
+                    course.setUsers(userContain);
+                    if(!this.checkTheSameCourse(course)) {
+                        response.put("status", "error");
+                        response.put("message", "该班级已经有学生这个时间段已经有课");
+                        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+                    };
+                }
+                //加课
+                for(User inneruser : userList) {
+                    User newuser = new User();
+                    newuser.setId(inneruser.getId());
+                    List<User> userContain = new ArrayList<>();
+                    userContain.add(newuser);
+                    course.setUsers(userContain);
+                    this.courseRepository.save(course);
+                }
+                response.put("status", "success");
+                response.put("message", "添加成功");
+            }else {
+                if(!this.checkTheSameCourse(course)) {
+                    response.put("message", "该学生这个时间段已经有课");
+                    return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+                }else {
+                    this.courseRepository.save(course);
+                    response.put("status", "success");
+                    response.put("message", "添加成功");
+                }
+            }
+            return ResponseEntity.ok(response);
     }
 
     @Override
@@ -64,7 +118,7 @@ public class CourseServiceImpl implements CourseService {
      * @param course 新班级数据
      */
     @Override
-    public void update(Long id, Course course) {
+    public ResponseEntity<Map<String, Object>> update(Long id, Course course) {
         Course oldCourse = courseRepository.findById(id).get();
         oldCourse.setName(course.getName());
         oldCourse.setTerm(course.getTerm());
@@ -73,7 +127,54 @@ public class CourseServiceImpl implements CourseService {
         oldCourse.setWeek(course.getWeek());
         oldCourse.setUsers(course.getUsers());
         oldCourse.setPeriod(course.getPeriod());
-        courseRepository.save(oldCourse);
+
+        if(course.getSory() == 1L) {
+            //获取全班同学
+            Optional<User> user = this.userRepository.findById(course.getUsers().get(0).getId());
+            Optional<Klass> klass = this.klassRepository.findById(user.get().getKlass().getId());
+            List<User> userList = new ArrayList<>();
+            List<User> allUSer = java.util.stream.StreamSupport.stream(this.userRepository.findAll().spliterator(), false)
+                    .collect(Collectors.toList());
+            for(User user1 : allUSer) {
+                if(user1.getKlass().getId() == user.get().getId()) {
+                    userList.add(user1);
+                }
+            }
+            //全部检查是否全班已经有人这个时间段有课
+            for(User inneruser : userList) {
+                User newuser = new User();
+                newuser.setId(inneruser.getId());
+                List<User> userContain = new ArrayList<>();
+                userContain.add(newuser);
+                oldCourse.setUsers(userContain);
+                if(!this.checkTheSameCourse(oldCourse)) {
+                    response.put("status", "error");
+                    response.put("message", "该班级已经有学生这个时间段已经有课");
+                    return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+                };
+            }
+            //加课
+            for(User inneruser : userList) {
+                User newuser = new User();
+                newuser.setId(inneruser.getId());
+                List<User> userContain = new ArrayList<>();
+                userContain.add(newuser);
+                oldCourse.setUsers(userContain);
+                this.courseRepository.save(oldCourse);
+            }
+            response.put("status", "success");
+            response.put("message", "更新成功");
+        }else {
+            if(!this.checkTheSameCourse(oldCourse)) {
+                response.put("message", "该学生这个时间段已经有课");
+                return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+            }else {
+                this.courseRepository.save(oldCourse);
+                response.put("status", "success");
+                response.put("message", "更新成功");
+            }
+        }
+        return ResponseEntity.ok(response);
     }
 
     @Override
@@ -126,5 +227,16 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public Optional<Course> findById(Long courseId) {
         return this.courseRepository.findById(courseId);
+    }
+
+    public boolean checkTheSameCourse(Course course) {
+        List<Course> allCourse =  this.courseRepository.findByUsers(course.getUsers());
+        List<Course> selectCourse =  java.util.stream.StreamSupport.stream(allCourse.spliterator(), false)
+                .collect(Collectors.toList()).stream()
+                .filter(matchingCourse ->!Collections.disjoint(matchingCourse.getDay(), course.getDay()) &&
+                                        !Collections.disjoint(matchingCourse.getWeek(), course.getWeek()) &&
+                                        !Collections.disjoint(matchingCourse.getPeriod(), course.getPeriod()))
+                .collect(Collectors.toList());
+        return selectCourse.isEmpty();
     }
 }

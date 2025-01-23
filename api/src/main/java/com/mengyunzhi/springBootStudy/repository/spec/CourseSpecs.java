@@ -125,4 +125,37 @@ public class CourseSpecs {
             };
         }
     }
+
+    /**
+     * 根据时间段查询课程
+     * @param period 周数
+     * @return Specification<Course>
+     */
+    public static Specification<Course> belongToPeriod(List<Integer> period) {
+        if (period == null) {
+            return Specification.where(null);
+        } else {
+            return (Specification<Course>) (Root<Course> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) -> {
+                // 检查 week 列表中是否包含指定的周数
+                return criteriaBuilder.isMember(period, root.get("period"));
+            };
+        }
+    }
+
+    /**
+     * 根据星期数段查询课程
+     * @param day 星期数
+     * @return Specification<Course>
+     */
+    public static Specification<Course> belongToDay(List<Integer> day) {
+        if (day == null) {
+            return Specification.where(null);
+        } else {
+            return (Specification<Course>) (Root<Course> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) -> {
+                // 检查 week 列表中是否包含指定的周数
+                return criteriaBuilder.isMember(day, root.get("day"));
+            };
+        }
+    }
+
 }

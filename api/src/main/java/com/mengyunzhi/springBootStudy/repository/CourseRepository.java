@@ -64,6 +64,15 @@ public interface CourseRepository extends PagingAndSortingRepository<Course, Lon
         return this.findAll(specification);
     }
 
+    default List<Course> findByDayAndWeeksAndPeriodsAndUser(List<Integer> day, List<Integer> weeks, List<Integer> periods, List<User> user) {
+        Specification<Course> specification = CourseSpecs.belongToDay(day)
+                .and(CourseSpecs.belongToPeriod(periods))
+                .and(CourseSpecs.belongToWeek(weeks))
+                .and(CourseSpecs.belongToUser(user.get(0)));
+        return this.findAll(specification);
+    }
+
+
     @Query("SELECT c FROM Course c WHERE c.term.id = ?1 AND c.sory = ?2")
     List<Course> getCoursesByTermId(Long termId, Long sory);
 

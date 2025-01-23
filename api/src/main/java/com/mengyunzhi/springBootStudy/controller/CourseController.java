@@ -10,10 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("Course")
@@ -53,7 +55,7 @@ public class CourseController {
     }
 
     @PostMapping("add")
-    public void add(@RequestBody newCourse newCourse) {
+    public ResponseEntity<Map<String, Object>> add(@RequestBody newCourse newCourse) {
         User user = new User();
         user.setId(newCourse.getUserId());
         List<User> userList = new ArrayList<>();
@@ -68,7 +70,7 @@ public class CourseController {
         course.setWeek(newCourse.getWeek());
         course.setUsers(userList);
         course.setTerm(term);
-        this.courseService.save(course);
+        return this.courseService.save(course);
     }
 
     @DeleteMapping("delete/{id}")
@@ -77,7 +79,7 @@ public class CourseController {
     }
 
     @PutMapping("/updateCourse")
-    public void update(@RequestBody newCourse updateCourse) {
+    public ResponseEntity<Map<String, Object>> update(@RequestBody newCourse updateCourse) {
         Course course = new Course();
         Term term = new Term();
         term.setId(updateCourse.getTermId());
@@ -93,7 +95,7 @@ public class CourseController {
         course.setDay(updateCourse.getDay());
         course.setSory(updateCourse.getSory());
         course.setName(updateCourse.getName());
-        this.courseService.update(updateCourse.getId(), course);
+       return this.courseService.update(updateCourse.getId(), course);
     }
 }
 class newCourse{
