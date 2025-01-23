@@ -1,8 +1,10 @@
 package com.mengyunzhi.springBootStudy.repository.spec;
 
-import com.mengyunzhi.springBootStudy.entity.Term;
-import com.mengyunzhi.springBootStudy.entity.School;
+import com.mengyunzhi.springBootStudy.entity.*;
 import org.springframework.data.jpa.domain.Specification;
+
+import javax.persistence.criteria.*;
+import java.util.Date;
 
 public class TermSpecs {
     public static Specification<Term> containingName(String name) {
@@ -24,5 +26,37 @@ public class TermSpecs {
             return Specification.where(null);
         }
         return (Specification<Term>) (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("school").as(School.class), school);
+    }
+
+    /**
+     * 日期小于结束时间
+     * */
+    public static Specification<Term> greaterThanDate(Date date) {
+        if (date != null) {
+            return new Specification<Term>() {
+                @Override
+                public Predicate toPredicate(Root<Term> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                    return criteriaBuilder.greaterThan(root.get("endTime"), date) ;
+                }
+            };
+        } else {
+            return Specification.where(null);
+        }
+    }
+
+    /**
+     * 日期大于开始时间
+     * */
+    public static Specification<Term> lessThanDate(Date date) {
+        if (date != null) {
+            return new Specification<Term>() {
+                @Override
+                public Predicate toPredicate(Root<Term> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                    return criteriaBuilder.lessThan(root.get("startTime"), date) ;
+                }
+            };
+        } else {
+            return Specification.where(null);
+        }
     }
 }

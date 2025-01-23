@@ -43,4 +43,6 @@ public interface KlassRepository extends PagingAndSortingRepository<Klass, Long>
 
     @Override
     List<Klass> findAll();
+
+    List<Klass> findBySchool(School school);
 }

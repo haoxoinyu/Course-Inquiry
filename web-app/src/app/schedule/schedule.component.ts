@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ScheduleService } from '../service/schedule.service';
+import { User } from '../norm/entity/User';
 
 @Component({
   selector: 'app-schedule',
@@ -20,7 +21,7 @@ export class ScheduleComponent {
   }
   PeopleHaveCourse = [{
     time: '',
-    students: []
+    user: new User(1,'','',1,'')
   }];
   weekDates: string[] = [];
 
@@ -36,10 +37,14 @@ export class ScheduleComponent {
     this.scheduleService.getFirstDayOfCurrentWeek(this.formGroup.get('date')?.value!)
       .subscribe((firstDayOfCurrentWeek) => {
         this.caculateWeekDay(firstDayOfCurrentWeek);
-
-        this.scheduleService.getUnbusyStudentsOfCurrentWeek(firstDayOfCurrentWeek)
+        const date1 =  new Date(firstDayOfCurrentWeek);
+        const requestDate = this.formatDateToYYYYMMDD(date1);
+        console.log('时间戳：', firstDayOfCurrentWeek, '日期： ', date1.getDate())
+        this.scheduleService.getUnbusyStudentsOfCurrentWeek(requestDate)
           .subscribe((data) => {
+        
             this.PeopleHaveCourse = data;
+            console.log("unbuys",this.PeopleHaveCourse)
             // 隐藏加载提示
           }, error => {
             // 如果发生错误，隐藏加载提示并处理错误
@@ -57,9 +62,10 @@ export class ScheduleComponent {
     .subscribe((firstDayOfCurrentWeek) => {
       const date1 =  new Date(firstDayOfCurrentWeek);
 
+      const requestDate = this.formatDateToYYYYMMDD(date1);
       console.log('时间戳：', firstDayOfCurrentWeek, '日期： ', date1.getDate())
       this.caculateWeekDay(firstDayOfCurrentWeek);
-      this.scheduleService.getUnbusyStudentsOfCurrentWeek(firstDayOfCurrentWeek)
+      this.scheduleService.getUnbusyStudentsOfCurrentWeek(requestDate)
         .subscribe((data) => {
           this.PeopleHaveCourse = data;
         })

@@ -75,4 +75,9 @@ public interface TermService {
      * @return
      */
     boolean validateTermTime(@NotNull Term term);
+
+    /**
+     * 查找某一个时间段的学期
+     * **/
+
 }

@@ -38,9 +38,7 @@
             <td style="height: 158px;" class="td" id="monday-first">
             <ng-container *ngFor="let obj of PeopleHaveCourse">
                 <ng-container *ngIf="obj.time === date + '-' + section">
-                <ng-container *ngFor="let student of obj.students">
-                    {{student}}
-                </ng-container>
+                    {{obj.user.name}}
                 </ng-container>
             </ng-container>
             </td>
