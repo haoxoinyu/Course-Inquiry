@@ -137,4 +137,12 @@ export class CourseService {
     }
     return this.httpClient.put<void>(this.url + '/updateCourse', updateCourse)
   }
+
+  /**
+   * 删除对应课程
+   * @param courseId 课程id
+   */
+  onDelete(courseId: number): Observable<void> {
+    return this.httpClient.delete<void>(this.url + '/delete/' + courseId);
+  }
 }

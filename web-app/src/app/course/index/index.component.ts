@@ -141,7 +141,6 @@ export class IndexComponent implements OnInit {
       .subscribe(pageData => {
         // 在请求数据之后设置当前页
         this.page = page ?? 0;
-
         console.log('课表组件接收到返回数据，重新设置pageData',pageData );
         this.pageData = pageData;
         this.definePageData();
@@ -156,27 +155,25 @@ export class IndexComponent implements OnInit {
 
    }
 
-   onDelete(index: number, id: number): void {
-     this.sweetAlertService.showWarning('', '', 'warning')
-       .then(isConfirmed => {
-         if (isConfirmed) {
-           this.httpClient.delete(`/api/course/delete/${id}`)
-             .subscribe(() => {
-                 console.log('删除成功');
-                 this.sweetAlertService.showSuccess('删除成功', 'success');
-                 this.pageData.content.splice(index, 1);
-                 // 检查当前页是否还有记录
-                 if (this.pageData.content.length === 0 && this.page > 1) {
-                   this.page--; // 如果当前页没有其他记录，跳转到上一页
-                 }
-                 this.loadByPage(this.page); // 重新加载当前页数据
-               },
-               error => {
-                   this.sweetAlertService.showError('删除失败', '检查数据是否清除干净，请稍后再试。', 'error');
-                   console.log('删除失败', error);
-               });
-         }
-       });
+   onDelete(course: Course): void {
+
+    this.courseService.onDelete(Number(course.id))
+      .subscribe(() => {
+        console.log('删除成功');
+        this.pageData.content.forEach((value, key) => {
+          if (value === course) {
+            this.pageData.content.splice(key, 1);
+            this.sweetAlertService.showSuccess('删除成功', "success");
+            if (this.pageData.content.length === 0 && this.page > 0) {
+              this.page--;
+              this.loadByPage(this.page);
+            }
+          } 
+        })
+      },(error) => {
+        this.sweetAlertService.showError('删除失败', '检查数据是否清除干净，请稍后再试。', 'error');
+        console.log('删除失败', error);
+    })
    }
 
    openAddDialog(): void {

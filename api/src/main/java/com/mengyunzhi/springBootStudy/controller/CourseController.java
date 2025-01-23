@@ -71,6 +71,11 @@ public class CourseController {
         this.courseService.save(course);
     }
 
+    @DeleteMapping("delete/{id}")
+    public void onDelete(@PathVariable Long id) {
+        this.courseService.deleteById(id);
+    }
+
     @PutMapping("/updateCourse")
     public void update(@RequestBody newCourse updateCourse) {
         Course course = new Course();
