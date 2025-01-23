@@ -13,14 +13,20 @@ import { SchoolSelectComponent } from '../klass/school-select/school-select.comp
 import { KlassModule } from '../klass/klass.module';
 import { MatSelect, MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { SoryPipe } from '../norm/sory.pipe';
 
 @NgModule({
-  declarations: [AddComponent, UserMultipleSelectComponent, IndexComponent, EditComponent],
+  declarations: [
+    AddComponent, 
+    UserMultipleSelectComponent, 
+    IndexComponent, 
+    EditComponent,
+    SoryPipe
+  ],
   imports: [
     CommonModule,
     CourseRoutingModule,
     ReactiveFormsModule,
-    UserModule,
     CoreModule,
     FormsModule,
     KlassModule,
