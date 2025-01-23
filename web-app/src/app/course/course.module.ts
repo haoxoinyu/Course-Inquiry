@@ -13,7 +13,7 @@ import { SchoolSelectComponent } from '../klass/school-select/school-select.comp
 import { KlassModule } from '../klass/klass.module';
 import { MatSelect, MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { SoryPipe } from '../norm/sory.pipe';
+import { MyCourseModule } from '../my-course/my-course.module';
 
 @NgModule({
   declarations: [
@@ -21,7 +21,6 @@ import { SoryPipe } from '../norm/sory.pipe';
     UserMultipleSelectComponent, 
     IndexComponent, 
     EditComponent,
-    SoryPipe
   ],
   imports: [
     CommonModule,
@@ -32,6 +31,7 @@ import { SoryPipe } from '../norm/sory.pipe';
     KlassModule,
     MatSelectModule,
     MatFormFieldModule,
+    MyCourseModule
   ]
 })
 export class CourseModule { }

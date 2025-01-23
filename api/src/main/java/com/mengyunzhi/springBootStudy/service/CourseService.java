@@ -5,10 +5,12 @@ import com.mengyunzhi.springBootStudy.entity.Course;
 import com.mengyunzhi.springBootStudy.entity.Term;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -21,7 +23,7 @@ public interface CourseService {
      * @param course 课程
      * @return 课程
      */
-    Course save(Course course);
+    ResponseEntity<Map<String, Object>> save(Course course);
 
     /**
      * 名称是否存在
@@ -59,7 +61,7 @@ public interface CourseService {
      * @param id    预更新的课程ID
      * @param klass 新的课程信息
      */
-    void update(Long id, Course klass);
+    ResponseEntity<Map<String, Object>> update(Long id, Course klass);
 
     /**
      * 综合查询
