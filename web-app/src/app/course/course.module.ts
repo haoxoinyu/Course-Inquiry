@@ -13,14 +13,14 @@ import { SchoolSelectComponent } from '../klass/school-select/school-select.comp
 import { KlassModule } from '../klass/klass.module';
 import { MatSelect, MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MyCourseModule } from '../my-course/my-course.module';
+import {MyCourseModule} from "../my-course/my-course.module";
 
 @NgModule({
   declarations: [
-    AddComponent, 
-    UserMultipleSelectComponent, 
-    IndexComponent, 
-    EditComponent,
+    AddComponent,
+    UserMultipleSelectComponent,
+    IndexComponent,
+    EditComponent
   ],
   imports: [
     CommonModule,

@@ -64,7 +64,7 @@
       <td>{{course.day}}</td>
       <td>{{course.period}}</td>
       <td>
-        <button (click)="onDelete(course)" class="btn btn-sm btn-danger"><span class="oi oi-trash"></span>删除</button>
+        <button (click)="onDelete(course)" class="btn btn-sm btn-danger" *ngIf="course.sory === 0"><span class="oi oi-trash"></span>删除</button>
       </td>
     </tr>
     </tbody>
