@@ -3,6 +3,7 @@ package com.mengyunzhi.springBootStudy.service;
 import com.mengyunzhi.springBootStudy.entity.Klass;
 import com.mengyunzhi.springBootStudy.entity.School;
 import com.mengyunzhi.springBootStudy.entity.Term;
+import com.mengyunzhi.springBootStudy.entity.User;
 import com.mengyunzhi.springBootStudy.repository.SchoolRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -11,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.List;
@@ -31,11 +34,14 @@ public class SchoolServiceImpl implements SchoolService {
     @Autowired
     TermService termService;
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
     @Override
     public ResponseEntity<Map<String, Object>> save(School school) {
         Map<String, Object> response = new HashMap<>();
 
-        if(this.validateSchool(school)){
+        if(!this.validateSchool(school)){
             response.put("status", "error");
             response.put("message", "该学校已存在");
             return ResponseEntity.ok(response);
@@ -48,7 +54,27 @@ public class SchoolServiceImpl implements SchoolService {
     }
 
     @Override
-    public boolean validateSchool(School school) { return school.getName().equals(school.getName()); }
+    public boolean validateSchool(School school) {
+        // 使用数据库查询，验证是否已经存在相同的Klass
+        String hql = "FROM School s WHERE s.name = :name";
+        List<School> result = entityManager.createQuery(hql, School.class)
+                .setParameter("name", school.getName())
+                .getResultList();
+
+        // 如果查询结果为空，则表示没有重复的学校名称，返回true
+        if (result.isEmpty()) {
+            return true;
+        }
+
+        // 如果查询到一条数据且schoolId相同，则返回true
+        if (result.size() == 1) {
+            School existingSchool = result.get(0);
+            return existingSchool.getId().equals(school.getId());
+        }
+
+        // 如果查询到多条数据或schoolId不同，则返回false
+        return false;
+    }
 
     @Override
     public Page<School> findAll(Pageable pageable) {
@@ -78,7 +104,7 @@ public class SchoolServiceImpl implements SchoolService {
 
         Map<String, Object> response = new HashMap<>();
 
-        if(this.validateSchool(school)){
+        if(!this.validateSchool(school)){
             response.put("status", "error");
             response.put("message", "该学校已存在");
             return ResponseEntity.ok(response);

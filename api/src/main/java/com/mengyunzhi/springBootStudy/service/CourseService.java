@@ -2,6 +2,7 @@ package com.mengyunzhi.springBootStudy.service;
 
 
 import com.mengyunzhi.springBootStudy.entity.Course;
+import com.mengyunzhi.springBootStudy.entity.Term;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -75,6 +76,7 @@ public interface CourseService {
 
     ArrayList<Course> getCoursesByTermId(Long termId, Long sory);
 
+    ArrayList<Course> findByTermId(Long termId);
     /**
      * 通过id寻找course
      *

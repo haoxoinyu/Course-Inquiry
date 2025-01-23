@@ -83,7 +83,7 @@ export class TermService {
    * @param id id
    * @param term 学期
    */
-  update(id: number | undefined, term: Term): Observable<Term> {
+  update(id: number | undefined, term: Term): Observable<any> {
     const url = `http://localhost:8080/Term/${id}`;
     return this.httpClient.put<Term>(url, term);
   }

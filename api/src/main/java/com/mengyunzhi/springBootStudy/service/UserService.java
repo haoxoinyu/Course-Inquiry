@@ -60,7 +60,7 @@ public interface UserService {
      *
      * @param id ID
      */
-    void deleteById(Long id);
+    ResponseEntity<Map<String, Object>> deleteById(Long id);
 
     /**
      * 我是谁
@@ -85,7 +85,12 @@ public interface UserService {
      *
      * @param user 用户
      */
-    void save(User user);
+    ResponseEntity<Map<String, Object>> save(User user);
+
+    /**
+     * 验证
+     */
+    boolean validateUser(@NotNull User user);
 
     /**
      * 通过ID获取用户
@@ -101,7 +106,7 @@ public interface UserService {
      * @param user 更新的用户信息
      * @return 用户
      */
-    User update(Long id, User user);
+    ResponseEntity<Map<String, Object>> update(Long id, User user);
 
     List<User> findByKlassId(Long klassId);
 }

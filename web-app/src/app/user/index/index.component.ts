@@ -101,6 +101,7 @@ export class IndexComponent implements OnInit {
                     this.params.page--;
                     this.loadData();
                   }
+                  this.loadData();
                 }
               });
             });

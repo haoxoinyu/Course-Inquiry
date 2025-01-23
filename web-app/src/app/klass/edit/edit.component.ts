@@ -74,13 +74,16 @@ export class EditComponent implements OnInit {
     };
     this.klassService.update(this.klass.id, this.klass).subscribe({
       next: (result) => {
-        this.klass = result;
-        this.dialogRef.close();
-        this.sweetAlertService.showSuccess('Edit successful', "success");
+        if(result.message === "该班级已存在") {
+          this.sweetAlertService.showError('编辑失败', '该班级已存在', 'error')
+        } else {
+          this.dialogRef.close();
+          this.sweetAlertService.showSuccess('编辑成功', "success");
+        }
       },
       error: (error) => {
         console.error('Error updating class:', error);
-        this.sweetAlertService.showError('Edit failed', '', error);
+        this.sweetAlertService.showError('编辑失败', '', error);
       }
     });
   }

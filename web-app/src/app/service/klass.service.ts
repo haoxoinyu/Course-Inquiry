@@ -73,7 +73,7 @@ export class KlassService {
    * @param id id
    * @param klass 班级
    */
-  update(id: number | undefined, klass: Klass): Observable<Klass> {
+  update(id: number | undefined, klass: Klass): Observable<any> {
     const url = `http://localhost:8080/Klass/${id}`;
     return this.httpClient.put<Klass>(url, klass);
   }
@@ -82,7 +82,7 @@ export class KlassService {
    * 删除学校
    * @param id 学校id
    */
-  deleteById(id: number | undefined): Observable<void> {
+  deleteById(id: number | undefined): Observable<any> {
     const url = `http://localhost:8080/Klass/${id}`;
     return this.httpClient.delete<void>(url);
   }

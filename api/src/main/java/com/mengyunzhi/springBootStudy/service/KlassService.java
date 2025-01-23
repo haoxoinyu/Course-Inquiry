@@ -4,9 +4,11 @@ import com.mengyunzhi.springBootStudy.entity.Klass;
 import com.mengyunzhi.springBootStudy.entity.School;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 班级服务
@@ -18,7 +20,7 @@ public interface KlassService {
      *
      * @param id 班级ID
      */
-    void deleteById(Long id);
+    ResponseEntity<Map<String, Object>> deleteById(Long id);
 
     /**
      * 获取所有学校列表
@@ -65,7 +67,7 @@ public interface KlassService {
      *
      * @param klass 班级
      */
-    void save(Klass klass);
+    ResponseEntity<Map<String, Object>> save(Klass klass);
 
     /**
      * 更新班级
@@ -73,5 +75,12 @@ public interface KlassService {
      * @param id    预更新的班级ID
      * @param klass 新的班级信息
      */
-    void update(Long id, Klass klass);
+    ResponseEntity<Map<String, Object>> update(Long id, Klass klass);
+
+    /**
+     * 验证
+     * @param klass
+     * @return
+     */
+    boolean validateKlass(@NotNull Klass klass);
 }
