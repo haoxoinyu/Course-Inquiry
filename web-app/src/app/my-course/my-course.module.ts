@@ -7,6 +7,9 @@ import { CreateComponent } from './create/create.component';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {SoryPipe} from "../norm/sory.pipe";
 import {KlassModule} from "../klass/klass.module";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatOptionModule} from "@angular/material/core";
+import {MatSelectModule} from "@angular/material/select";
 
 @NgModule({
   declarations: [
@@ -21,6 +24,9 @@ import {KlassModule} from "../klass/klass.module";
         FormsModule,
         KlassModule,
         ReactiveFormsModule,
+        MatFormFieldModule,
+        MatOptionModule,
+        MatSelectModule,
     ],
   exports: [SoryPipe]
 })

@@ -38,7 +38,7 @@ export class CreateComponent {
     userId: new FormControl(0, Validators.required),
     klassId: new FormControl(0, Validators.required),
     sory: new FormControl(0, Validators.required),
-    week: new FormControl(0, Validators.required),
+    week: new FormControl([] as number[], Validators.required),
     day: new FormControl(0, Validators.required),
     period: new FormControl(0, Validators.required)
   })
@@ -47,8 +47,6 @@ export class CreateComponent {
   schools = new Array<School>();
   terms = new Array<Term>();
   term = new Term(1, '', new School(1, ''), new Date(), new Date());
-  clazzes: Klass[] = [new Klass(1, '', undefined)];
-  users = new Array<User>(new User(1, '', '', 1, ''));
   me?: User;
 
   semesterStartDate: Date | undefined;
@@ -96,7 +94,7 @@ export class CreateComponent {
     const newCourse = {
       name: this.formGroup.get('name')!.value,
       sory: 0,
-      week: [this.formGroup.get('week')!.value],
+      week: this.formGroup.get('week')!.value!,
       day: this.formGroup.get('day')!.value,
       period: this.formGroup.get('period')!.value,
       schoolId: this.me?.klass?.school?.id,
