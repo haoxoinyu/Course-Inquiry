@@ -22,7 +22,6 @@ public class CourseSpecs {
                 public Predicate toPredicate(Root<Course> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
                     Join<Course, User> userJoin = root.join("users", JoinType.INNER);
                     Join<User, Klass> klassJoin = userJoin.join("klass");
-
                     return criteriaBuilder.equal(klassJoin.get("id"), klass.getId()) ;
                 }
             };
