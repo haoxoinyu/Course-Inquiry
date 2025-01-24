@@ -110,10 +110,11 @@ export class IndexComponent implements OnInit {
    }
 
    ngOnInit() {
-     const sessionRole = window.sessionStorage.getItem('role');
-     if (sessionRole !== 'true') {
-       this.role = 3;
-     }
+    this.userService.me().subscribe((user) => {
+      this.me = user;
+      this.role = user.role;
+      console.log("me", this.me);
+    });
      // 使用默认值 page = 0 调用loadByPage()方法
      this.loadByPage();
    }
@@ -201,27 +202,27 @@ export class IndexComponent implements OnInit {
      });
    }
 
-  //  addLesson(courseId: number): void {
-  //    console.log('addLesson');
-  //    const userId = this.me?.id;
-  //    this.courseService.addLesson(courseId, userId).subscribe(
-  //      response => {
-  //        console.log('Lesson added successfully', response);
-  //        this.sweetAlertService.showSuccess('添加成功', 'success');
-  //      },
-  //      error => {
-  //        console.log(error.error.error);
-  //        if (error.error.error === '课程已存在') {
-  //          this.sweetAlertService.showError('添加失败', '课程已存在', '');
-  //        } else if (error.error.error === '用户和课程必须属于同一所学校') {
-  //          this.sweetAlertService.showError('添加失败', '用户和课程必须属于同一所学校', '');
-  //        } else {
-  //          console.error('Failed to add lesson', error);
-  //          this.sweetAlertService.showError('添加失败', '', '');
-  //        }
-  //      }
-  //    );
-  //  }
+   addLesson(courseId: string): void {
+     console.log('addLesson');
+     const userId = this.me?.id;
+     this.courseService.addElectiveCourses(Number(courseId), userId).subscribe(
+       response => {
+         console.log('Lesson added successfully', response);
+         this.sweetAlertService.showSuccess('添加成功', 'success');
+       },
+       error => {
+         console.log(error.error.error);
+         if (error.error.error === '课程已存在') {
+           this.sweetAlertService.showError('添加失败', '课程已存在', 'error');
+         } else if (error.error.error === '用户和课程必须属于同一所学校') {
+           this.sweetAlertService.showError('添加失败', '用户和课程必须属于同一所学校', 'error');
+         } else {
+           console.error('Failed to add lesson', error);
+           this.sweetAlertService.showError('添加失败', '', 'error');
+         }
+       }
+     );
+   }
 
    onSubmit(form: NgForm, page = 1) {
      console.log('调用了search');
@@ -232,6 +233,14 @@ export class IndexComponent implements OnInit {
        console.log('提交的查询参数:', this.searchParameters);
       this.loadByPage()
      }
+   }
+
+   checkTheSameKlass(courseUser: User){
+    if(courseUser.klass?.id === this.me.klass?.id){
+      return true;
+    }
+    return false;
+
    }
 
    private handleInvalidToken(): void {

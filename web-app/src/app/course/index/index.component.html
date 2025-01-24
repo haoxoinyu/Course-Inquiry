@@ -1,6 +1,6 @@
 <div class="container-md main" style="margin-top: 120px;">
   <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-12">
       <form class="form-inline d-flex justify-content-between" style="width: auto"
             (ngSubmit)="onSubmit(searchForm)" #searchForm="ngForm">
         <div class="form-group mb-2">
@@ -70,13 +70,13 @@
       <td>{{ course.day }}</td>
       <td>{{ course.period }}</td>
       <td>
-        <a class="btn btn-outline-success btn-sm"  *ngIf="course.sory === 0">
+        <a class="btn btn-outline-success btn-sm"  *ngIf="course.sory === 0 && checkTheSameKlass(course.users[0])"  (click)="addLesson(course.id)">
           <i class="fas fa-plus"></i>添加
         </a>
-        <a class="btn btn-outline-primary btn-sm" (click)="openEditDialog(course.id)">
+        <a class="btn btn-outline-primary btn-sm"  *ngIf="role !== 3" (click)="openEditDialog(course.id)">
           <i class="fas fa-pen" ></i>编辑
         </a>
-        <span class="btn btn-sm btn-outline-danger" *ngIf="role === 3" (click)="onDelete(course)">
+        <span class="btn btn-sm btn-outline-danger" *ngIf="role !== 3" (click)="onDelete(course)">
             <i class="far fa-trash-alt" ></i>删除
         </span>
       </td>
