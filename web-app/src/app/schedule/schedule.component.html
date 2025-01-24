@@ -18,31 +18,35 @@
         </div>
     </div>
     <table class="table">
-        <tr>
-        <th class="th">时间</th>
-            <ng-container *ngFor="let day of weekDates; index as index">
-            <th class="th">{{getDayOfWeek(index)}}<br>{{day}}
-            </ng-container>
-        </tr>
-        <tr *ngFor="let section of sectionNumber">
-        <th class="th">
-            <ng-container [ngSwitch]="section">
-            <p *ngSwitchCase="1">8:30 - 10:05</p>
-            <p *ngSwitchCase="2">10:30 - 12:00</p>
-            <p *ngSwitchCase="3">14:00 - 15:30</p>
-            <p *ngSwitchCase="4">16:30 - 18:00</p>
-            <p *ngSwitchCase="5">20:00 - 21:00</p>
-            </ng-container>
-        </th>
-        <ng-container *ngFor="let date of dateNumber">
-            <td style="height: 158px;" class="td" id="monday-first">
-            <ng-container *ngFor="let obj of PeopleHaveCourse">
-                <ng-container *ngIf="obj.time === date + '-' + section">
-                    {{obj.user.name}}
+        <thead>
+            <tr>
+            <th class="th">时间</th>
+                <ng-container *ngFor="let day of weekDates; index as index">
+                <th class="th">{{getDayOfWeek(index)}}<br>{{day}}
                 </ng-container>
-            </ng-container>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let section of sectionNumber">
+            <td >
+                <ng-container [ngSwitch]="section">
+                <p *ngSwitchCase="1">8:30 - 10:05</p>
+                <p *ngSwitchCase="2">10:30 - 12:00</p>
+                <p *ngSwitchCase="3">14:00 - 15:30</p>
+                <p *ngSwitchCase="4">16:30 - 18:00</p>
+                <p *ngSwitchCase="5">20:00 - 21:00</p>
+                </ng-container>
             </td>
-        </ng-container>
-        </tr>
+            <ng-container *ngFor="let date of dateNumber">
+                <td style="height: 158px;" id="monday-first">
+                <ng-container *ngFor="let obj of PeopleHaveCourse">
+                    <ng-container *ngIf="obj.time === date + '-' + section">
+                        {{obj.user.name}}
+                    </ng-container>
+                </ng-container>
+                </td>
+            </ng-container>
+            </tr>
+        </tbody>
     </table>
 </div>

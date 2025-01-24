@@ -39,13 +39,13 @@
       </form>
     </div>
     <div class="col-md-4 text-right" style="margin: -53px 0px 0px 1100px" >
-      <a class="btn btn-primary mb-2" (click)="openAddDialog()"><i class="fas fa-plus"></i>新增</a>
+      <a class="btn btn-primary" (click)="openAddDialog()"><span class="oi oi-plus"></span>新增</a>
     </div>
   </div>
   <br>
-  <table class="table table-striped" style="width: 1550px">
+  <table class="table" style="width: 1550px">
     <thead>
-    <tr class="table-primary">
+    <tr>
       <th>序号</th>
       <th>学校名称</th>
       <th>班级名称</th>
@@ -70,38 +70,45 @@
       <td>{{ course.day }}</td>
       <td>{{ course.period }}</td>
       <td>
-        <a class="btn btn-outline-success btn-sm"  *ngIf="course.sory === 0 && checkTheSameKlass(course.users[0])"  (click)="addLesson(course.id)">
-          <i class="fas fa-plus"></i>添加
-        </a>
-        <a class="btn btn-outline-primary btn-sm"  *ngIf="role !== 3" (click)="openEditDialog(course.id)">
-          <i class="fas fa-pen" ></i>编辑
-        </a>
-        <span class="btn btn-sm btn-outline-danger" *ngIf="role !== 3" (click)="onDelete(course)">
-            <i class="far fa-trash-alt" ></i>删除
-        </span>
+        <button *ngIf="course.sory === 0 && checkTheSameKlass(course.users[0])"  (click)="addLesson(course.id)" class="btn btn-sm btn-success">
+          <span class="oi oi-plus"></span> 添加
+        </button>
+        <button  *ngIf="role !== 3" (click)="openEditDialog(course.id)" class="btn btn-sm btn-info button">
+          <span class="oi oi-pencil"></span>编辑
+        </button>
+        <button *ngIf="role !== 3" (click)="onDelete(course)" class="btn btn-sm btn-danger">
+          <span class="oi oi-trash"></span>删除
+        </button>
       </td>
     </tr>
     </tbody>
   </table>
-  <nav>
-    <ul class="pagination">
-      <li class="page-item" [ngClass]="{'disabled': page === 0}" (click)="onPage(0)">
-        <span class="page-link">首页</span>
-      </li>
-      <li class="page-item" [ngClass]="{'disabled': page === 0}" (click)="onPage(page - 1)">
-        <span class="page-link">上一页</span>
-      </li>
-      <li class="page-item" [ngClass]="{'active': page === pageli}" *ngFor="let pageli of pages" (click)="onPage(pageli)">
-        <span class="page-link" *ngIf="page  !== pageli">{{pageli + 1}}</span>
-        <span class="page-link" *ngIf="page === pageli">{{pageli + 1}}<span class="sr-only">(current)</span></span>
-      </li>
-      <li class="page-item" [ngClass]="{'disabled': page === pageData.totalPages - 1}" (click)="onPage(page + 1)">
-        <span class="page-link">下一页</span>
-      </li>
-      <li class="page-item" [ngClass]="{'disabled': page === pageData.totalPages - 1}" (click)="onPage(pageData.totalPages - 1)">
-        <span class="page-link">尾页</span>
-      </li>
+  <div *ngIf="pageData" class="row">
+    <div class="col-4" id="pageInfo">
+      第{{page + 1}}/{{pageData.totalPages}}页 每页{{size}}条
+    </div>
+    <div class="col-8">
+      <nav>
+        <ul class="pagination">
+          <li class="page-item" [ngClass]="{'disabled': page === 0}" (click)="onPage(0)">
+            <span class="page-link">首页</span>
+          </li>
+          <li class="page-item" [ngClass]="{'disabled': page === 0}" (click)="onPage(page - 1)">
+            <span class="page-link">上一页</span>
+          </li>
+          <li class="page-item" [ngClass]="{'active': page === pageli}" *ngFor="let pageli of pages" (click)="onPage(pageli)">
+            <span class="page-link" *ngIf="page  !== pageli">{{pageli + 1}}</span>
+            <span class="page-link" *ngIf="page === pageli">{{pageli + 1}}<span class="sr-only">(current)</span></span>
+          </li>
+          <li class="page-item" [ngClass]="{'disabled': page === pageData.totalPages - 1}" (click)="onPage(page + 1)">
+            <span class="page-link">下一页</span>
+          </li>
+          <li class="page-item" [ngClass]="{'disabled': page === pageData.totalPages - 1}" (click)="onPage(pageData.totalPages - 1)">
+            <span class="page-link">尾页</span>
+          </li>
 
-    </ul>
-  </nav>
+        </ul>
+      </nav>
+    </div>
+  </div>
 </div>
