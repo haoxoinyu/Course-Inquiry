@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Inject} from '@angular/core';
+import {Component, EventEmitter, Inject, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {School} from "../../norm/entity/School";
 import {Term} from "../../norm/entity/Term";
@@ -18,7 +18,7 @@ import {SchoolService} from "../../service/school.service";
   templateUrl: './create.component.html',
   styleUrls: ['./create.component.sass']
 })
-export class CreateComponent {
+export class CreateComponent implements OnInit {
   course = {
     name: '',
     school_id: null as unknown as number,
@@ -69,7 +69,6 @@ export class CreateComponent {
     {name: '第四大节', value: 4},
     {name: '第五大节', value: 5}
   ];
-  beLogout = new EventEmitter<void>();
 
   constructor(private httpClient: HttpClient,
               public dialogRef: MatDialogRef<CreateComponent>,
