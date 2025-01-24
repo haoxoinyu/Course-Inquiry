@@ -40,7 +40,7 @@ public class CourseServiceImpl implements CourseService {
                 List<User> allUSer = java.util.stream.StreamSupport.stream(this.userRepository.findAll().spliterator(), false)
                         .collect(Collectors.toList());
                 for(User user1 : allUSer) {
-                    if(user1.getKlass().getId() == user.get().getId()) {
+                    if(user1.getKlass().getId().equals(user.get().getKlass().getId())) {
                         userList.add(user1);
                     }
                 }
