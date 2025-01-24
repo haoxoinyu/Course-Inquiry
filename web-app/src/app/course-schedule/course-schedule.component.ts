@@ -12,6 +12,7 @@ import {UserService} from "../service/user.service";
 import {ScheduleService} from '../service/schedule.service';
 import {School} from "../norm/entity/School";
 import {KlassService} from "../service/klass.service";
+import {SchoolService} from "../service/school.service";
 
 @Component({
   selector: 'app-course-schedule',
@@ -29,8 +30,9 @@ export class CourseScheduleComponent implements OnInit {
     week: 0
 };
   dates: Date[] = [];
-  clazzes = new Array<Klass>();
+  klasses = new Array<Klass>();
   terms = new Array<Term>();
+  schools = new Array<School>();
   weeks: number[] = [];
   days = [
     {name: '周一', value: 1},
@@ -53,18 +55,21 @@ export class CourseScheduleComponent implements OnInit {
 
   constructor(private klassService: KlassService,
               private termService: TermService,
+              private schoolService: SchoolService,
               private courseScheduleService: CourseScheduleService,
               private userService: UserService,
               private sweetAlertService: SweetAlertService) { }
 
   ngOnInit(): void {
     console.log('ngOnInit');
+    this.getSchools(); // 调用获取学校列表的方法
     this.userService.me().subscribe(
       user => {
         console.log(user);
         if (this.searchParameters.schoolId === 0 && user.klass && user.klass.school) {
           this.searchParameters.schoolId = user.klass.school.id;
-          console.log(this.searchParameters.schoolId);
+          console.log(this.searchParameters.schoolId)
+          this.onSchoolChange(this.searchParameters.schoolId);
         }
         if (this.searchParameters.klassId === 0 && user.klass && user.klass.id !== undefined) {
           this.searchParameters.klassId = user.klass.id;
@@ -149,7 +154,8 @@ export class CourseScheduleComponent implements OnInit {
     });
   }
 
-  onSchoolChange(school: School) {
+  onSchoolChange(id: number) {
+    console.log('调用了');
     if (this.searchParameters.schoolId !== 0) {
       console.log(this.firstChange);
       if (this.firstChange) {
@@ -158,12 +164,24 @@ export class CourseScheduleComponent implements OnInit {
         this.searchParameters.klassId = 0;
         this.searchParameters.termId = 0;
         this.searchParameters.week = 0;
+        this.weeks = [];
       }
     }
-    this.searchParameters.schoolId = school.id;
+    this.searchParameters.schoolId = id;
     console.log(this.searchParameters.schoolId);
-    this.getClazzBySchoolId(school.id);
-    this.getTermsBySchoolId(school.id);
+    this.getClazzBySchoolId(id);
+    this.getTermsBySchoolId(id);
+  }
+
+  getSchools(): void {
+    this.schoolService.all().subscribe(
+      (data: School[]) => {
+        this.schools = data;
+      },
+      (error) => {
+        console.error('Error fetching schools:', error);
+      }
+    );
   }
 
   onTermChange(id: number) {
@@ -200,7 +218,7 @@ export class CourseScheduleComponent implements OnInit {
   getClazzBySchoolId(schoolId: number) {
     this.klassService.getClazzBySchoolId(schoolId)
       .subscribe(data => {
-        this.clazzes = data.content;
+        this.klasses = data.content;
       }, error => {
         console.error('获取班级失败', error);
       });

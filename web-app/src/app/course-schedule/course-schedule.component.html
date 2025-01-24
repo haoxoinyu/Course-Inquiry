@@ -4,16 +4,19 @@
           (ngSubmit)="onSearchSubmit()">
       <div class="form-group mb-2">
         <label class="mr-2">学校：</label>
-        {{searchParameters.schoolId}}
-        <!-- 默认提示选项 -->
-        <app-school-select (selected)="onSchoolChange($event)" [(ngModel)]="searchParameters.schoolId"></app-school-select>
+        <select class="form-control" [(ngModel)]="searchParameters.schoolId" (change)="onSchoolChange(searchParameters.schoolId)" name="school_id" id="school_id">
+          <option [ngValue]="0">所有学校</option>
+          <option *ngFor="let school of schools" [value]="school.id">
+            {{school.name}}
+          </option>
+        </select>
       </div>
       <div class="form-group mb-2">
         <label class="mr-2">班级：</label>
         <select class="form-control" [(ngModel)]="searchParameters.klassId" name="clazz_id" id="clazz_id">
           <option [ngValue]="0">所有班级</option>
-          <option *ngFor="let clazz of clazzes" [value]="clazz.id">
-            {{clazz.name}}
+          <option *ngFor="let klass of klasses" [value]="klass.id">
+            {{klass.name}}
           </option>
         </select>
       </div>
@@ -29,7 +32,7 @@
       <div class="form-group mb-2">
         <label class="mr-2">周数：</label>
         <select class="form-control" [(ngModel)]="searchParameters.week" name="week" id="week">
-          <option [ngValue]=null>所有周数</option>
+          <option [ngValue]=0>所有周数</option>
           <option *ngFor="let week of weeks" [value]="week">
             {{week}}
           </option>

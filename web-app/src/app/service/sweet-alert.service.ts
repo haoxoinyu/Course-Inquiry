@@ -50,8 +50,6 @@ export class SweetAlertService {
       icon: 'warning',
       title,
       text,
-    }).then(() => {
-      this.router.navigate(['term']);
     });
   }
 
