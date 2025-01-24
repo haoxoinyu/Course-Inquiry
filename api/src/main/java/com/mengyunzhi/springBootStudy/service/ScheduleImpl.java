@@ -82,7 +82,7 @@ public class ScheduleImpl implements ScheduleService{
             Date StartDate = term.getStartTime();
             LocalDate localDate1 = StartDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             LocalDate localDate2 = formatDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            Long offsetWeek = ChronoUnit.DAYS.between(localDate1, localDate2) / 7;
+            Long offsetWeek = ChronoUnit.DAYS.between(localDate1, localDate2) / 7 - 1;
             //查找关联学校
 
             Optional<School> innnerSchool = this.schoolRepository.findById(term.getSchool().getId());

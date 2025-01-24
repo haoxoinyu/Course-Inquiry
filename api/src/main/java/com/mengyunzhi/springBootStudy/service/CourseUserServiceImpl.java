@@ -104,6 +104,38 @@ public class CourseUserServiceImpl implements CourseUserService {
     }
 
     @Override
+    public String add(Long CourseId, Long UserId) {
+        // 获取 course 和 user 对象
+        Course course = courseRepository.findById(CourseId)
+                .orElseThrow(() -> new RuntimeException("Course not found"));
+
+        User user = userRepository.findById(UserId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // 创建一个新的 CourseUserId
+        CourseUserId courseUserId = new CourseUserId(CourseId, UserId);
+
+        // 调用时间验证服务
+        boolean isTimeConflict = courseUserService.validateCourseTimeConflict(user.getId(), course);
+        if (!isTimeConflict) {
+            return "与已有课程时间冲突";
+        }
+
+        // 创建新的 CourseUser 实体并设置 Course 和 User
+        CourseUsers courseUsers = new CourseUsers();
+
+        courseUsers.setId(courseUserId); // 设置复合主键
+
+        courseUsers.setCourse(course);
+        courseUsers.setUser(user);
+
+        // 保存到数据库
+        courseUserRepository.save(courseUsers);
+
+        return "新增成功";
+    }
+
+    @Override
     public List<CourseUsers> findByUserId(Long userId) {
         User user = new User();
         user.setId(userId);

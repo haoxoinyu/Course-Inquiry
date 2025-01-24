@@ -2,6 +2,7 @@ package com.mengyunzhi.springBootStudy.service;
 
 import com.mengyunzhi.springBootStudy.entity.*;
 import com.mengyunzhi.springBootStudy.repository.CourseRepository;
+import com.mengyunzhi.springBootStudy.repository.CourseUserRepository;
 import com.mengyunzhi.springBootStudy.repository.KlassRepository;
 import com.mengyunzhi.springBootStudy.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,63 +23,54 @@ public class CourseServiceImpl implements CourseService {
     private CourseRepository courseRepository;
     private UserRepository userRepository;
     private KlassRepository klassRepository;
+    private CourseUserRepository courseUserRepository;
+    @Autowired
+    public CourseService courseService;
+    @Autowired
+    public CourseUserService courseUserService;
     Map<String, Object> response = new HashMap<>();
 
     @Autowired
-    public CourseServiceImpl(CourseRepository courseRepository, UserRepository userRepository, KlassRepository klassRepository) {
+    public CourseServiceImpl(CourseRepository courseRepository, UserRepository userRepository, KlassRepository klassRepository, CourseUserRepository courseUserRepository) {
         this.courseRepository = courseRepository;
         this.userRepository = userRepository;
         this.klassRepository = klassRepository;
+        this.courseUserRepository = courseUserRepository;
     }
 
     @Override
     public ResponseEntity<Map<String, Object>> save(Course course) {
-            if(course.getSory() == 1L) {
-                Optional<User> user = this.userRepository.findById(course.getUsers().get(0).getId());
-                Optional<Klass> klass = this.klassRepository.findById(user.get().getKlass().getId());
-                List<User> userList = new ArrayList<>();
-                List<User> allUSer = java.util.stream.StreamSupport.stream(this.userRepository.findAll().spliterator(), false)
-                        .collect(Collectors.toList());
-                for(User user1 : allUSer) {
-                    if(user1.getKlass().getId().equals(user.get().getKlass().getId())) {
-                        userList.add(user1);
+        // 保存课程信息
+        Course savedCourse = courseRepository.save(course);
+
+        // 检查是否成功保存课程
+        if (savedCourse != null) {
+            // 获取课程中的用户列表
+            List<User> users = course.getUsers();
+            Long saveCourseId = savedCourse.getId();
+            if (users != null && !users.isEmpty()) {
+                // 遍历用户列表，为每个用户与课程建立关联
+                for (User user : users) {
+                    String data = this.courseUserService.add(saveCourseId, user.getId());
+                    if (data == "与已有课程时间冲突") {
+                        this.courseService.deleteById(saveCourseId);
+                        response.put("error", false);
+                        response.put("message", "与已有课程时间冲突");
+                        return ResponseEntity.ok(response);
                     }
-                }
-                //全部检查是否全班已经有人这个时间段有课
-                for(User inneruser : userList) {
-                    User newuser = new User();
-                    newuser.setId(inneruser.getId());
-                    List<User> userContain = new ArrayList<>();
-                    userContain.add(newuser);
-                    course.setUsers(userContain);
-                    if(!this.checkTheSameCourse(course)) {
-                        response.put("status", "error");
-                        response.put("message", "该班级已经有学生这个时间段已经有课");
-                        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-                    };
-                }
-                List<User> userContain = new ArrayList<>();
-                //加课
-                for(User inneruser : userList) {
-                    User newuser = new User();
-                    newuser.setId(inneruser.getId());
-                    userContain.add(newuser);
-                    course.setUsers(userContain);
-                    this.courseRepository.save(course);
-                }
-                response.put("status", "success");
-                response.put("message", "添加成功");
-            }else {
-                if(!this.checkTheSameCourse(course)) {
-                    response.put("message", "该学生这个时间段已经有课");
-                    return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-                }else {
-                    this.courseRepository.save(course);
-                    response.put("status", "success");
-                    response.put("message", "添加成功");
+
                 }
             }
-            return ResponseEntity.ok(response);
+
+            response.put("success", true);
+            response.put("message", "新增成功");
+            response.put("courseId", savedCourse.getId());
+        } else {
+            response.put("success", false);
+            response.put("message", "新增失败");
+        }
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @Override
@@ -119,82 +111,54 @@ public class CourseServiceImpl implements CourseService {
      */
     @Override
     public ResponseEntity<Map<String, Object>> update(Long id, Course course) {
-        //设置一个占位课程对象接受检查，防止被污染
-        Course checkCourse = new Course();
-        checkCourse.setName(course.getName());
-        checkCourse.setTerm(course.getTerm());
-        checkCourse.setDay(course.getDay());
-        checkCourse.setSory(course.getSory());
-        checkCourse.setWeek(course.getWeek());
-        checkCourse.setUsers(course.getUsers());
-        checkCourse.setPeriod(course.getPeriod());
+        // 初始化响应对象
+        Map<String, Object> response = new HashMap<>();
 
+        // 检查课程是否存在
+        Optional<Course> existingCourseOptional = courseRepository.findById(id);
+        if (!existingCourseOptional.isPresent()) {
+            response.put("status", "error");
+            response.put("message", "课程不存在");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
 
-        if(course.getSory() == 1L) {
-            //获取全班同学
-            Optional<User> user = this.userRepository.findById(course.getUsers().get(0).getId());
-            Optional<Klass> klass = this.klassRepository.findById(user.get().getKlass().getId());
-            List<User> userList = new ArrayList<>();
-            List<User> allUSer = java.util.stream.StreamSupport.stream(this.userRepository.findAll().spliterator(), false)
-                    .collect(Collectors.toList());
-            for(User user1 : allUSer) {
-                if(user1.getKlass().getId() == user.get().getId()) {
-                    userList.add(user1);
+        // 获取已存在的课程对象
+        Course existingCourse = existingCourseOptional.get();
+
+        // 更新课程属性
+        existingCourse.setName(course.getName());
+        existingCourse.setSory(course.getSory());
+        existingCourse.setDay(course.getDay());
+        existingCourse.setWeek(course.getWeek());
+        existingCourse.setPeriod(course.getPeriod());
+        existingCourse.setTerm(course.getTerm());
+
+        // 更新用户列表
+        List<User> updatedUsers = course.getUsers();
+        if (updatedUsers != null) {
+            for (User user : updatedUsers) {
+                String data = this.courseUserService.add(id, user.getId());
+                if ("与已有课程时间冲突".equals(data)) { // 使用字符串比较方法
+                    response.put("status", "error");
+                    response.put("message", "与已有课程时间冲突");
+                    return ResponseEntity.ok(response);
                 }
             }
+        }
 
+        // 保存更新后的课程信息
+        Course updatedCourse = courseRepository.save(existingCourse);
 
-            //全部检查是否全班已经有人这个时间段有课
-            for(User inneruser : userList) {
-                User newuser = new User();
-                newuser.setId(inneruser.getId());
-                List<User> userContain = new ArrayList<>();
-                userContain.add(newuser);
-                checkCourse.setUsers(userContain);
-                if(!this.checkTheSameCourse(checkCourse)) {
-                    response.put("status", "error");
-                    response.put("message", "该班级已经有学生这个时间段已经有课");
-                    return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-                };
-            }
-            List<User> userContain = new ArrayList<>();
-            //加课
-            for(User inneruser : userList) {
-                Course oldCourse = courseRepository.findById(id).get();
-                oldCourse.setName(course.getName());
-                oldCourse.setTerm(course.getTerm());
-                oldCourse.setDay(course.getDay());
-                oldCourse.setSory(course.getSory());
-                oldCourse.setWeek(course.getWeek());
-                oldCourse.setUsers(course.getUsers());
-                oldCourse.setPeriod(course.getPeriod());
-
-                User newuser = new User();
-                newuser.setId(inneruser.getId());
-                userContain.add(newuser);
-                oldCourse.setUsers(userContain);
-                this.courseRepository.save(oldCourse);
-            }
+        // 检查是否成功更新课程
+        if (updatedCourse != null) {
             response.put("status", "success");
             response.put("message", "更新成功");
-        }else {
-            if(!this.checkTheSameCourse(checkCourse)) {
-                response.put("message", "该学生这个时间段已经有课");
-                return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-            }else {
-                Course oldCourse = courseRepository.findById(id).get();
-                oldCourse.setName(course.getName());
-                oldCourse.setTerm(course.getTerm());
-                oldCourse.setDay(course.getDay());
-                oldCourse.setSory(course.getSory());
-                oldCourse.setWeek(course.getWeek());
-                oldCourse.setUsers(course.getUsers());
-                oldCourse.setPeriod(course.getPeriod());
-                this.courseRepository.save(oldCourse);
-                response.put("status", "success");
-                response.put("message", "更新成功");
-            }
+            response.put("courseId", updatedCourse.getId());
+        } else {
+            response.put("status", "error");
+            response.put("message", "更新失败");
         }
+
         return ResponseEntity.ok(response);
     }
 

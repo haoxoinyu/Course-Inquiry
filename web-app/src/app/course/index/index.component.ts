@@ -16,6 +16,7 @@ import {Klass} from '../../norm/entity/Klass';
 import { School } from 'src/app/norm/entity/School';
 import { KlassService } from 'src/app/service/klass.service';
 import { TermService } from 'src/app/service/term.service';
+import {MyCourseService} from "../../service/my-course.service";
 
 @Component({
   selector: 'app-index',
@@ -106,7 +107,8 @@ export class IndexComponent implements OnInit {
                private courseService: CourseService,
                private userService: UserService,
                private klassService: KlassService,
-               private termService: TermService) {
+               private termService: TermService,
+               private myCourseService: MyCourseService) {
    }
 
    ngOnInit() {
@@ -157,24 +159,23 @@ export class IndexComponent implements OnInit {
    }
 
    onDelete(course: Course): void {
-
-    this.courseService.onDelete(Number(course.id))
-      .subscribe(() => {
-        console.log('删除成功');
-        this.pageData.content.forEach((value, key) => {
-          if (value === course) {
-            this.pageData.content.splice(key, 1);
-            this.sweetAlertService.showSuccess('删除成功', "success");
-            if (this.pageData.content.length === 0 && this.page > 0) {
-              this.page--;
-              this.loadByPage(this.page);
+      this.courseService.onDelete(Number(course.id))
+        .subscribe(() => {
+          console.log('删除成功');
+          this.pageData.content.forEach((value, key) => {
+            if (value === course) {
+              this.pageData.content.splice(key, 1);
+              this.sweetAlertService.showSuccess('删除成功', "success");
+              if (this.pageData.content.length === 0 && this.page > 0) {
+                this.page--;
+                this.loadByPage(this.page);
+              }
             }
-          } 
-        })
-      },(error) => {
-        this.sweetAlertService.showError('删除失败', '检查数据是否清除干净，请稍后再试。', 'error');
-        console.log('删除失败', error);
-    })
+          })
+        },(error) => {
+          this.sweetAlertService.showError('删除失败', '检查数据是否清除干净，请稍后再试。', 'error');
+          console.log('删除失败', error);
+      })
    }
 
    openAddDialog(): void {
@@ -204,24 +205,20 @@ export class IndexComponent implements OnInit {
 
    addLesson(courseId: string): void {
      console.log('addLesson');
-     const userId = this.me?.id;
-     this.courseService.addElectiveCourses(Number(courseId), userId).subscribe(
-       response => {
-         console.log('Lesson added successfully', response);
-         this.sweetAlertService.showSuccess('添加成功', 'success');
-       },
-       error => {
-         console.log(error.error.error);
-         if (error.error.error === '课程已存在') {
-           this.sweetAlertService.showError('添加失败', '课程已存在', 'error');
-         } else if (error.error.error === '用户和课程必须属于同一所学校') {
-           this.sweetAlertService.showError('添加失败', '用户和课程必须属于同一所学校', 'error');
-         } else {
-           console.error('Failed to add lesson', error);
-           this.sweetAlertService.showError('添加失败', '', 'error');
-         }
+     const newCourseUser = {
+       userId: Number(this.me?.id),
+       courseId: Number(courseId),
+     }
+     console.log(newCourseUser);
+     this.myCourseService.save(newCourseUser).subscribe((data: any) => {
+       if (data.message === "该课程已存在") {
+         this.sweetAlertService.showError('新增失败', '该课程已存在', 'error');
+       } else if (data.message === "与已有课程时间冲突") {
+         this.sweetAlertService.showError('新增失败', '与已有课程时间冲突', 'error');
+       } else {
+         this.sweetAlertService.showSuccess('新增成功', "success");
        }
-     );
+     });
    }
 
    onSubmit(form: NgForm, page = 1) {

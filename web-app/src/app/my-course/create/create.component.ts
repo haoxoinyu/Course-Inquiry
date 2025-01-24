@@ -102,19 +102,19 @@ export class CreateComponent implements OnInit {
       userId: this.me?.id
     }
     this.courseService.add(newCourse)
-      .subscribe(clazz => {
-          this.dialogRef.close(newCourse);
-          this.sweetAlertService.showSuccess('添加成功！', 'success');
-        },
-        error => {
-        console.log(error.error.message);
-          if (error.error.message === '课程名称长度最小为2位') {
+      .subscribe((data: any )=> {
+          if (data.message === '课程名称长度最小为2位') {
             this.sweetAlertService.showError('添加失败', '课程名称长度最小为2位', 'error');
-          } else if (error.error.error === '与已有课程的时间冲突') {
+          } else if (data.message === '与已有课程的时间冲突') {
             this.sweetAlertService.showError('添加失败', '与已有课程的时间冲突', 'error');
           } else {
-            this.sweetAlertService.showError('添加失败', '', 'error');
+            this.dialogRef.close(newCourse);
+            this.sweetAlertService.showSuccess('添加成功！', 'success');
           }
+        },
+        error => {
+          console.log(error.error.message);
+          this.sweetAlertService.showError('添加失败', '', 'error');
           console.log('保存失败', error);
         });
   }

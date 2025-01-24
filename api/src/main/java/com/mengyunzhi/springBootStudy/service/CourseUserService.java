@@ -17,4 +17,6 @@ public interface CourseUserService {
     List<CourseUsers> findByUserId(Long userId);
 
     boolean validateCourseTimeConflict(Long userId, Course newCourse);
+
+    String add(Long CourseId, Long UserId);
 }

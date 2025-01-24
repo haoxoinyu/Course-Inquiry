@@ -115,6 +115,7 @@ export class CourseScheduleComponent implements OnInit {
     console.log(this.searchParameters.klassId);
     console.log(this.searchParameters.termId);
     console.log(this.searchParameters.week);
+    this.getWeekDates(this.searchParameters.week);
     this.courseScheduleService.getCourseTable(this.searchParameters)
       .subscribe(data => {
       this.processCourseData(data);

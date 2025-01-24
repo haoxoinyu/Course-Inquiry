@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ScheduleService } from '../service/schedule.service';
 import { User } from '../norm/entity/User';
@@ -8,7 +8,7 @@ import { User } from '../norm/entity/User';
   templateUrl: './schedule.component.html',
   styleUrls: ['./schedule.component.sass']
 })
-export class ScheduleComponent {
+export class ScheduleComponent implements OnInit {
 
   sectionNumber = Array.from({ length: 5 }, (_, i) => i + 1);
   dateNumber = Array.from({ length: 7 }, (_, i) => i + 1);
@@ -29,7 +29,6 @@ export class ScheduleComponent {
 
   ngOnInit(): void {
     // 显示加载提示
-
     // 调用函数来格式化日期
     let formattedDate = this.formatDateToYYYYMMDD(this.currentDate);
     this.formGroup.get('date')?.setValue(formattedDate);
@@ -42,7 +41,7 @@ export class ScheduleComponent {
         console.log('时间戳：', firstDayOfCurrentWeek, '日期： ', date1.getDate())
         this.scheduleService.getUnbusyStudentsOfCurrentWeek(requestDate)
           .subscribe((data) => {
-        
+
             this.PeopleHaveCourse = data;
             console.log("unbuys",this.PeopleHaveCourse)
             // 隐藏加载提示
