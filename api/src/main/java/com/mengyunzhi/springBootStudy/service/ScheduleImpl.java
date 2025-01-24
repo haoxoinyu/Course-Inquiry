@@ -68,6 +68,7 @@ public class ScheduleImpl implements ScheduleService{
         return zonedDateTime.toInstant().toEpochMilli();
     }
 
+    @Override
     public List<UnbusyStudentsOfCurrentWeek> getUnbusyStudentsOfCurrentWeek(String date) {
         //转化为周一
         Long timestamp =this.changeToMonday(date);
