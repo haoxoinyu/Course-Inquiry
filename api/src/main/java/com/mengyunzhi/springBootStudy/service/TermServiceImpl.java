@@ -1,7 +1,6 @@
 package com.mengyunzhi.springBootStudy.service;
 
 import com.mengyunzhi.springBootStudy.entity.*;
-import com.mengyunzhi.springBootStudy.repository.KlassRepository;
 import com.mengyunzhi.springBootStudy.repository.TermRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,12 +12,9 @@ import org.springframework.util.Assert;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 
 /**
  * 学期服务实现
@@ -76,6 +72,13 @@ public class TermServiceImpl implements TermService {
         return this.termRepository.findBySchoolId(school);
     }
 
+    @Override
+    public Optional<Term> getCurrentTermBySchool(Long schoolId, Date today) {
+        School school = new School();
+        school.setId(schoolId);
+        System.out.println(schoolId);
+        return termRepository.findCurrentTermBySchool(school, today);
+    }
     /**
      * 获取某个班级
      *

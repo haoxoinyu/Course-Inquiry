@@ -35,13 +35,17 @@ public class CourseController {
         return this.courseService.findAll(name, schoolId, klassId, termId, userId, PageRequest.of(page, size));
     }
 
-    @PostMapping("/course-schedule")
+    @GetMapping("/course-schedule")
     public List<Course> findAll(
             @RequestParam(required = false) Long schoolId,
             @RequestParam(required = false) Long termId,
             @RequestParam(required = false) Long klassId,
             @RequestParam(required = false) List<Integer> week
     ) {
+        System.out.println("Received schoolId: " + schoolId);
+        System.out.println("Received clazzId: " + klassId);
+        System.out.println("Received termId: " + termId);
+        System.out.println("Received week: " + week);
         return this.courseService.findAll(schoolId, klassId, termId, week);
     }
 

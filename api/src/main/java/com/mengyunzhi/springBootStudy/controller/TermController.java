@@ -8,11 +8,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * 班级控制器
@@ -76,5 +83,19 @@ public class TermController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Map<String, Object>> update(@PathVariable Long id, @RequestBody Term term) {
         return this.termService.update(id, term);
+    }
+
+    @GetMapping("/getCurrentTerm")
+    public ResponseEntity<?> getCurrentTerm(@RequestParam Long schoolId,
+                                            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date date) {
+        System.out.println("Received schoolId: " + schoolId);
+        System.out.println("Received date: " + date);
+        Optional<Term> term = termService.getCurrentTermBySchool(schoolId, date);
+
+        if (term.isPresent()) {
+            return ResponseEntity.ok(term.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("当前日期不在任何学期的日期范围内");
+        }
     }
 }

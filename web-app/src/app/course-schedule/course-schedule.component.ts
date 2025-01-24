@@ -26,8 +26,9 @@ export class CourseScheduleComponent implements OnInit {
     schoolId: 0,
     klassId: 0,
     termId: 0,
-    week: null
-  };
+    week: 0
+};
+  dates: Date[] = [];
   clazzes = new Array<Klass>();
   terms = new Array<Term>();
   weeks: number[] = [];
@@ -47,13 +48,60 @@ export class CourseScheduleComponent implements OnInit {
     {name: '第四大节', value: 4},
     {name: '第五大节', value: 5}
   ];
+  me: User | undefined;
+  firstChange = true;
 
   constructor(private klassService: KlassService,
               private termService: TermService,
               private courseScheduleService: CourseScheduleService,
-              private courseService: CourseService) { }
+              private userService: UserService,
+              private sweetAlertService: SweetAlertService) { }
 
   ngOnInit(): void {
+    console.log('ngOnInit');
+    this.userService.me().subscribe(
+      user => {
+        console.log(user);
+        if (this.searchParameters.schoolId === 0 && user.klass && user.klass.school) {
+          this.searchParameters.schoolId = user.klass.school.id;
+          console.log(this.searchParameters.schoolId);
+        }
+        if (this.searchParameters.klassId === 0 && user.klass && user.klass.id !== undefined) {
+          this.searchParameters.klassId = user.klass.id;
+          console.log(this.searchParameters.klassId);
+        }
+        if (this.searchParameters.termId === 0) {
+          this.termService.getCurrentTerm(this.searchParameters.schoolId).subscribe(
+            response => {
+              if (response && response.id !== undefined) {
+                this.searchParameters.termId = response.id;
+                console.log(this.searchParameters.termId);
+                this.semesterStartDate = response.startTime;
+                console.log(this.semesterStartDate);
+                this.semesterEndDate = response.endTime;
+                console.log(this.semesterEndDate);
+                this.semesterStartDate = new Date(response.startTime);
+                this.semesterEndDate = new Date(response.endTime);
+                this.calculateWeeks();
+                this.searchParameters.week = this.calculateCurrentWeek();
+                console.log(this.searchParameters.week);
+                this.getWeekDates(this.searchParameters.week);
+                console.log(this.searchParameters);
+                this.onSearchSubmit();
+              }
+            },
+            error => {
+              console.error('获取当前学期失败:', error);
+              const errorMessage = error.error.error || '获取当前学期失败';
+              this.sweetAlertService.showWithoutTerm('未识别到当前学期信息', errorMessage, 'warning');
+            }
+          );
+        }
+      },
+      error => {
+        console.log(error);
+      }
+    );
   }
 
   onSearchSubmit() {
@@ -62,14 +110,25 @@ export class CourseScheduleComponent implements OnInit {
     console.log(this.searchParameters.klassId);
     console.log(this.searchParameters.termId);
     console.log(this.searchParameters.week);
-    this.courseScheduleService.getCourseTable(
-      this.searchParameters.schoolId,
-      this.searchParameters.klassId,
-      this.searchParameters.termId,
-      this.searchParameters.week
-    ).subscribe(data => {
+    this.courseScheduleService.getCourseTable(this.searchParameters)
+      .subscribe(data => {
       this.processCourseData(data);
     });
+  }
+
+  private calculateCurrentWeek(): number {
+    const today = new Date();
+
+    // 确保 this.semesterStartDate 是一个有效的 Date 对象
+    if (this.semesterStartDate instanceof Date) {
+      const startDiff = today.getTime() - this.semesterStartDate.getTime();
+      const weekNumber = Math.ceil(startDiff / (1000 * 60 * 60 * 24 * 7));
+      console.log(weekNumber);
+      return weekNumber;
+    } else {
+      console.error("semesterStartDate is not a valid Date object");
+      return 1; // 或者其他适当的默认值
+    }
   }
 
   processCourseData(courses: any[]) {
@@ -91,16 +150,24 @@ export class CourseScheduleComponent implements OnInit {
   }
 
   onSchoolChange(school: School) {
+    if (this.searchParameters.schoolId !== 0) {
+      console.log(this.firstChange);
+      if (this.firstChange) {
+        this.firstChange = false;
+      } else {
+        this.searchParameters.klassId = 0;
+        this.searchParameters.termId = 0;
+        this.searchParameters.week = 0;
+      }
+    }
     this.searchParameters.schoolId = school.id;
-    this.searchParameters.klassId = 0;
-    this.searchParameters.termId = 0;
-    this.searchParameters.week = null;
+    console.log(this.searchParameters.schoolId);
     this.getClazzBySchoolId(school.id);
     this.getTermsBySchoolId(school.id);
   }
 
   onTermChange(id: number) {
-    this.searchParameters.week = null;
+    this.searchParameters.week = 0;
     this.searchParameters.termId = id;
     console.log(this.searchParameters.termId);
     this.termService.getById(id)
@@ -146,5 +213,22 @@ export class CourseScheduleComponent implements OnInit {
       }, error => {
         console.error('获取学期失败', error);
       });
+  }
+
+  getWeekDates(weekNumber: number): void {
+    const start = new Date(this.semesterStartDate);
+    start.setDate(start.getDate() + (weekNumber - 1) * 7);
+    const dates = []; // 创建一个空数组来存储格式化后的日期
+    for (let i = 0; i < 7; i++) {
+      const date = new Date(start);
+      // 格式化日期为YYYY-MM-DD
+      const formattedDate = date.getFullYear() + '-' +
+        ('0' + (date.getMonth() + 1)).slice(-2) + '-' +
+        ('0' + date.getDate()).slice(-2);
+      dates.push(formattedDate); // 将格式化后的日期添加到数组中
+      start.setDate(start.getDate() + 1); // 增加一天
+    }
+    // @ts-ignore
+    this.dates = dates; // 返回包含格式化日期的数组
   }
 }
