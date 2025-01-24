@@ -4,6 +4,8 @@ import com.mengyunzhi.springBootStudy.entity.*;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 
 public class TermSpecs {
