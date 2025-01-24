@@ -102,8 +102,16 @@ export class TermService {
    * @param schoolId
    * */
     getTermsBySchoolId(schoolId: number): Observable<Page<Term>> {
+     const queryParams = new HttpParams()
+       .set('schoolId', schoolId ? schoolId.toString() : '')
+     return this.httpClient.get<Page<Term>>(this.url + '/getTermsBySchoolId', {params: queryParams});
+    }
+
+    getCurrentTerm(schoolId: number): Observable<Term> {
       const queryParams = new HttpParams()
-        .set('schoolId', schoolId? schoolId.toString() : '')
-      return this.httpClient.get<Page<Term>>(this.url + '/getTermsBySchoolId', {params: queryParams});
+        .set('schoolId', schoolId.toString())
+        .set('date', new Date().toISOString().split('T')[0]); // 修改参数名为 date
+      console.log(queryParams.toString());
+      return this.httpClient.get<Term>(this.url + '/getCurrentTerm', { params: queryParams });
     }
 }

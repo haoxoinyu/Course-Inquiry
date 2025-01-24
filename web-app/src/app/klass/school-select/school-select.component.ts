@@ -17,15 +17,17 @@ import {ControlValueAccessor, NG_VALUE_ACCESSOR} from "@angular/forms";
 export class SchoolSelectComponent implements ControlValueAccessor,OnInit {
 
   @Output() selected = new EventEmitter<School>();
-  @Input() school!: School;
+  @Input() set school(value: School) {
+    if (value) {
+      this.selected.emit(value);
+    }
+  }
   url = 'http://localhost:8080/School/list';
 
   value?: number;
 
   onChange: any = () => {};
   onTouched: any = () => {};
-  @Output()
-  beChange = new EventEmitter<number>();
   constructor() {
   }
 

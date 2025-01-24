@@ -8,8 +8,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public interface TermService {
     /**
@@ -76,8 +79,5 @@ public interface TermService {
      */
     boolean validateTermTime(@NotNull Term term);
 
-    /**
-     * 查找某一个时间段的学期
-     * **/
-
+    Optional<Term> getCurrentTermBySchool(Long schoolId, Date today);
 }

@@ -4,8 +4,9 @@
           (ngSubmit)="onSearchSubmit()">
       <div class="form-group mb-2">
         <label class="mr-2">学校：</label>
+        {{searchParameters.schoolId}}
         <!-- 默认提示选项 -->
-        <app-school-select (selected)="onSchoolChange($event)"></app-school-select>
+        <app-school-select (selected)="onSchoolChange($event)" [(ngModel)]="searchParameters.schoolId"></app-school-select>
       </div>
       <div class="form-group mb-2">
         <label class="mr-2">班级：</label>
@@ -36,10 +37,10 @@
       </div>
       <div class="form-group mb-2">
         <button class="btn btn-success mb-2" type="submit"
-                [disabled]="searchParameters.schoolId === null ||
-                searchParameters.klassId === null ||
-                searchParameters.termId === null ||
-                searchParameters.week === null ">查询</button>
+                [disabled]="searchParameters.schoolId === 0 ||
+                searchParameters.klassId === 0 ||
+                searchParameters.termId === 0 ||
+                searchParameters.week === 0 ">查询</button>
       </div>
     </form>
   </div>
@@ -50,7 +51,7 @@
         <tr>
           <th>节次/星期</th>
           <th *ngFor="let day of days; let i = index" class="multi-line-th">
-            {{ day.name }}
+            {{ day.name }} <br> {{ dates[i] }}
           </th>
         </tr>
         </thead>
