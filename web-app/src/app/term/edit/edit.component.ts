@@ -33,6 +33,8 @@ export class EditComponent implements OnInit {
     };
   }
 
+  canEdit: boolean = true;
+
   // 开始时间过滤器：只允许选择周一
   isMondayValidator: ValidatorFn = (control: AbstractControl) => {
     const value = control.value;
@@ -55,7 +57,12 @@ export class EditComponent implements OnInit {
 
   ngOnInit() {
     this.loadTermData();
-
+    this.termService.getCoursesByTerm(this.term.id).subscribe((data )=>
+    {
+      console.log(data);
+      this.canEdit = data;
+    });
+    console.log(this.canEdit);
     this.formGroup = new FormGroup({
       name: new FormControl('', [
         Validators.required,

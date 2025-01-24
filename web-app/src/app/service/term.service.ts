@@ -114,4 +114,10 @@ export class TermService {
       console.log(queryParams.toString());
       return this.httpClient.get<Term>(this.url + '/getCurrentTerm', { params: queryParams });
     }
+
+  getCoursesByTerm(termId: number | undefined): Observable<boolean> {
+      const url = `http://localhost:8080/Term/getCoursesByTerm/${termId}`;
+      console.log(this.httpClient.get<boolean>(url));
+      return this.httpClient.get<boolean>(url);
+    }
 }

@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -200,6 +201,18 @@ public class TermServiceImpl implements TermService {
         }
 
         return false;
+    }
+
+    @Override
+    public boolean getCoursesByTerm(Long termId) {
+        Term term = this.termRepository.findById(termId).get();
+
+        // 检查班级是否有用户
+        List<Course> courseList = this.courseService.findByTermId(term.getId());
+        if (!courseList.isEmpty()) {
+            return false;
+        }
+        return true;
     }
 
 }
