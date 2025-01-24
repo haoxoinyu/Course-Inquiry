@@ -35,14 +35,14 @@ export class AddComponent implements OnInit {
 
   formGroup = new FormGroup({
     name: new FormControl('', Validators.required),
-    schoolId: new FormControl(0, Validators.required),
-    termId: new FormControl(0, Validators.required),
+    schoolId: new FormControl(null as unknown as number, Validators.required),
+    termId: new FormControl(null, Validators.required),
     userId: new FormControl(0, Validators.required),
-    klassId: new FormControl(0, Validators.required),
+    klassId: new FormControl(null as unknown as number, Validators.required),
     sory: new FormControl(0, Validators.required),
     week:  new FormControl([] as number [], Validators.required),
-    day: new FormControl(0, Validators.required),
-    period: new FormControl(0, Validators.required)
+    day: new FormControl(null, Validators.required),
+    period: new FormControl(null, Validators.required)
   })
 
   value = '';
@@ -105,19 +105,19 @@ export class AddComponent implements OnInit {
     }
     console.log("newCourse", newCourse)
     this.courseService.add(newCourse)
-      .subscribe(clazz => {
-          this.dialogRef.close(newCourse);
-          this.sweetAlertService.showSuccess('新增成功！', 'success');
+      .subscribe((data: any) => {
+          if (data.message === '课程名称长度最小为2位') {
+            this.sweetAlertService.showError('新增失败', '课程名称长度最小为2位', 'error');
+          } else if (data.message === '与已有课程时间冲突') {
+            this.sweetAlertService.showError('新增失败', '与已有课程时间冲突', 'error');
+          } else {
+            this.dialogRef.close(newCourse);
+            this.sweetAlertService.showSuccess('新增成功！', 'success');
+          }
         },
         error => {
-          if (error.error.error === '课程已存在') {
-            this.sweetAlertService.showError('新增失败', '课程已存在', 'error');
-          } else if (error.error.error === '与已有课程的时间冲突') {
-            this.sweetAlertService.showError('新增失败', '与已有课程的时间冲突', 'error');
-          } else {
-            this.sweetAlertService.showError('新增失败', '', 'error');
-          }
           console.log('保存失败', error);
+          this.sweetAlertService.showError('新增失败', '', 'error');
         });
   }
 

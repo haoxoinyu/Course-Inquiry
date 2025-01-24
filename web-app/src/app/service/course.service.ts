@@ -93,6 +93,7 @@ export class CourseService {
       termId: course.term_id,
       userId: course.userId
     }
+    console.log(newCourse);
     return this.httpClient.post<void>(this.url + '/add', newCourse);
   }
 
