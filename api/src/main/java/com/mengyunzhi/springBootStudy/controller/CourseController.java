@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("Course")
@@ -100,6 +101,17 @@ public class CourseController {
         course.setSory(updateCourse.getSory());
         course.setName(updateCourse.getName());
        return this.courseService.update(updateCourse.getId(), course);
+    }
+
+    @PutMapping("addElectiveCourses")
+    public void addElectiveCourses(@RequestBody CourseUserRequest courseUserRequest) {
+        Optional<Course> electiveCourse = this.courseService.findById(courseUserRequest.getCourseId());
+        User user = new User();
+        user.setId(courseUserRequest.getUserId());
+        List<User> userList = new ArrayList<>();
+        userList.add(user);
+        electiveCourse.get().setUsers(userList);
+        this.courseService.save(electiveCourse.get());
     }
 }
 class newCourse{

@@ -145,4 +145,13 @@ export class CourseService {
   onDelete(courseId: number): Observable<void> {
     return this.httpClient.delete<void>(this.url + '/delete/' + courseId);
   }
+
+  /**
+   * 添加选修课
+   * @param courseId 课程id
+   * **/
+
+  addElectiveCourses(courseId : number, userId: number): Observable<void> {
+    return this.httpClient.put<void>(this.url + "/addElectiveCourses", {courseId, userId});
+  }
 }
