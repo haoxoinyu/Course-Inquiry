@@ -181,10 +181,11 @@ public class TermServiceImpl implements TermService {
         Date newEnd = term.getEndTime();
 
         // 使用 HQL 或 JPQL 查询可能重叠的学期
-        String hql = "SELECT t FROM Term t WHERE :newStart < t.endTime AND t.startTime < :newEnd";
+        String hql = "SELECT t FROM Term t WHERE :newStart < t.endTime AND t.startTime < :newEnd AND t.school.id = :schoolId";
         List<Term> result = entityManager.createQuery(hql, Term.class)
                 .setParameter("newStart", newStart)
                 .setParameter("newEnd", newEnd)
+                .setParameter("schoolId", term.getSchool().getId())
                 .getResultList();
 
         // 如果查询结果为空，则表示没有重复的名称，返回true
