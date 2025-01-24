@@ -98,4 +98,9 @@ public class TermController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("当前日期不在任何学期的日期范围内");
         }
     }
+
+    @GetMapping("/getCoursesByTerm/{termId}")
+    public boolean getCoursesByTerm(@PathVariable Long termId) {
+        return this.termService.getCoursesByTerm(termId);
+    }
 }
