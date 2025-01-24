@@ -6,6 +6,7 @@ import com.mengyunzhi.springBootStudy.entity.Term;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -80,4 +81,6 @@ public interface TermService {
     boolean validateTermTime(@NotNull Term term);
 
     Optional<Term> getCurrentTermBySchool(Long schoolId, Date today);
+
+    boolean getCoursesByTerm(Long termId);
 }
