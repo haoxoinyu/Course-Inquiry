@@ -62,12 +62,14 @@ public class MyCourseController {
     }
 
     @PostMapping
+    @CrossOrigin("*")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Map<String, Object>> addCourseToUser(@RequestBody CourseUserRequest request) {
         return courseUserService.addCourseUser(request);
     }
 
     @DeleteMapping
+    @CrossOrigin("*")
     public ResponseEntity<Void> deleteCourseUser(@RequestParam Long courseId, @RequestParam Long userId) {
         courseUserService.deleteCourseUser(courseId, userId);
         return ResponseEntity.noContent().build();

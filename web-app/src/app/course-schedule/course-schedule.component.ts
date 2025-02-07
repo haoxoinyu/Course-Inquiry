@@ -66,6 +66,9 @@ export class CourseScheduleComponent implements OnInit {
     this.userService.me().subscribe(
       user => {
         console.log(user);
+        if (user.state === 2) {
+          this.sweetAlertService.returnLogin();
+        }
         if (this.searchParameters.schoolId === 0 && user.klass && user.klass.school) {
           this.searchParameters.schoolId = user.klass.school.id;
           console.log(this.searchParameters.schoolId)

@@ -37,7 +37,7 @@
       <td>{{klass.school?.name}}</td>
       <td>
         <button (click)="openEditDialog(klass)" class="btn btn-sm btn-info button"><span class="oi oi-pencil"></span>编辑</button>
-        <button (click)="onDelete(klass)" class="btn btn-sm btn-danger"><span class="oi oi-trash"></span>删除</button>
+        <button (click)="onDelete(klass)" class="btn btn-sm btn-danger" *ngIf="klass.id !== me?.klass?.id"><span class="oi oi-trash"></span>删除</button>
       </td>
     </tr>
   </table>

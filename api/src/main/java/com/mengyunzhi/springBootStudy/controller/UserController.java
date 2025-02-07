@@ -1,6 +1,7 @@
 package com.mengyunzhi.springBootStudy.controller;
 
 import com.mengyunzhi.springBootStudy.entity.Klass;
+import com.mengyunzhi.springBootStudy.entity.School;
 import com.mengyunzhi.springBootStudy.entity.User;
 import com.mengyunzhi.springBootStudy.service.UserService;
 import org.slf4j.Logger;
@@ -31,6 +32,12 @@ public class UserController {
     @Autowired
     UserService userService;
 
+    @GetMapping("/list")
+    @CrossOrigin("*")
+    public List<User> getAll() {
+        return this.userService.getAll();
+    }
+
     @PostMapping("login")
     @CrossOrigin("*")
     public ResponseEntity<Map<String, Object>> login(@RequestBody User user) {
@@ -38,17 +45,20 @@ public class UserController {
     }
 
     @GetMapping("logout")
+    @CrossOrigin("*")
     public void login() {
         this.userService.logout();
     }
 
     @GetMapping("me")
+    @CrossOrigin("*")
     public User me() {
         System.out.println("用户成功的请求了me方法");
         return this.userService.me();
     }
 
     @DeleteMapping("{id}")
+    @CrossOrigin("*")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Map<String, Object>> delete(@PathVariable Long id) {
         return userService.deleteById(id);

@@ -142,6 +142,13 @@ public class CourseUserServiceImpl implements CourseUserService {
         return this.courseUserRepository.findByUser(user);
     }
 
+    @Override
+    public List<CourseUsers> findByCourseId(Long courseId) {
+        Course course = new Course();
+        course.setId(courseId);
+        return this.courseUserRepository.findByCourse(course);
+    }
+
     /**
      * 验证用户是否已有时间冲突的课程
      * @param userId 用户ID
@@ -170,15 +177,18 @@ public class CourseUserServiceImpl implements CourseUserService {
                 "JOIN course_day cd ON cu.course_id = cd.course_id " +  // 连接 course_day 表
                 "JOIN course_period cp ON cu.course_id = cp.course_id " +  // 连接 course_period 表
                 "JOIN course_week cw ON cu.course_id = cw.course_id " +    // 连接 course_week 表
+                "JOIN course c ON cu.course_id = c.id " +            // 连接 course 表
                 "WHERE cu.users_id = :userId " +                          // 用户ID
                 "AND cu.course_id != :newCourseId " +                     // 排除当前课程
                 "AND cd.day IN (:days) " +                                // 检查课程是否在同一天
                 "AND cp.period IN (:periods) " +                          // 检查课程是否在同一节次
-                "AND cw.week IN (:weeks)";                                // 检查课程是否在同一周
+                "AND cw.week IN (:weeks) " +                               // 检查课程是否在同一周
+                "AND c.term_id = :termId";
 
         // 创建 Query 对象
         Query query = entityManager.createNativeQuery(sql);
         query.setParameter("userId", userId);                    // 设置用户ID
+        query.setParameter("termId", newCourse.getTerm().getId());  // 设置学期ID
         query.setParameter("newCourseId", newCourse.getId());    // 设置新课程ID
         query.setParameter("days", newCourseDays);               // 设置课程的天数
         query.setParameter("periods", newCoursePeriods);         // 设置课程的节次

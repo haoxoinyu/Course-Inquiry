@@ -87,8 +87,7 @@ export class UserService {
    * 获取所有用户
    */
   all(): Observable<User[]> {
-    const httpParams = new HttpParams().append('name', '');
-    return this.httpClient.get<User[]>('http://localhost:8080/User', {params: httpParams});
+    return this.httpClient.get<User[]>('http://localhost:8080/User/list');
   }
 
   /**
