@@ -116,8 +116,12 @@ export class AddComponent implements OnInit {
           }
         },
         error => {
-          console.log('保存失败', error);
-          this.sweetAlertService.showError('新增失败', '', 'error');
+          console.log('保存失败', error.error.message);
+          if (error.error.message === '课程名称长度最小为2位') {
+            this.sweetAlertService.showError('新增失败', '课程名称长度最小为2位', 'error');
+          } else {
+            this.sweetAlertService.showError('新增失败', '', 'error');
+          }
         });
   }
 

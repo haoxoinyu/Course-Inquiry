@@ -109,5 +109,7 @@ public interface UserService {
     ResponseEntity<Map<String, Object>> update(Long id, User user);
 
     List<User> findByKlassId(Long klassId);
+
+    List<User> getAll();
 }
 

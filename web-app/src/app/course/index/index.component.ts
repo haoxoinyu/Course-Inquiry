@@ -115,6 +115,9 @@ export class IndexComponent implements OnInit {
     this.userService.me().subscribe((user) => {
       this.me = user;
       this.role = user.role;
+      if (user.state === 2) {
+        this.sweetAlertService.returnLogin();
+      }
       console.log("me", this.me);
     });
      // 使用默认值 page = 0 调用loadByPage()方法
@@ -170,6 +173,7 @@ export class IndexComponent implements OnInit {
                 this.page--;
                 this.loadByPage(this.page);
               }
+              this.loadByPage();
             }
           })
         },(error) => {

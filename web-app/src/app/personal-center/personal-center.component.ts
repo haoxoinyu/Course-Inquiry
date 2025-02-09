@@ -16,11 +16,15 @@ export class PersonalCenterComponent implements OnInit {
   public user: User | undefined;
   public role: number | undefined;
   constructor(private userService: UserService,
-              private dialog: MatDialog) { }
+              private dialog: MatDialog,
+              private sweetAlertService: SweetAlertService) { }
 
   ngOnInit() {
     // 调用M层的相关方法
     this.userService.me().subscribe((user) => {
+      if (user.state === 2) {
+        this.sweetAlertService.returnLogin();
+      }
       this.user = user;
       this.role = user.role;
       console.log(user);

@@ -2,6 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ScheduleService } from '../service/schedule.service';
 import { User } from '../norm/entity/User';
+import {UserService} from "../service/user.service";
+import {SweetAlertService} from "../service/sweet-alert.service";
 
 @Component({
   selector: 'app-schedule',
@@ -25,9 +27,16 @@ export class ScheduleComponent implements OnInit {
   }];
   weekDates: string[] = [];
 
-  constructor(private scheduleService: ScheduleService) { }
+  constructor(private scheduleService: ScheduleService,
+              private userService: UserService,
+              private sweetAlertService: SweetAlertService) { }
 
   ngOnInit(): void {
+    this.userService.me().subscribe((user) => {
+      if (user.state === 2) {
+        this.sweetAlertService.returnLogin();
+      }
+    });
     // 显示加载提示
     // 调用函数来格式化日期
     let formattedDate = this.formatDateToYYYYMMDD(this.currentDate);

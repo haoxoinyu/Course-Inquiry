@@ -27,6 +27,7 @@ public class SchoolController {
     SchoolService schoolService;
 
     @GetMapping("/list")
+    @CrossOrigin("*")
     public List<School> getAll() {
         return this.schoolService.getAll();
     }

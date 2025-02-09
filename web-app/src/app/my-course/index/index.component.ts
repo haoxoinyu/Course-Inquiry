@@ -69,6 +69,9 @@ export class IndexComponent implements OnInit {
 
   ngOnInit() {
     this.userService.me().subscribe((user) => {
+      if (user.state === 2) {
+        this.sweetAlertService.returnLogin();
+      }
       this.me = user;
       this.params.user_id = user.id;
       console.log(user);
