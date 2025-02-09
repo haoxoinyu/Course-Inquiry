@@ -7,6 +7,8 @@ import {AddComponent} from '../add/add.component';
 import {MatDialog} from '@angular/material/dialog';
 import {SweetAlertService} from '../../service/sweet-alert.service';
 import {CacheService} from '../../service/cache.service';
+import {UserService} from "../../service/user.service";
+import {User} from "../../norm/entity/User";
 
 @Component({
   selector: 'app-index',
@@ -34,9 +36,12 @@ export class IndexComponent implements OnInit {
   currentPage: number | undefined;
   totalPages: number | undefined;
 
+  me: User | undefined;
+
   constructor(private schoolService: SchoolService,
               private dialog: MatDialog,
-              private sweetAlertService: SweetAlertService) {
+              private sweetAlertService: SweetAlertService,
+              private userService: UserService) {
   }
 
   /**
@@ -93,6 +98,7 @@ export class IndexComponent implements OnInit {
                       this.params.page--;
                       this.loadData();
                     }
+                    this.loadData();
                   }
                 });
               }
@@ -134,6 +140,17 @@ export class IndexComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.userService.me().subscribe((user) => {
+      if (user.state === 2) {
+        this.sweetAlertService.returnLogin();
+      }
+      this.me = user;
+      if (user.role === 3) {
+        window.history.back();
+        this.sweetAlertService.showError('跳转失败', '无权限', 'error');
+      }
+      console.log(user);
+    });
     console.log('ngOnInit');
     this.loadData();
   }

@@ -9,6 +9,8 @@ import {School} from '../../norm/entity/School';
 import {SchoolService} from '../../service/school.service';
 import {TermService} from "../../service/term.service";
 import {Term} from "../../norm/entity/Term";
+import {UserService} from "../../service/user.service";
+import {User} from "../../norm/entity/User";
 
 @Component({
   selector: 'app-index',
@@ -39,10 +41,13 @@ export class IndexComponent implements OnInit {
   currentPage: number | undefined;
   totalPages: number | undefined;
 
+  me: User | undefined;
+
   constructor(private termService: TermService,
               private dialog: MatDialog,
               private sweetAlertService: SweetAlertService,
-              private schoolService: SchoolService) {
+              private schoolService: SchoolService,
+              private userService: UserService) {
   }
 
   /**
@@ -112,6 +117,17 @@ export class IndexComponent implements OnInit {
 
   ngOnInit() {
     console.log('ngOnInit');
+    this.userService.me().subscribe((user) => {
+      if (user.state === 2) {
+        this.sweetAlertService.returnLogin();
+      }
+      this.me = user;
+      if (user.role === 3) {
+        window.history.back();
+        this.sweetAlertService.showError('跳转失败', '无权限', 'error');
+      }
+      console.log(user);
+    });
     this.schoolService.all().subscribe(schools => {
       this.schools = schools;
     });

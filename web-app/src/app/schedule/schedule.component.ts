@@ -2,6 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ScheduleService } from '../service/schedule.service';
 import { User } from '../norm/entity/User';
+import {UserService} from "../service/user.service";
+import {SweetAlertService} from "../service/sweet-alert.service";
 import { getCurrencySymbol } from '@angular/common';
 import { TermService } from '../service/term.service';
 import { SchoolService } from '../service/school.service';
@@ -35,11 +37,18 @@ export class ScheduleComponent implements OnInit {
   currentWeekOfSchools: currentWeekOfSchool[] = [];
   constructor(
     private scheduleService: ScheduleService,
+              private userService: UserService,
+              private sweetAlertService: SweetAlertService,
     private termService: TermService,
     private schoolService: SchoolService
   ) { }
 
   ngOnInit(): void {
+    this.userService.me().subscribe((user) => {
+      if (user.state === 2) {
+        this.sweetAlertService.returnLogin();
+      }
+    });
     // 加载全部学校
     this.schoolService.all()
       .subscribe((schools) => {

@@ -80,7 +80,22 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public void deleteById(Long id) {
-        this.courseRepository.deleteById(id);
+        List<CourseUsers> courseUserList = this.courseUserService.findByCourseId(id);
+        if (!courseUserList.isEmpty()) {
+            for (CourseUsers courseUsers : courseUserList) {
+                // 检查是否有其他用户选择了该课程
+                this.courseUserService.deleteCourseUser(courseUsers.getId().getCourseId(), courseUsers.getId().getUserId());
+                Optional<Course> courseOptional = this.courseRepository.findById(id);
+                if (courseOptional.isPresent()) {
+                    Course course = courseOptional.get();
+
+                    // 如果课程有有效信息（比如课程的名称或描述不为空），则删除该课程
+                    if (course.getName() != null && !course.getName().isEmpty()) {
+                        this.courseRepository.deleteById(id);
+                    }
+                }
+            }
+        }
     }
 
     @Override

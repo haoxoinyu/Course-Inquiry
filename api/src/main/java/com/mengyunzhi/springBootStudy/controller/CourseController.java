@@ -32,6 +32,7 @@ public class CourseController {
     private static final Logger logger = LoggerFactory.getLogger(CourseController.class);
 
     @GetMapping
+    @CrossOrigin("*")
     public Page<Course> findAll(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) Long schoolId,
@@ -45,6 +46,7 @@ public class CourseController {
     }
 
     @GetMapping("/course-schedule")
+    @CrossOrigin("*")
     public List<Course> findAll(
             @RequestParam(required = false) Long schoolId,
             @RequestParam(required = false) Long termId,
@@ -66,6 +68,7 @@ public class CourseController {
     }
 
     @PostMapping("add")
+    @CrossOrigin("*")
     public ResponseEntity<Map<String, Object>> add(@RequestBody newCourse newCourse) {
         // 声明 userList 变量，使其在整个方法中可见
         List<User> userList;
@@ -98,11 +101,13 @@ public class CourseController {
     }
 
     @DeleteMapping("delete/{id}")
+    @CrossOrigin("*")
     public void onDelete(@PathVariable Long id) {
         this.courseService.deleteById(id);
     }
 
     @PutMapping("/updateCourse")
+    @CrossOrigin("*")
     public ResponseEntity<Map<String, Object>> update(@RequestBody newCourse updateCourse) {
         // 声明 userList 变量，使其在整个方法中可见
         List<User> userList;
@@ -137,6 +142,7 @@ public class CourseController {
     }
 
     @PutMapping("addElectiveCourses")
+    @CrossOrigin("*")
     public void addElectiveCourses(@RequestBody CourseUserRequest courseUserRequest) {
         Optional<Course> electiveCourse = this.courseService.findById(courseUserRequest.getCourseId());
         User user = new User();

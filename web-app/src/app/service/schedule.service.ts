@@ -15,7 +15,7 @@ export class ScheduleService {
       .set('date', date ? date : '')
       return this.httpClient.get<number>(this.url + '/getfirstDayOfCurrentWeek', {params: queryParams})
     }
-  
+
     getUnbusyStudentsOfCurrentWeek(date: string): Observable<any> {
       const queryParams = new HttpParams()
       .set('date', date ? date : '')

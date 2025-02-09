@@ -31,18 +31,21 @@ public class KlassController {
     SchoolService schoolService;
 
     @DeleteMapping("{id}")
+    @CrossOrigin("*")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Map<String, Object>> delete(@PathVariable Long id) {
         return klassService.deleteById(id);
     }
 
     @GetMapping("{id}")
+    @CrossOrigin("*")
     @ResponseStatus(HttpStatus.OK)
     public Klass get(@PathVariable Long id) {
         return this.klassService.getById(id);
     }
 
     @GetMapping("getKlassBySchoolId/{schoolId}")
+    @CrossOrigin("*")
     @ResponseStatus(HttpStatus.OK)
     public List<Klass> getKlassBySchoolId(@PathVariable Long schoolId) {
         School school = new School();
@@ -51,6 +54,7 @@ public class KlassController {
     }
 
     @GetMapping("/list")
+    @CrossOrigin("*")
     public List<Klass> getAll() {
         return this.klassService.getAll();
     }
@@ -78,6 +82,7 @@ public class KlassController {
     }
 
     @PostMapping
+    @CrossOrigin("*")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Map<String, Object>> save(@RequestBody Klass klass) {
         return this.klassService.save(klass);
@@ -90,6 +95,7 @@ public class KlassController {
      * @param klass 新班级数据
      */
     @PutMapping("/{id}")
+    @CrossOrigin("*")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Map<String, Object>> update(@PathVariable Long id, @RequestBody Klass klass) {
         return this.klassService.update(id, klass);

@@ -250,5 +250,10 @@ public class UserServiceImpl implements UserService {
         klass.setId(klassId);
         return this.userRepository.findByKlass(klass);
     }
+
+    @Override
+    public List<User> getAll() {
+        return this.userRepository.findAll();
+    }
  }
 

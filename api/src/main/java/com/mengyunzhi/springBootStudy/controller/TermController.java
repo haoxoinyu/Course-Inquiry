@@ -33,12 +33,14 @@ public class TermController {
     TermService termService;
 
     @DeleteMapping("{id}")
+    @CrossOrigin("*")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Map<String, Object>> delete(@PathVariable Long id) {
         return termService.deleteById(id);
     }
 
     @GetMapping("{id}")
+    @CrossOrigin("*")
     @ResponseStatus(HttpStatus.OK)
     public Term get(@PathVariable Long id) {
         return this.termService.getById(id);
@@ -68,6 +70,7 @@ public class TermController {
     }
 
     @PostMapping
+    @CrossOrigin("*")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Map<String, Object>> save(@RequestBody Term term) {
         return this.termService.save(term);
@@ -80,12 +83,14 @@ public class TermController {
      * @param term
      */
     @PutMapping("{id}")
+    @CrossOrigin("*")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Map<String, Object>> update(@PathVariable Long id, @RequestBody Term term) {
         return this.termService.update(id, term);
     }
 
     @GetMapping("/getCurrentTerm")
+    @CrossOrigin("*")
     public ResponseEntity<?> getCurrentTerm(@RequestParam Long schoolId,
                                             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date date) {
         System.out.println("Received schoolId: " + schoolId);
@@ -100,6 +105,7 @@ public class TermController {
     }
 
     @GetMapping("/getCoursesByTerm/{termId}")
+    @CrossOrigin("*")
     public boolean getCoursesByTerm(@PathVariable Long termId) {
         return this.termService.getCoursesByTerm(termId);
     }
