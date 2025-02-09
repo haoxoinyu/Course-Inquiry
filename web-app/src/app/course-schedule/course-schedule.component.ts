@@ -27,6 +27,7 @@ export class CourseScheduleComponent implements OnInit {
     schoolId: 0,
     klassId: 0,
     termId: 0,
+    userId: 0,
     week: 0
 };
   dates: string[] = [];
@@ -34,6 +35,7 @@ export class CourseScheduleComponent implements OnInit {
   terms = new Array<Term>();
   schools = new Array<School>();
   weeks: number[] = [];
+  users = new Array<User>(new User(1, '', '', 1, ''));
   days = [
     {name: '周一', value: 1},
     {name: '周二', value: 2},
@@ -77,6 +79,11 @@ export class CourseScheduleComponent implements OnInit {
         if (this.searchParameters.klassId === 0 && user.klass && user.klass.id !== undefined) {
           this.searchParameters.klassId = user.klass.id;
           console.log(this.searchParameters.klassId);
+          this.onKlassChange(this.searchParameters.klassId);
+        }
+        if (this.searchParameters.userId === 0 && user.id) {
+          this.searchParameters.userId = user.id;
+          console.log(this.searchParameters.userId);
         }
         if (this.searchParameters.termId === 0) {
           this.termService.getCurrentTerm(this.searchParameters.schoolId).subscribe(
@@ -117,6 +124,7 @@ export class CourseScheduleComponent implements OnInit {
     console.log(this.searchParameters.schoolId);
     console.log(this.searchParameters.klassId);
     console.log(this.searchParameters.termId);
+    console.log(this.searchParameters.userId);
     console.log(this.searchParameters.week);
     this.getWeekDates(this.searchParameters.week);
     this.courseScheduleService.getCourseTable(this.searchParameters)
@@ -168,6 +176,7 @@ export class CourseScheduleComponent implements OnInit {
         this.searchParameters.klassId = 0;
         this.searchParameters.termId = 0;
         this.searchParameters.week = 0;
+        this.searchParameters.userId = 0;
         this.weeks = [];
       }
     }
@@ -175,6 +184,20 @@ export class CourseScheduleComponent implements OnInit {
     console.log(this.searchParameters.schoolId);
     this.getClazzBySchoolId(id);
     this.getTermsBySchoolId(id);
+  }
+
+  onKlassChange(id: number) {
+    if (this.searchParameters.klassId !== 0) {
+      console.log(this.firstChange);
+      if (this.firstChange) {
+        this.firstChange = false;
+      } else {
+        this.searchParameters.userId = 0;
+      }
+    }
+    this.searchParameters.klassId = id;
+    console.log(this.searchParameters.klassId);
+    this.getUsersByKlassId(id);
   }
 
   getSchools(): void {
@@ -232,8 +255,20 @@ export class CourseScheduleComponent implements OnInit {
     this.termService.getTermsBySchoolId(schoolId)
       .subscribe(data => {
         this.terms = data.content;
+        console.log(this.terms);
       }, error => {
         console.error('获取学期失败', error);
+      });
+  }
+
+  getUsersByKlassId(klassId: number) {
+    console.log('调用了获取用户的方法');
+    this.userService.getUsersByKlassId(klassId)
+      .subscribe(data => {
+        this.users = data;
+        console.log(this.users);
+      }, error => {
+        console.error('获取用户失败', error);
       });
   }
 

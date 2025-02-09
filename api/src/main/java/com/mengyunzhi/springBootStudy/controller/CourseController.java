@@ -51,13 +51,15 @@ public class CourseController {
             @RequestParam(required = false) Long schoolId,
             @RequestParam(required = false) Long termId,
             @RequestParam(required = false) Long klassId,
+            @RequestParam(required = false) Long userId,
             @RequestParam(required = false) List<Integer> week
     ) {
         System.out.println("Received schoolId: " + schoolId);
         System.out.println("Received clazzId: " + klassId);
         System.out.println("Received termId: " + termId);
+        System.out.println("Received userId: " + userId);
         System.out.println("Received week: " + week);
-        return this.courseService.findAll(schoolId, klassId, termId, week);
+        return this.courseService.findAll(schoolId, klassId, termId, userId, week);
     }
 
     @GetMapping("/findById")

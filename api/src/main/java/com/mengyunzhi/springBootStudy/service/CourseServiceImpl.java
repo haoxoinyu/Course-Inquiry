@@ -193,14 +193,16 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public List<Course> findAll(Long schoolId, Long klassId, Long termId, List<Integer> week) {
+    public List<Course> findAll(Long schoolId, Long klassId, Long termId, Long userId, List<Integer> week) {
         School school = new School();
         school.setId(schoolId);
         Klass klass = new Klass();
         klass.setId(klassId);
         Term term = new Term();
         term.setId(termId);
-        return courseRepository.findAll(school, klass, term, week);
+        User user = new User();
+        user.setId(userId);
+        return courseRepository.findAll(school, klass, term, user, week);
     }
 
 

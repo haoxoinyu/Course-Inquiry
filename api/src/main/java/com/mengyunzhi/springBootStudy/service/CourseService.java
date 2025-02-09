@@ -86,5 +86,5 @@ public interface CourseService {
      **/
     Optional<Course> findById(Long courseId);
 
-    List<Course> findAll(Long schoolId, Long klassId, Long termId, List<Integer> week);
+    List<Course> findAll(Long schoolId, Long klassId, Long termId, Long usrId, List<Integer> week);
 }
