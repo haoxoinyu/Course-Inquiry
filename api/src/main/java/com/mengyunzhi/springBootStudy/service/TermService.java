@@ -83,4 +83,6 @@ public interface TermService {
     Optional<Term> getCurrentTermBySchool(Long schoolId, Date today);
 
     boolean getCoursesByTerm(Long termId);
+
+    List<Map<String, String>> getCurrencyWeekOfEachSchool(String firstDayOfCurrentWeek);
 }

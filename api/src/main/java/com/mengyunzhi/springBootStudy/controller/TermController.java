@@ -109,4 +109,10 @@ public class TermController {
     public boolean getCoursesByTerm(@PathVariable Long termId) {
         return this.termService.getCoursesByTerm(termId);
     }
+
+    @GetMapping("/getCurrencyWeekOfEachSchool")
+    public List<Map<String, String>>  getCurrencyWeekOfEachSchool(@RequestParam String firstDayOfCurrentWeek) {
+       return  this.termService.getCurrencyWeekOfEachSchool(firstDayOfCurrentWeek);
+    }
 }
+

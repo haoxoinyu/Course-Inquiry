@@ -4,14 +4,21 @@ import { ScheduleService } from '../service/schedule.service';
 import { User } from '../norm/entity/User';
 import {UserService} from "../service/user.service";
 import {SweetAlertService} from "../service/sweet-alert.service";
-
+import { getCurrencySymbol } from '@angular/common';
+import { TermService } from '../service/term.service';
+import { SchoolService } from '../service/school.service';
+import { School } from '../norm/entity/School';
+interface currentWeekOfSchool {
+  schoolName: string,
+  currentWeek: string,
+  termName: string
+}
 @Component({
   selector: 'app-schedule',
   templateUrl: './schedule.component.html',
   styleUrls: ['./schedule.component.sass']
 })
 export class ScheduleComponent implements OnInit {
-
   sectionNumber = Array.from({ length: 5 }, (_, i) => i + 1);
   dateNumber = Array.from({ length: 7 }, (_, i) => i + 1);
   currentDate = new Date();
@@ -26,10 +33,15 @@ export class ScheduleComponent implements OnInit {
     user: new User(1,'','',1,'')
   }];
   weekDates: string[] = [];
-
-  constructor(private scheduleService: ScheduleService,
+  schools: School[] = [];
+  currentWeekOfSchools: currentWeekOfSchool[] = [];
+  constructor(
+    private scheduleService: ScheduleService,
               private userService: UserService,
-              private sweetAlertService: SweetAlertService) { }
+              private sweetAlertService: SweetAlertService,
+    private termService: TermService,
+    private schoolService: SchoolService
+  ) { }
 
   ngOnInit(): void {
     this.userService.me().subscribe((user) => {
@@ -37,7 +49,11 @@ export class ScheduleComponent implements OnInit {
         this.sweetAlertService.returnLogin();
       }
     });
-    // 显示加载提示
+    // 加载全部学校
+    this.schoolService.all()
+      .subscribe((schools) => {
+        this.schools = schools;
+      })
     // 调用函数来格式化日期
     let formattedDate = this.formatDateToYYYYMMDD(this.currentDate);
     this.formGroup.get('date')?.setValue(formattedDate);
@@ -47,17 +63,14 @@ export class ScheduleComponent implements OnInit {
         this.caculateWeekDay(firstDayOfCurrentWeek);
         const date1 =  new Date(firstDayOfCurrentWeek);
         const requestDate = this.formatDateToYYYYMMDD(date1);
-        console.log('时间戳：', firstDayOfCurrentWeek, '日期： ', date1.getDate())
         this.scheduleService.getUnbusyStudentsOfCurrentWeek(requestDate)
           .subscribe((data) => {
-
             this.PeopleHaveCourse = data;
-            console.log("unbuys",this.PeopleHaveCourse)
-            // 隐藏加载提示
           }, error => {
             // 如果发生错误，隐藏加载提示并处理错误
             console.error(error);
           });
+          this.getCurrencyWeekOfEachSchool(requestDate);
       }, error => {
         // 如果发生错误，隐藏加载提示并处理错误
         console.error(error);
@@ -69,9 +82,7 @@ export class ScheduleComponent implements OnInit {
     this.scheduleService.getFirstDayOfCurrentWeek(this.formGroup.get('date')?.value!)
     .subscribe((firstDayOfCurrentWeek) => {
       const date1 =  new Date(firstDayOfCurrentWeek);
-
       const requestDate = this.formatDateToYYYYMMDD(date1);
-      console.log('时间戳：', firstDayOfCurrentWeek, '日期： ', date1.getDate())
       this.caculateWeekDay(firstDayOfCurrentWeek);
       this.scheduleService.getUnbusyStudentsOfCurrentWeek(requestDate)
         .subscribe((data) => {
@@ -107,5 +118,29 @@ export class ScheduleComponent implements OnInit {
     getDayOfWeek(day: number): string {
       const daysOfWeek = ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六','星期日'];
       return daysOfWeek[day];
+    }
+
+    //获取当前查询日期是每个学校的哪个学期的第几周
+    getCurrencyWeekOfEachSchool(firstDayOfCurrentWeek : string) {
+      this.termService.getCurrencyWeekOfEachSchool(firstDayOfCurrentWeek)
+      .subscribe((message) => {
+        this.currentWeekOfSchools = message;
+        this.schools.forEach((school) => {
+          let flag = false;
+          this.currentWeekOfSchools.forEach((school1) => {
+            if(school1.schoolName === school.name) {
+              flag = true;
+            }
+          })
+          if(!flag) {
+            this.currentWeekOfSchools.push({
+              schoolName: school.name,
+              currentWeek: '0',
+              termName: '暂无学期安排'
+            })
+          }
+        }) 
+        console.log(this.currentWeekOfSchools)
+      })
     }
 }

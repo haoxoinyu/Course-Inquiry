@@ -120,4 +120,11 @@ export class TermService {
       console.log(this.httpClient.get<boolean>(url));
       return this.httpClient.get<boolean>(url);
     }
+    //获取当前查询日期是每个学校的哪个学期的第几周
+    getCurrencyWeekOfEachSchool(firstDayOfCurrentWeek: string | undefined): Observable<any> {
+      const url = `http://localhost:8080/Term/getCurrencyWeekOfEachSchool`;
+      const queryParams = new HttpParams()
+      .set('firstDayOfCurrentWeek', firstDayOfCurrentWeek ? firstDayOfCurrentWeek.toString() : '')
+      return this.httpClient.get<any>(url, {params: queryParams});
+    }
 }

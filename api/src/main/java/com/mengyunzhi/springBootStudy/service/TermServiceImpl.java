@@ -1,6 +1,7 @@
 package com.mengyunzhi.springBootStudy.service;
 
 import com.mengyunzhi.springBootStudy.entity.*;
+import com.mengyunzhi.springBootStudy.repository.SchoolRepository;
 import com.mengyunzhi.springBootStudy.repository.TermRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,6 +15,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
@@ -28,6 +32,9 @@ public class TermServiceImpl implements TermService {
 
     @Autowired
     CourseService courseService;
+
+    @Autowired
+    SchoolRepository schoolRepository;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -213,6 +220,36 @@ public class TermServiceImpl implements TermService {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public   List<Map<String, String>> getCurrencyWeekOfEachSchool(String firstDayOfCurrentWeek) {
+        List<Map<String, String>> messagesOfCurrencyWeekOfEachSchool = new ArrayList<>();
+        LocalDate DateOfMonday;
+        //创建一个可以处理时间字符串的控制器
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        //转化为可以操作的时间对象
+        LocalDate localDate = LocalDate.parse(firstDayOfCurrentWeek, formatter);
+        ZonedDateTime zonedDateTime = localDate.atStartOfDay().atZone(ZoneId.systemDefault());
+        Long timestamp = zonedDateTime.toInstant().toEpochMilli();
+        Date formatDate = new Date(timestamp);
+        List<Term> inRangeTerms = this.termRepository.findTermsInRange(formatDate);
+        for(Term term : inRangeTerms) {
+            //计算在这个学期是第几周
+            Date StartDate = term.getStartTime();
+            LocalDate localDate1 = StartDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate localDate2 = formatDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            Long offsetWeek = ChronoUnit.DAYS.between(localDate1, localDate2) / 7 + 1;
+            //查找关联学校
+            Optional<School> innnerSchool = this.schoolRepository.findById(term.getSchool().getId());
+
+            Map<String, String>  messageOfCurrencyWeekOfEachSchool = new HashMap<>();
+            messageOfCurrencyWeekOfEachSchool.put("schoolName", innnerSchool.get().getName());
+            messageOfCurrencyWeekOfEachSchool.put("currentWeek", offsetWeek.toString());
+            messageOfCurrencyWeekOfEachSchool.put("termName", term.getName());
+            messagesOfCurrencyWeekOfEachSchool.add(messageOfCurrencyWeekOfEachSchool);
+         }
+        return messagesOfCurrencyWeekOfEachSchool;
     }
 
 }
