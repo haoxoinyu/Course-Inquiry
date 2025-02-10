@@ -84,7 +84,6 @@ public class ScheduleImpl implements ScheduleService{
             LocalDate localDate2 = formatDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             Long offsetWeek = ChronoUnit.DAYS.between(localDate1, localDate2) / 7 - 1;
             //查找关联学校
-
             Optional<School> innnerSchool = this.schoolRepository.findById(term.getSchool().getId());
             //查找关联班级
             List<Klass> innerKlasses = this.klassRepository.findBySchool(innnerSchool.get());
@@ -103,7 +102,6 @@ public class ScheduleImpl implements ScheduleService{
                                for(Integer period : course.getPeriod()) {
                                    String time = day + "-" + period;
                                    UnbusyStudentsOfCurrentWeek unbusyStudentOfCurrentWeek = new UnbusyStudentsOfCurrentWeek(user, time);
-
                                    unbusyStudentsOfCurrentWeekList.add(unbusyStudentOfCurrentWeek);
                                }
                            }
