@@ -20,6 +20,7 @@ export class CourseScheduleService {
     schoolId?: number,
     klassId?: number,
     termId?:  number,
+    userId?: number,
     week?: number,
   }): Observable<any> {
 
@@ -28,6 +29,7 @@ export class CourseScheduleService {
       .set('schoolId', params.schoolId ? params.schoolId.toString() : '')
       .set('klassId', params.klassId ? params.klassId.toString() : '')
       .set('termId', params.termId ? params.termId.toString() : '')
+      .set('userId', params.userId ? params.userId.toString() : '')
       .set('week', params.week ? params.week : '')
     console.log(queryParams);
     return this.httpClient.get<any>(this.url + '/course-schedule', {params: queryParams});
