@@ -45,6 +45,17 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
             return true;
         }
 
+        // 判断请求地址、方法是否与定时钉钉发送实时行程表请求相同
+        if ("/DingdingsendCurrentSchedule/getMessage".equals(url) && "GET".equals(method)) {
+            System.out.println("请求地址方法匹配到定时钉钉发送实时行程表，不拦截");
+            return true;
+        }
+
+        if ("/DingdingsendCurrentSchedule/sendCurrentSchedule".equals(url) && "GET".equals(method)) {
+            System.out.println("请求地址方法匹配到查看定时钉钉发送实时行程表，不拦截");
+            return true;
+        }
+
         // auth-token是否绑定了用户
         String authToken = request.getHeader(TokenFilter.TOKEN_KEY);
         if (this.userService.isLogin(authToken)) {

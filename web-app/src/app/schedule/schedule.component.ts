@@ -8,6 +8,7 @@ import { getCurrencySymbol } from '@angular/common';
 import { TermService } from '../service/term.service';
 import { SchoolService } from '../service/school.service';
 import { School } from '../norm/entity/School';
+import { HttpClient } from '@angular/common/http';
 interface currentWeekOfSchool {
   schoolName: string,
   currentWeek: string,
@@ -39,9 +40,10 @@ export class ScheduleComponent implements OnInit {
     private scheduleService: ScheduleService,
               private userService: UserService,
               private sweetAlertService: SweetAlertService,
-    private termService: TermService,
-    private schoolService: SchoolService
-  ) { }
+              private httpClient : HttpClient,
+              private termService: TermService,
+              private schoolService: SchoolService
+            ) { }
 
   ngOnInit(): void {
     this.userService.me().subscribe((user) => {
