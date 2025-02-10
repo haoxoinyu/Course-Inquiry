@@ -13,10 +13,20 @@
       </div>
       <div class="form-group mb-2">
         <label class="mr-2">班级：</label>
-        <select class="form-control" [(ngModel)]="searchParameters.klassId" name="clazz_id" id="clazz_id">
+        <select class="form-control" [(ngModel)]="searchParameters.klassId" (change)="onKlassChange(searchParameters.klassId)" name="clazz_id" id="clazz_id">
           <option [ngValue]="0">所有班级</option>
           <option *ngFor="let klass of klasses" [value]="klass.id">
             {{klass.name}}
+          </option>
+        </select>
+      </div>
+      {{ searchParameters.userId }}
+      <div class="form-group mb-2">
+        <label class="mr-2">用户：</label>
+        <select class="form-control" [(ngModel)]="searchParameters.userId" name="user_id" id="user_id">
+          <option [ngValue]="0">所有用户</option>
+          <option *ngFor="let user of users" [value]="user.id">
+            {{user.name}}
           </option>
         </select>
       </div>

@@ -56,10 +56,11 @@ public interface CourseRepository extends PagingAndSortingRepository<Course, Lon
         return this.findAll(specification, pageable);
     }
 
-    default List<Course> findAll(School school, Klass klass, Term term, List<Integer> week){
+    default List<Course> findAll(School school, Klass klass, Term term, User user, List<Integer> week){
         Specification<Course> specification = CourseSpecs.belongToSchool(school)
                 .and(CourseSpecs.belongToTerm(term))
                 .and(CourseSpecs.belongToKlass(klass))
+                .and(CourseSpecs.belongToUser(user))
                 .and(CourseSpecs.belongToWeek(week));
         return this.findAll(specification);
     }
