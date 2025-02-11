@@ -266,7 +266,7 @@ export class CourseScheduleComponent implements OnInit {
     this.userService.getUsersByKlassId(klassId)
       .subscribe(data => {
         this.users = data;
-        console.log(this.users);
+        console.log(this.users,klassId);
       }, error => {
         console.error('获取用户失败', error);
       });

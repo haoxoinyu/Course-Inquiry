@@ -9,6 +9,8 @@ import { TermService } from '../service/term.service';
 import { SchoolService } from '../service/school.service';
 import { School } from '../norm/entity/School';
 import { HttpClient } from '@angular/common/http';
+import { MatDialog } from '@angular/material/dialog';
+import { AddDingdingRobotsComponent } from './add-dingding-robots/add-dingding-robots.component';
 interface currentWeekOfSchool {
   schoolName: string,
   currentWeek: string,
@@ -36,13 +38,13 @@ export class ScheduleComponent implements OnInit {
   weekDates: string[] = [];
   schools: School[] = [];
   currentWeekOfSchools: currentWeekOfSchool[] = [];
-  constructor(
-    private scheduleService: ScheduleService,
+  constructor(private scheduleService: ScheduleService,
+              private dialog: MatDialog,
               private userService: UserService,
               private sweetAlertService: SweetAlertService,
               private httpClient : HttpClient,
               private termService: TermService,
-              private schoolService: SchoolService
+              private schoolService: SchoolService,
             ) { }
 
   ngOnInit(): void {
@@ -144,5 +146,16 @@ export class ScheduleComponent implements OnInit {
         }) 
         console.log(this.currentWeekOfSchools)
       })
+    }
+
+    openAddDialog(): void {
+      const dialogRef = this.dialog.open(AddDingdingRobotsComponent, {
+        width: '1200px',
+        height: '300px',
+      });
+ 
+      dialogRef.afterClosed().subscribe(() => {
+        this.onSubmit()
+      });
     }
 }

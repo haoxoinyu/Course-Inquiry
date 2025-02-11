@@ -1,14 +1,14 @@
 package com.mengyunzhi.springBootStudy.controller;
 
 import com.mengyunzhi.springBootStudy.entity.UnbusyStudentsOfCurrentWeek;
+import com.mengyunzhi.springBootStudy.service.DingdingRobotWebhookUrlService;
 import com.mengyunzhi.springBootStudy.service.DingdingSendCurrentScheduleService;
 import com.mengyunzhi.springBootStudy.service.ScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -20,12 +20,26 @@ public class DingdingsendCurrentSchedule {
     ScheduleService scheduleService;
 
     @Autowired
+    DingdingRobotWebhookUrlService dingdingRobotWebhookUrlService;
+
+    @Autowired
     DingdingSendCurrentScheduleService dingdingSendCurrentScheduleService;
+    @PostMapping("/add")
+    @CrossOrigin("*")
+    public ResponseEntity<?> addWebhookUrl(@RequestBody String webhookUrl) {
+        try{
+            this.dingdingRobotWebhookUrlService.addWebhookUrl(webhookUrl);
+            return ResponseEntity.status(HttpStatus.OK).body("{\"message\": \"添加成功\"}");
+        }catch(Exception e){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("当前机器人已添加过了，请勿重复添加");
+        }
+    }
 
     /**
      * 编辑查看信息
      * */
     @GetMapping("/getMessage")
+    @CrossOrigin("*")
     public void generateMessage() {
         // 生成链接
         String scheduleLink = "http://119.132.169.197:8080/DingdingsendCurrentSchedule/sendCurrentSchedule" ;
@@ -34,6 +48,7 @@ public class DingdingsendCurrentSchedule {
     }
 
     @GetMapping("/sendCurrentSchedule")
+    @CrossOrigin("*")
     public String sendCurrentSchedule() {
         //当前时间的时间戳
         long timestamp = System.currentTimeMillis();
@@ -43,7 +58,7 @@ public class DingdingsendCurrentSchedule {
         String dateString = dateFormat.format(date);
         List<UnbusyStudentsOfCurrentWeek> unbusyStudentsOfCurrentWeekList = this.scheduleService.getUnbusyStudentsOfCurrentWeek(dateString);
 
-        List<String> weekdays = Arrays.asList("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday");
+        List<String> weekdays = Arrays.asList("星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日");
         List<String> periods = Arrays.asList( "8:30 - 10:05", "10:25 - 12:00", "14:00 - 15:35", "15:55 - 17:30", "18:40 - 21:00");
 
         //构造课程表的二维数组
@@ -70,7 +85,7 @@ public class DingdingsendCurrentSchedule {
        });
 
         // 生成 HTML 表格
-        StringBuilder tableHtml = new StringBuilder("<!DOCTYPE html> <html lang=\"zh-CN\"> <head> <meta charset=\"UTF-8\"> <title>我的表格</title> </head> <body> <table border=\"1\">");
+        StringBuilder tableHtml = new StringBuilder("<!DOCTYPE html> <html lang=\"zh-CN\"> <head> <meta charset=\"UTF-8\"> <title>今日行程安排</title> <link href=\"https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css\" rel=\"stylesheet\"></head> <body> <table class=\"table mt-4 container-md main\"  border=\"1\">");
         tableHtml.append("<tr><th></th>");
 
         // 生成星期标题行
