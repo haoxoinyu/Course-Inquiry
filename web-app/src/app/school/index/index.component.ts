@@ -169,6 +169,7 @@ export class IndexComponent implements OnInit {
 
   /* 查询 */
   onQuery() {
+    this.params.page = 0; // 每次查询后重置到第一页
     this.loadData();
   }
 
