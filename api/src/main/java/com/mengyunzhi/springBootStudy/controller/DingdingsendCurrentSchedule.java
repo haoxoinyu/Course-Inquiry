@@ -41,7 +41,7 @@ public class DingdingsendCurrentSchedule {
      * */
     @GetMapping("/getMessage")
     @CrossOrigin("*")
-    @Scheduled(cron = "0 10 17 * * ?")
+    @Scheduled(cron = "0 0 9 * * ?")
     public void generateMessage() {
         // 生成链接
         String scheduleLink = "http://119.132.169.197:8080/DingdingsendCurrentSchedule/sendCurrentSchedule" ;
