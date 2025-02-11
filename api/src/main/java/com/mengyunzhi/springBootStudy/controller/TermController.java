@@ -111,6 +111,7 @@ public class TermController {
     }
 
     @GetMapping("/getCurrencyWeekOfEachSchool")
+    @CrossOrigin("*")
     public List<Map<String, String>>  getCurrencyWeekOfEachSchool(@RequestParam String firstDayOfCurrentWeek) {
        return  this.termService.getCurrencyWeekOfEachSchool(firstDayOfCurrentWeek);
     }

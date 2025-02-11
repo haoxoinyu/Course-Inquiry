@@ -1,14 +1,14 @@
 package com.mengyunzhi.springBootStudy.controller;
 
 import com.mengyunzhi.springBootStudy.entity.UnbusyStudentsOfCurrentWeek;
+import com.mengyunzhi.springBootStudy.service.DingdingRobotWebhookUrlService;
 import com.mengyunzhi.springBootStudy.service.DingdingSendCurrentScheduleService;
 import com.mengyunzhi.springBootStudy.service.ScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -20,12 +20,26 @@ public class DingdingsendCurrentSchedule {
     ScheduleService scheduleService;
 
     @Autowired
+    DingdingRobotWebhookUrlService dingdingRobotWebhookUrlService;
+
+    @Autowired
     DingdingSendCurrentScheduleService dingdingSendCurrentScheduleService;
+    @PostMapping("/add")
+    @CrossOrigin("*")
+    public ResponseEntity<?> addWebhookUrl(@RequestBody String webhookUrl) {
+        try{
+            this.dingdingRobotWebhookUrlService.addWebhookUrl(webhookUrl);
+            return ResponseEntity.status(HttpStatus.OK).body("{\"message\": \"添加成功\"}");
+        }catch(Exception e){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("当前机器人已添加过了，请勿重复添加");
+        }
+    }
 
     /**
      * 编辑查看信息
      * */
     @GetMapping("/getMessage")
+    @CrossOrigin("*")
     public void generateMessage() {
         // 生成链接
         String scheduleLink = "http://119.132.169.197:8080/DingdingsendCurrentSchedule/sendCurrentSchedule" ;
@@ -34,6 +48,7 @@ public class DingdingsendCurrentSchedule {
     }
 
     @GetMapping("/sendCurrentSchedule")
+    @CrossOrigin("*")
     public String sendCurrentSchedule() {
         //当前时间的时间戳
         long timestamp = System.currentTimeMillis();

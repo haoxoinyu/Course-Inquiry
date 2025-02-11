@@ -35,7 +35,7 @@ export class CourseScheduleComponent implements OnInit {
   terms = new Array<Term>();
   schools = new Array<School>();
   weeks: number[] = [];
-  users = new Array<User>(new User(1, '', '', 1, ''));
+  users = new Array<User>(new User(2, '', '', 2, ''));
   days = [
     {name: '周一', value: 1},
     {name: '周二', value: 2},
@@ -266,7 +266,7 @@ export class CourseScheduleComponent implements OnInit {
     this.userService.getUsersByKlassId(klassId)
       .subscribe(data => {
         this.users = data;
-        console.log(this.users);
+        console.log(this.users,klassId);
       }, error => {
         console.error('获取用户失败', error);
       });

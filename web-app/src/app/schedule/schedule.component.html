@@ -14,12 +14,16 @@
         </ng-container>
     </div>
     <div class="mt-4 mb-4">
-        <form class="form-inline" style="margin-top: 24px;"(ngSubmit)="onSubmit()" [formGroup]="formGroup">
+        <form class="form-inline" style="margin-top: 24px;width: 1900px;"(ngSubmit)="onSubmit()" [formGroup]="formGroup" >
             <!-- 查询日期 -->
             <input class="form-control datetimepicker-input" type="date" name="date" id="date" formControlName="date"/>
             <!-- 提交按钮 -->
             <div class="form-group col-md-2">
-            <button type="submit" class="btn btn-outline-success" [disabled]="formGroup.invalid">&nbsp;<i class="fas fa-search"></i>查询</button>
+                <button type="submit" class="btn btn-outline-success" [disabled]="formGroup.invalid">&nbsp;<i class="fas fa-search"></i>查询</button>
+            </div>
+            <div class="form-group col-md-4"></div>
+            <div class="col-md-4" style="margin-top: 10px;">
+                <a type="submit" class="btn btn-primary" (click)="openAddDialog()">&nbsp;<span class="oi oi-plus"></span>添加钉钉机器人发送每日行程!</a>
             </div>
         </form>
     </div>
