@@ -46,11 +46,11 @@ export class CourseScheduleComponent implements OnInit {
     {name: '周日', value: 7},
   ];
   periods = [
-    {name: '第一大节', value: 1},
-    {name: '第二大节', value: 2},
-    {name: '第三大节', value: 3},
-    {name: '第四大节', value: 4},
-    {name: '第五大节', value: 5}
+    { name: '第一大节', startTime: '8:30', endTime: '10:05', value: 1 },
+    { name: '第二大节', startTime: '10:30', endTime: '12:00', value: 2 },
+    { name: '第三大节', startTime: '14:00', endTime: '15:30', value: 3 },
+    { name: '第四大节', startTime: '16:30', endTime: '18:00', value: 4 },
+    { name: '第五大节', startTime: '20:00', endTime: '21:00', value: 5 }
   ];
   me: User | undefined;
   firstChange = true;
