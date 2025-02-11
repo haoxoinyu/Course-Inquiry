@@ -7,6 +7,7 @@ import com.mengyunzhi.springBootStudy.service.ScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,6 +41,7 @@ public class DingdingsendCurrentSchedule {
      * */
     @GetMapping("/getMessage")
     @CrossOrigin("*")
+    @Scheduled(cron = "0 0 9 * * ?")
     public void generateMessage() {
         // 生成链接
         String scheduleLink = "http://119.132.169.197:8080/DingdingsendCurrentSchedule/sendCurrentSchedule" ;
