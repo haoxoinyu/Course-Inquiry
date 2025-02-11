@@ -1,4 +1,4 @@
-<select id="objectSelect" [formControl]="objectSelect" (change)="onChange()" [compareWith]="compareFn">
+<select class="form-control mr-2" id="objectSelect" [formControl]="objectSelect" (change)="onChange()" [compareWith]="compareFn">
   <option *ngFor="let object of objects" [ngValue]="object">
     {{object?.name}}
   </option>

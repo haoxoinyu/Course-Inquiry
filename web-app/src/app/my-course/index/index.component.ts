@@ -30,7 +30,7 @@ export class IndexComponent implements OnInit {
   /* 查询参数 */
   params = {
     page: 0,
-    size: 2,
+    size: 5,
     name: "" as unknown as string,
     term_id: null as unknown as number,
     sory: null as unknown as number,
