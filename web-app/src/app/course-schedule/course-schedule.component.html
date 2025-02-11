@@ -72,7 +72,7 @@
           <td>{{ period.name }} 
             <br>({{ period.startTime }} - {{ period.endTime }})<br><br></td>
           <td *ngFor="let day of days">
-            {{ courseTable[day.value - 1][period.value - 1] || '-' }}
+            {{ courseTable[day.value - 1][period.value - 1] || '' }}
           </td>
         </tr>
         </tbody>
