@@ -58,7 +58,7 @@ public class DingdingsendCurrentSchedule {
         String dateString = dateFormat.format(date);
         List<UnbusyStudentsOfCurrentWeek> unbusyStudentsOfCurrentWeekList = this.scheduleService.getUnbusyStudentsOfCurrentWeek(dateString);
 
-        List<String> weekdays = Arrays.asList("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday");
+        List<String> weekdays = Arrays.asList("星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日");
         List<String> periods = Arrays.asList( "8:30 - 10:05", "10:25 - 12:00", "14:00 - 15:35", "15:55 - 17:30", "18:40 - 21:00");
 
         //构造课程表的二维数组
@@ -85,7 +85,7 @@ public class DingdingsendCurrentSchedule {
        });
 
         // 生成 HTML 表格
-        StringBuilder tableHtml = new StringBuilder("<!DOCTYPE html> <html lang=\"zh-CN\"> <head> <meta charset=\"UTF-8\"> <title>我的表格</title> </head> <body> <table border=\"1\">");
+        StringBuilder tableHtml = new StringBuilder("<!DOCTYPE html> <html lang=\"zh-CN\"> <head> <meta charset=\"UTF-8\"> <title>今日行程安排</title> <link href=\"https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css\" rel=\"stylesheet\"></head> <body> <table class=\"table mt-4 container-md main\"  border=\"1\">");
         tableHtml.append("<tr><th></th>");
 
         // 生成星期标题行
