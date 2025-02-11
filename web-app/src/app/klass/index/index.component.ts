@@ -27,7 +27,7 @@ export class IndexComponent implements OnInit {
   /* 查询参数 */
   params = {
     page: 0,
-    size: 2,
+    size: 5,
     name: new FormControl(),
     school_id: null,
   };
