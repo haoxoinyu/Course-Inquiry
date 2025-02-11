@@ -51,6 +51,7 @@ export class IndexComponent implements OnInit {
    */
   makePagesByTotalPages(currentPage: number, totalPages: number): Array<number> {
     this.currentPage = currentPage;
+    console.log(this.currentPage);
     this.totalPages = totalPages;
     if (totalPages > 0) {
       /* 总页数小于5 */
@@ -108,6 +109,12 @@ export class IndexComponent implements OnInit {
       });
   }
 
+  /* 查询 */
+  onQuery() {
+    this.params.page = 0;
+    this.loadData();
+  }
+  
   /**
    * 加载数据
    */
@@ -164,11 +171,6 @@ export class IndexComponent implements OnInit {
       return;
     }
     this.params.page = page;
-    this.loadData();
-  }
-
-  /* 查询 */
-  onQuery() {
     this.loadData();
   }
 

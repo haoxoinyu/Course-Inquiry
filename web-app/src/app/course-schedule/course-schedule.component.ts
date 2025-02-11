@@ -37,13 +37,13 @@ export class CourseScheduleComponent implements OnInit {
   weeks: number[] = [];
   users = new Array<User>(new User(2, '', '', 2, ''));
   days = [
-    {name: '周一', value: 1},
-    {name: '周二', value: 2},
-    {name: '周三', value: 3},
-    {name: '周四', value: 4},
-    {name: '周五', value: 5},
-    {name: '周六', value: 6},
-    {name: '周日', value: 7},
+    {name: '星期一', value: 1},
+    {name: '星期二', value: 2},
+    {name: '星期三', value: 3},
+    {name: '星期四', value: 4},
+    {name: '星期五', value: 5},
+    {name: '星期六', value: 6},
+    {name: '星期日', value: 7},
   ];
   periods = [
     { name: '第一大节', startTime: '8:30', endTime: '10:05', value: 1 },

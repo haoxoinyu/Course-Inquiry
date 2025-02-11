@@ -196,6 +196,7 @@ export class IndexComponent implements OnInit {
 
   /* 查询 */
   onQuery() {
+    this.params.page = 0;
     this.loadData();
   }
 
