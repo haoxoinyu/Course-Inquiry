@@ -1,5 +1,5 @@
 <div class="main">
-  <h1>创建我的选修课程</h1>
+  <h1>创建我的课程</h1>
   <hr>
 <form class="container-sm content" style="margin: 40px 0px 0px 0px" [formGroup]="formGroup">
   <div class="mb-3 row">
@@ -27,9 +27,28 @@
     </div>
   </div>
   <div class="mb-3 row">
+    <label class="col-sm-2 col-form-label">类别：</label>
+    <div class="col-sm-10" >
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" id="sory-bi"
+               name="sory"
+               [value]="1"
+               formControlName="sory">
+        <label class="form-check-label" for="sory-bi">必修</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" id="sory-option"
+               name="sory"
+               [value]="0"
+               formControlName="sory">
+        <label class="form-check-label" for="sory-option">选修</label>
+      </div>
+    </div>
+  </div>
+  <div class="mb-3 row">
     <label for="name" class="col-sm-2 col-form-label">选择周数</label>
     <div class="col-sm-10">
-      <mat-form-field>
+      <mat-form-field style="width: 640px">
         <mat-select [multiple]="true" #multiSelect="matSelect" formControlName="week">
           <mat-option *ngFor="let week of weeks" [value]="week">
             {{ week }}

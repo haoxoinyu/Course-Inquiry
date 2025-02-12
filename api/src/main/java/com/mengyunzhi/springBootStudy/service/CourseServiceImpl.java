@@ -80,22 +80,16 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public void deleteById(Long id) {
+        // 删除 Course 和 User 之间的关系
         List<CourseUsers> courseUserList = this.courseUserService.findByCourseId(id);
         if (!courseUserList.isEmpty()) {
             for (CourseUsers courseUsers : courseUserList) {
-                // 检查是否有其他用户选择了该课程
                 this.courseUserService.deleteCourseUser(courseUsers.getId().getCourseId(), courseUsers.getId().getUserId());
-                Optional<Course> courseOptional = this.courseRepository.findById(id);
-                if (courseOptional.isPresent()) {
-                    Course course = courseOptional.get();
-
-                    // 如果课程有有效信息（比如课程的名称或描述不为空），则删除该课程
-                    if (course.getName() != null && !course.getName().isEmpty()) {
-                        this.courseRepository.deleteById(id);
-                    }
-                }
             }
         }
+
+        // 删除 Course 对象
+        this.courseRepository.deleteById(id);
     }
 
     @Override
@@ -178,7 +172,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public Page<Course> findAll(String name, Long schoolId, Long klassId, Long termId, Long userId, Pageable pageable) {
+    public Page<Course> findAll(String name, Long schoolId, Long klassId, Long termId, List<Long> userId, Pageable pageable) {
         System.out.println("service" + termId);
         Klass klass = new Klass();
         klass.setId(klassId);
@@ -187,33 +181,27 @@ public class CourseServiceImpl implements CourseService {
         school.setId(schoolId);
         Term term = new Term();
         term.setId(termId);
-        User user = new User();
-        user.setId(userId);
-        return this.courseRepository.findAll(name, school, klass, term, user, pageable);
+        return this.courseRepository.findAll(name, school, klass, term, userId, pageable);
     }
 
     @Override
-    public List<Course> findAll(Long schoolId, Long klassId, Long termId, Long userId, List<Integer> week) {
+    public List<Course> findAll(Long schoolId, Long klassId, Long termId, List<Long> userId, List<Integer> week) {
         School school = new School();
         school.setId(schoolId);
         Klass klass = new Klass();
         klass.setId(klassId);
         Term term = new Term();
         term.setId(termId);
-        User user = new User();
-        user.setId(userId);
-        return courseRepository.findAll(school, klass, term, user, week);
+        return courseRepository.findAll(school, klass, term, userId, week);
     }
 
 
     @Override
-    public Page<Course> findCoursesByCriteria(Long termId, String courseName, Long sory, Long userId, Pageable pageable) {
+    public Page<Course> findCoursesByCriteria(Long termId, String courseName, Long sory, List<Long> userId, Pageable pageable) {
         Term term = new Term();
         term.setId(termId);
 
-        User user = new User();
-        user.setId(userId);
-        return courseRepository.find(term, courseName, sory, user, pageable);
+        return courseRepository.find(term, courseName, sory, userId, pageable);
     }
 
     @Override

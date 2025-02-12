@@ -37,7 +37,7 @@ public class CourseController {
             @RequestParam(required = false) String name,
             @RequestParam(required = false) Long schoolId,
             @RequestParam(required = false) Long termId,
-            @RequestParam(required = false) Long userId,
+            @RequestParam(required = false) List<Long> userId,
             @RequestParam(required = false) Long klassId,
             @RequestParam int page,
             @RequestParam int size
@@ -51,7 +51,7 @@ public class CourseController {
             @RequestParam(required = false) Long schoolId,
             @RequestParam(required = false) Long termId,
             @RequestParam(required = false) Long klassId,
-            @RequestParam(required = false) Long userId,
+            @RequestParam(required = false) List<Long> userId,
             @RequestParam(required = false) List<Integer> week
     ) {
         System.out.println("Received schoolId: " + schoolId);
@@ -75,16 +75,8 @@ public class CourseController {
         // 声明 userList 变量，使其在整个方法中可见
         List<User> userList;
 
-        if (newCourse.getUserId() != 0) {
-            // 如果 userId 不为 0，创建一个包含单个用户的列表
-            User user = new User();
-            user.setId(newCourse.getUserId());
-            userList = new ArrayList<>();
-            userList.add(user);
-        } else {
-            // 如果 userId 为 0，从 userService 获取用户列表
-            userList = this.userService.findByKlassId(newCourse.getKlassId());
-        }
+        // 如果 userId 为 0，从 userService 获取用户列表
+        userList = this.userService.findByKlassId(newCourse.getKlassId());
 
         // 创建 Term 对象并设置 ID
         Term term = new Term();
@@ -112,14 +104,16 @@ public class CourseController {
     @CrossOrigin("*")
     public ResponseEntity<Map<String, Object>> update(@RequestBody newCourse updateCourse) {
         // 声明 userList 变量，使其在整个方法中可见
-        List<User> userList;
+        List<User> userList = List.of();
 
-        if (updateCourse.getUserId() != 0) {
-            // 如果 userId 不为 0，创建一个包含单个用户的列表
-            User user = new User();
-            user.setId(updateCourse.getUserId());
-            userList = new ArrayList<>();
-            userList.add(user);
+        if (updateCourse.getUserId() != null) {
+            for (Long userId : updateCourse.getUserId()) {
+                // 如果 userId 不为 null，创建一个包含单个用户的列表
+                User user = new User();
+                user.setId(userId);
+                userList = new ArrayList<>();
+                userList.add(user);
+            }
         } else {
             // 如果 userId 为 0，从 userService 获取用户列表
             userList = this.userService.findByKlassId(updateCourse.getKlassId());
@@ -165,7 +159,7 @@ class newCourse{
     private Long schoolId;
     private Long klassId;
     private Long termId;
-    private Long userId;
+    private List<Long> userId;
 
     public Long getId() {
         return id;
@@ -199,7 +193,7 @@ class newCourse{
         return termId;
     }
 
-    public Long getUserId() {
+    public List<Long> getUserId() {
         return userId;
     }
 

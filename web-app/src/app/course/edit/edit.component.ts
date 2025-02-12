@@ -41,7 +41,7 @@ export class EditComponent implements OnInit {
     name: new FormControl('', Validators.required),
     schoolId: new FormControl(null as unknown as number, Validators.required),
     termId: new FormControl(null as unknown as number, Validators.required),
-    userId: new FormControl(0, Validators.required),
+    userId: new FormControl([] as number [], Validators.required),
     klassId: new FormControl(null as unknown as number, Validators.required),
     sory: new FormControl(0, Validators.required),
     week:  new FormControl([] as number [], Validators.required),
@@ -79,141 +79,150 @@ export class EditComponent implements OnInit {
   beLogout = new EventEmitter<void>();
 
 
-constructor(private httpClient: HttpClient,
-            private userService: UserService,
-            private activatedRoute: ActivatedRoute,
-            private sharedService: ShareService,
-            private sweetAlertService: SweetAlertService,
-            public dialogRef: MatDialogRef<EditComponent>,
-            @Inject(MAT_DIALOG_DATA) public data: any,
-            private courseService: CourseService,
-            private klassService: KlassService,
-            private termService: TermService,
-            private schoolService: SchoolService) { }
+  constructor(private httpClient: HttpClient,
+              private userService: UserService,
+              private activatedRoute: ActivatedRoute,
+              private sharedService: ShareService,
+              private sweetAlertService: SweetAlertService,
+              public dialogRef: MatDialogRef<EditComponent>,
+              @Inject(MAT_DIALOG_DATA) public data: any,
+              private courseService: CourseService,
+              private klassService: KlassService,
+              private termService: TermService,
+              private schoolService: SchoolService) { }
 
-ngOnInit(): void {
-  this.courseService.getById(this.data.id)
-    .subscribe((course) => {
-      this.onSchoolChange(course.term.school!);
-      this.onTermChange(course.term.id!);
-      this.onKlassChange(course.users[0]!.klass!.id!)
-      this.course.name = course.name;
-      this.course.user_id = course.users[0].id;
-      this.schools.push(course.term.school!);
-      this.formGroup.get('name')!.setValue(course.name),
-      this.formGroup.get('sory')!.setValue(course.sory),
-      this.updateWeekFromControl(course.week),
-      this.formGroup.get('day')!.setValue(course.day[0]),
-      this.formGroup.get('period')!.setValue(course.period[0]),
-      this.formGroup.get('schoolId')!.setValue(course.term.school!.id),
-      this.formGroup.get('klassId')!.setValue(course.users[0]!.klass!.id as number),
-      this.formGroup.get('termId')!.setValue(course.term.id as number)
-      this.formGroup.get('userId')?.setValue(course.users[0].id)
-      console.log(this.formGroup.get('day')!.value)
-    })
-}
+  ngOnInit(): void {
+    this.courseService.getById(this.data.id)
+      .subscribe((course) => {
+        this.onSchoolChange(course.term.school!);
+        this.onTermChange(course.term.id!);
+        this.onKlassChange(course.users[0]!.klass!.id!)
+        this.course.name = course.name;
+        this.course.user_id = course.users[0].id;
+        this.schools.push(course.term.school!);
+        this.formGroup.get('name')!.setValue(course.name),
+        this.formGroup.get('sory')!.setValue(course.sory),
+        this.updateWeekFromControl(course.week),
+        this.updateUserFromControl(course.users.map(user => user.id)),
+        this.formGroup.get('day')!.setValue(course.day[0]),
+        this.formGroup.get('period')!.setValue(course.period[0]),
+        this.formGroup.get('schoolId')!.setValue(course.term.school!.id),
+        this.formGroup.get('klassId')!.setValue(course.users[0]!.klass!.id as number),
+        this.formGroup.get('termId')!.setValue(course.term.id as number)
+        console.log(this.formGroup.get('day')!.value)
+      })
+  }
+
   updateWeekFromControl(weeks:number[]) {
     weeks.forEach(week => {
       (this.formGroup.get('week')!.value as number[]).push(week);
     })
     console.log(this.formGroup.get('week')!.value)
   }
-onSubmit(): void {
-  console.log(this.formGroup.get('week')!.value)
-  const newCourse = {
-      id: this.data.id,
-      name: this.formGroup.get('name')!.value!,
-      sory: this.formGroup.get('sory')!.value!,
-      week: this.formGroup.get('week')!.value!,
-      day: this.formGroup.get('day')!.value,
-      period: this.formGroup.get('period')!.value!,
-      schoolId: this.formGroup.get('schoolId')!.value!,
-      clazz_id: this.formGroup.get('klassId')!.value!,
-      term_id: this.formGroup.get('termId')!.value!,
-      userId: this.formGroup.get('userId')!.value!
-  }
-  this.courseService.update(newCourse)
-    .subscribe((data: any) => {
-        if (data.message === '课程名称长度最小为2位') {
-          this.sweetAlertService.showError('编辑失败', '课程名称长度最小为2位', 'error');
-        } else if (data.message === '与已有课程时间冲突') {
-          this.sweetAlertService.showError('编辑失败', '与已有课程时间冲突', 'error');
-        } else {
-          this.dialogRef.close(newCourse);
-          this.sweetAlertService.showSuccess('编辑成功！', 'success');
-        }
-      },
-      error => {
-        console.log('保存失败', error);
-        this.sweetAlertService.showError('编辑失败', '', 'error');
-      });
-}
 
-onNoClick(): void {
-  this.dialogRef.close();
-}
-
-getClazzBySchoolId(schoolId: number) {
-  this.klassService.getClazzBySchoolId(schoolId)
-    .subscribe(data => {
-      this.clazzes = data.content;
-    }, error => {
-      console.error('获取班级失败', error);
-    });
-}
-
-getUsersByKlassId(klassId: number) {
-  this.userService.getUsersByKlassId(klassId)
-    .subscribe((data) => {
-      this.users = data;
+  updateUserFromControl(users:number[]) {
+    users.forEach(user => {
+      (this.formGroup.get('userId')!.value as number[]).push(user);
     })
-}
-getTermsBySchoolId(schoolId: number) {
-  this.termService.getTermsBySchoolId(schoolId)
-    .subscribe(data => {
-      this.terms = data.content;
-    }, error => {
-      console.error('获取学期失败', error);
-    });
-}
-
-onSchoolChange(school: School) {
-  this.course.school_id = school.id;
-  this.formGroup.get('schoolId')?.setValue(school.id);
-  this.getClazzBySchoolId(school.id);
-  this.getTermsBySchoolId(school.id);
-}
-
-onKlassChange(klassId: number) {
-  this.course.clazz_id = klassId;
-  this.formGroup.get('klassId')?.setValue(klassId);
-  this.getUsersByKlassId(klassId);
-}
-
-onTermChange(termId: number) {
-  this.course.term_id = termId;
-  this.termService.getTermById(termId)
-    .subscribe(term => {
-      this.semesterEndDate = term.endTime;
-      this.semesterStartDate = term.startTime;
-      this.calculateWeeks();
-    }, error => {
-      console.error('获取学期失败', error);
-    });
-}
-
-
-calculateWeeks(): void {
-  this.weeks = [];
-  const oneDay = 1000 * 60 * 60 * 24;
-  const startTime = new Date(this.semesterStartDate ?? new Date());
-  const endTime = new Date(this.semesterEndDate ?? new Date());
-  const diffInMilliseconds = endTime.getTime() - startTime.getTime();
-  const diffInDays = Math.ceil(diffInMilliseconds / oneDay); // 使用ceil确保包含最后一天
-  const numberOfWeeks = Math.ceil(diffInDays / 7);
-  // 创建周数数组
-  for (let i = 1; i <= numberOfWeeks; i++) {
-    this.weeks.push(i);
+    console.log(this.formGroup.get('userId')!.value)
   }
-}
+
+  onSubmit(): void {
+    console.log(this.formGroup.get('week')!.value)
+    const newCourse = {
+        id: this.data.id,
+        name: this.formGroup.get('name')!.value!,
+        sory: this.formGroup.get('sory')!.value!,
+        week: this.formGroup.get('week')!.value!,
+        day: this.formGroup.get('day')!.value,
+        period: this.formGroup.get('period')!.value!,
+        schoolId: this.formGroup.get('schoolId')!.value!,
+        clazz_id: this.formGroup.get('klassId')!.value!,
+        term_id: this.formGroup.get('termId')!.value!,
+        userId: this.formGroup.get('userId')!.value!
+    }
+    this.courseService.update(newCourse)
+      .subscribe((data: any) => {
+          if (data.message === '课程名称长度最小为2位') {
+            this.sweetAlertService.showError('编辑失败', '课程名称长度最小为2位', 'error');
+          } else if (data.message === '与已有课程时间冲突') {
+            this.sweetAlertService.showError('编辑失败', '与已有课程时间冲突', 'error');
+          } else {
+            this.dialogRef.close(newCourse);
+            this.sweetAlertService.showSuccess('编辑成功！', 'success');
+          }
+        },
+        error => {
+          console.log('保存失败', error);
+          this.sweetAlertService.showError('编辑失败', '', 'error');
+        });
+  }
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+
+  getClazzBySchoolId(schoolId: number) {
+    this.klassService.getClazzBySchoolId(schoolId)
+      .subscribe(data => {
+        this.clazzes = data.content;
+      }, error => {
+        console.error('获取班级失败', error);
+      });
+  }
+
+  getUsersByKlassId(klassId: number) {
+    this.userService.getUsersByKlassId(klassId)
+      .subscribe((data) => {
+        this.users = data;
+      })
+  }
+  getTermsBySchoolId(schoolId: number) {
+    this.termService.getTermsBySchoolId(schoolId)
+      .subscribe(data => {
+        this.terms = data.content;
+      }, error => {
+        console.error('获取学期失败', error);
+      });
+  }
+
+  onSchoolChange(school: School) {
+    this.course.school_id = school.id;
+    this.formGroup.get('schoolId')?.setValue(school.id);
+    this.getClazzBySchoolId(school.id);
+    this.getTermsBySchoolId(school.id);
+  }
+
+  onKlassChange(klassId: number) {
+    this.course.clazz_id = klassId;
+    this.formGroup.get('klassId')?.setValue(klassId);
+    this.getUsersByKlassId(klassId);
+  }
+
+  onTermChange(termId: number) {
+    this.course.term_id = termId;
+    this.termService.getTermById(termId)
+      .subscribe(term => {
+        this.semesterEndDate = term.endTime;
+        this.semesterStartDate = term.startTime;
+        this.calculateWeeks();
+      }, error => {
+        console.error('获取学期失败', error);
+      });
+  }
+
+
+  calculateWeeks(): void {
+    this.weeks = [];
+    const oneDay = 1000 * 60 * 60 * 24;
+    const startTime = new Date(this.semesterStartDate ?? new Date());
+    const endTime = new Date(this.semesterEndDate ?? new Date());
+    const diffInMilliseconds = endTime.getTime() - startTime.getTime();
+    const diffInDays = Math.ceil(diffInMilliseconds / oneDay); // 使用ceil确保包含最后一天
+    const numberOfWeeks = Math.ceil(diffInDays / 7);
+    // 创建周数数组
+    for (let i = 1; i <= numberOfWeeks; i++) {
+      this.weeks.push(i);
+    }
+  }
 }

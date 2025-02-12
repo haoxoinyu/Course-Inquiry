@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -34,7 +35,7 @@ public class MyCourseController {
     @CrossOrigin("*")
     public Page<Course> findAll(
             @RequestParam String courseName,
-            @RequestParam Long userId,
+            @RequestParam List<Long> userId,
             @RequestParam Long sory,
             @RequestParam Long termId,
             @RequestParam int page,

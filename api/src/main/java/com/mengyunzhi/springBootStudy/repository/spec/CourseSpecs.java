@@ -56,15 +56,16 @@ public class CourseSpecs {
      * @param user 学生
      * @return
      * */
-    public static Specification<Course> belongToUser(User user) {
-        if(user == null || null == user.getId()) {
+    public static Specification<Course> belongToUser(List<Long> user) {
+        if(user == null || user.isEmpty()) {
             return Specification.where(null);
         }else {
             return new Specification<Course>() {
                 @Override
                 public Predicate toPredicate(Root<Course> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
                     Join<Course, User> userJoin = root.join("users", JoinType.INNER);
-                    return criteriaBuilder.equal(userJoin.get("id"), user.getId());
+                    // 使用 in 方法来匹配多个用户 ID
+                    return userJoin.get("id").in(user);
                 }
             };
         }

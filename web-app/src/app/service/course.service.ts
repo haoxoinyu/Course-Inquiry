@@ -79,7 +79,7 @@ export class CourseService {
     schoolId?: number | null,
     clazz_id?: number | null,
     term_id?: number | null,
-    userId?: number | null
+    userId?: (number | null)[]
   }): Observable<void> {
 
     let newCourse = {
@@ -122,7 +122,7 @@ export class CourseService {
     schoolId?: number | null,
     clazz_id?: number | null,
     term_id?: number | null,
-    userId?: number | null
+    userId?: number[] | null
   }): Observable<void> {
     let updateCourse = {
       id: course.id,
