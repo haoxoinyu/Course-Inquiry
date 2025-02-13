@@ -72,9 +72,9 @@ public interface CourseService {
      * @param userId 学生id
      * @param pageable 分页参数
      * */
-    Page<Course> findAll(String name, Long schoolId, Long klassId, Long termId, Long userId, @NotNull Pageable pageable);
+    Page<Course> findAll(String name, Long schoolId, Long klassId, Long termId, List<Long> userId, @NotNull Pageable pageable);
 
-    Page<Course> findCoursesByCriteria(Long termId, String courseName, Long sory, Long userId, @NotNull Pageable pageable);
+    Page<Course> findCoursesByCriteria(Long termId, String courseName, Long sory, List<Long> userId, @NotNull Pageable pageable);
 
     ArrayList<Course> getCoursesByTermId(Long termId, Long sory);
 
@@ -86,5 +86,5 @@ public interface CourseService {
      **/
     Optional<Course> findById(Long courseId);
 
-    List<Course> findAll(Long schoolId, Long klassId, Long termId, Long usrId, List<Integer> week);
+    List<Course> findAll(Long schoolId, Long klassId, Long termId, List<Long> usrId, List<Integer> week);
 }

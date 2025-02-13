@@ -70,7 +70,7 @@
       <td>{{ course.day }}</td>
       <td>{{ course.period }}</td>
       <td>
-        <button *ngIf="course.sory === 0 && checkTheSameKlass(course.users[0]) && course.klass.school?.id === me.klass?.school?.id" (click)="addLesson(course.id)" class="btn btn-sm btn-success">
+        <button *ngIf="course.klass.school?.id === me.klass?.school?.id" (click)="addLesson(course.id)" class="btn btn-sm btn-success">
           <span class="oi oi-plus"></span> 添加
         </button>
         <button  *ngIf="role !== 3" (click)="openEditDialog(course.id)" class="btn btn-sm btn-info button">

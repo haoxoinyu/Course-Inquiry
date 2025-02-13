@@ -70,15 +70,16 @@
         </div>
       </div>
     </div>
-    <div class="mb-3 row" *ngIf="!formGroup.get('sory')!.value ?? 0">
+    <div class="mb-3 row">
       <label class="col-sm-2 col-form-label">用户</label>
       <div class="col-sm-10">
-        <select class="form-control" name="course.user_id" id="course.user_id" formControlName="userId">
-          <option >请选择用户</option>
-          <option *ngFor="let user of users" [value]="user.id">
-            {{user.name}}
-          </option>
-        </select>
+        <mat-form-field style="width: 640px">
+          <mat-select [multiple]="true" #multiSelect="matSelect" formControlName="userId">
+            <mat-option *ngFor="let user of users" [value]="user.id">
+              {{ user.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
         <small class="text-danger"
                *ngIf="!formGroup.get('userId')!.value ?? 0">
           必须指定一个用户
@@ -88,7 +89,7 @@
     <div class="mb-3 row">
       <label for="name" class="col-sm-2 col-form-label">选择周数</label>
       <div class="col-sm-10">
-        <mat-form-field>
+        <mat-form-field style="width: 640px">
           <mat-select [multiple]="true" #multiSelect="matSelect" formControlName="week">
             <mat-option *ngFor="let week of weeks" [value]="week">
               {{ week }}
@@ -134,7 +135,8 @@
       <div class="col-sm-3 offset-sm-1" style="margin: 0px 0px 0px 200px">
         <button appLoading class="btn btn-primary" (click)="onSubmit()"
                 [disabled]="formGroup.invalid ||
-(formGroup.get('sory')!.value === 0 && formGroup.get('userId')!.value === 0)"><i class="fa fa-save"></i>保存
+(formGroup.get('sory')!.value === 0 && formGroup.get('userId')!.value === [] ||
+(formGroup.get('sory')!.value === 1 && formGroup.get('userId')!.value === []))"><i class="fa fa-save"></i>保存
         </button>
       </div>
       <div class="col-sm-3 offset-sm-1">

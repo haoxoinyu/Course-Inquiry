@@ -33,14 +33,14 @@ export class CreateComponent implements OnInit {
 
   formGroup = new FormGroup({
     name: new FormControl('', Validators.required),
-    schoolId: new FormControl(0, Validators.required),
+    schoolId: new FormControl(0),
     termId: new FormControl(0, Validators.required),
-    userId: new FormControl(0, Validators.required),
-    klassId: new FormControl(0, Validators.required),
+    userId: new FormControl([] as number[]),
+    klassId: new FormControl(0),
     sory: new FormControl(0, Validators.required),
     week: new FormControl([] as number[], Validators.required),
-    day: new FormControl(0, Validators.required),
-    period: new FormControl(0, Validators.required)
+    day: new FormControl(null as unknown as number, Validators.required),
+    period: new FormControl(null as unknown as number, Validators.required)
   })
 
   value = '';
@@ -92,14 +92,14 @@ export class CreateComponent implements OnInit {
   onSubmit(): void {
     const newCourse = {
       name: this.formGroup.get('name')!.value,
-      sory: 0,
+      sory: this.formGroup.get('sory')!.value,
       week: this.formGroup.get('week')!.value!,
       day: this.formGroup.get('day')!.value,
       period: this.formGroup.get('period')!.value,
       schoolId: this.me?.klass?.school?.id,
       clazz_id: this.me?.klass?.id,
       term_id: this.formGroup.get('termId')!.value,
-      userId: this.me?.id
+      userId: [this.me?.id!]
     }
     this.courseService.add(newCourse)
       .subscribe((data: any )=> {

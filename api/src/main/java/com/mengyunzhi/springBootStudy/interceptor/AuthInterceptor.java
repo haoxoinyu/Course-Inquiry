@@ -67,7 +67,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
         // 为响应加入提示：用户未登录
         response.setStatus(401);
         response.setHeader("Access-Control-Allow-Methods", "GET,POST,DELETE,PUT,PATCH");
-        response.setHeader("Access-Control-Allow-Origin", "http://localhost");
+        response.setHeader("Access-Control-Allow-Origin", "http://localhost:4200");
         return false;
     }
 

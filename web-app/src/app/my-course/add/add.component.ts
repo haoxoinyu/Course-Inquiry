@@ -19,7 +19,6 @@ import {CourseUser} from "../../norm/entity/CourseUser";
 })
 export class AddComponent implements OnInit{
   terms = new Array<Term>();
-  courses = new Array<Course>();
   me?: User;
   clazzId?: number;
 
@@ -30,6 +29,9 @@ export class AddComponent implements OnInit{
     course_id: null as unknown as number,
   };
   newCourseUser?: CourseUser;
+
+  courses = new Array<Course>();
+  uncourses = new Array<Course>();
 
   constructor(public dialogRef: MatDialogRef<AddComponent>,
               private termService: TermService,
@@ -80,13 +82,27 @@ export class AddComponent implements OnInit{
   onTermChange(termId: number) {
     this.courseUser.term_id = termId;
     console.log(this.courseUser.term_id);
+    this.getUnCoursesByTermId(termId);
     this.getCoursesByTermId(termId);
+  }
+
+  getUnCoursesByTermId(termId: number) {
+    const params = {
+      termId: termId,
+      sory: 0
+    }
+    this.myCourseService.getCoursesByTermId(params)
+      .subscribe(courses => {
+        this.uncourses = courses;
+      }, error => {
+        console.error('获取课程失败', error);
+      });
   }
 
   getCoursesByTermId(termId: number) {
     const params = {
       termId: termId,
-      sory: 0
+      sory: 1
     }
     this.myCourseService.getCoursesByTermId(params)
       .subscribe(courses => {

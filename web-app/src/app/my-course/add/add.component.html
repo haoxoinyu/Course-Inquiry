@@ -1,5 +1,5 @@
 <div class="main">
-  <h1>添加我的选修课程</h1>
+  <h1>添加我的课程</h1>
   <hr>
   <form class="container-sm content" style="margin: 40px 0px 0px 0px">
     <div class="mb-3 row">
@@ -21,8 +21,13 @@
       <label class="col-sm-2 col-form-label">课程名称</label>
       <div class="col-sm-10">
         <select class="form-control" [(ngModel)]="courseUser.course_id" name="courseUser.course_id" id="courseUser.course_id">
-          <option [ngValue]="null">请选择课程</option>
+          <option [ngValue]="null" disabled style="font-weight: bold;">请选择课程</option>
+          <option disabled style="font-weight: bold; color: black">必修</option>
           <option *ngFor="let course of courses" [value]="course.id">
+            {{course.name}}
+          </option>
+          <option disabled style="font-weight: bold; color: black">选修</option>
+          <option *ngFor="let course of uncourses" [value]="course.id">
             {{course.name}}
           </option>
         </select>

@@ -32,7 +32,7 @@ public interface CourseRepository extends PagingAndSortingRepository<Course, Lon
      * @param pageable 分页参数
      * @return
      * */
-    default Page<Course> findAll(String name, School school, Klass klass, Term term, User user, @NotNull Pageable pageable){
+    default Page<Course> findAll(String name, School school, Klass klass, Term term, List<Long> user, @NotNull Pageable pageable){
         if (null == pageable) {
             throw new IllegalArgumentException("传入的Pageable不能为null");
         }
@@ -45,7 +45,7 @@ public interface CourseRepository extends PagingAndSortingRepository<Course, Lon
         return this.findAll(specification, pageable);
     }
 
-    default Page<Course> find(Term term, String courseName, Long sory, User user, @NotNull Pageable pageable){
+    default Page<Course> find(Term term, String courseName, Long sory, List<Long> user, @NotNull Pageable pageable){
         if (null == pageable) {
             throw new IllegalArgumentException("传入的Pageable不能为null");
         }
@@ -56,7 +56,7 @@ public interface CourseRepository extends PagingAndSortingRepository<Course, Lon
         return this.findAll(specification, pageable);
     }
 
-    default List<Course> findAll(School school, Klass klass, Term term, User user, List<Integer> week){
+    default List<Course> findAll(School school, Klass klass, Term term, List<Long> user, List<Integer> week){
         Specification<Course> specification = CourseSpecs.belongToSchool(school)
                 .and(CourseSpecs.belongToTerm(term))
                 .and(CourseSpecs.belongToKlass(klass))
@@ -64,15 +64,6 @@ public interface CourseRepository extends PagingAndSortingRepository<Course, Lon
                 .and(CourseSpecs.belongToWeek(week));
         return this.findAll(specification);
     }
-
-    default List<Course> findByDayAndWeeksAndPeriodsAndUser(List<Integer> day, List<Integer> weeks, List<Integer> periods, List<User> user) {
-        Specification<Course> specification = CourseSpecs.belongToDay(day)
-                .and(CourseSpecs.belongToPeriod(periods))
-                .and(CourseSpecs.belongToWeek(weeks))
-                .and(CourseSpecs.belongToUser(user.get(0)));
-        return this.findAll(specification);
-    }
-
 
     @Query("SELECT c FROM Course c WHERE c.term.id = ?1 AND c.sory = ?2")
     List<Course> getCoursesByTermId(Long termId, Long sory);

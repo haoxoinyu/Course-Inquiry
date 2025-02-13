@@ -37,7 +37,7 @@ export class AddComponent implements OnInit {
     name: new FormControl('', Validators.required),
     schoolId: new FormControl(null as unknown as number, Validators.required),
     termId: new FormControl(null, Validators.required),
-    userId: new FormControl(0, Validators.required),
+    userId: new FormControl([] as number [], Validators.required),
     klassId: new FormControl(null as unknown as number, Validators.required),
     sory: new FormControl(0, Validators.required),
     week:  new FormControl([] as number [], Validators.required),
@@ -101,7 +101,7 @@ export class AddComponent implements OnInit {
         schoolId: this.formGroup.get('schoolId')!.value,
         clazz_id: this.formGroup.get('klassId')!.value,
         term_id: this.formGroup.get('termId')!.value,
-        userId: this.formGroup.get('userId')!.value
+        userId: this.formGroup.get('userId')!.value!
     }
     console.log("newCourse", newCourse)
     this.courseService.add(newCourse)
