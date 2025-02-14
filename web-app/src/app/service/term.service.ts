@@ -97,34 +97,35 @@ export class TermService {
     return this.httpClient.delete<void>(url);
   }
 
-   /**
-   * 通过学校id获取所属所有学期
-   * @param schoolId
-   * */
-    getTermsBySchoolId(schoolId: number): Observable<Page<Term>> {
-     const queryParams = new HttpParams()
-       .set('schoolId', schoolId ? schoolId.toString() : '')
-     return this.httpClient.get<Page<Term>>(this.url + '/getTermsBySchoolId', {params: queryParams});
-    }
+  /**
+ * 通过学校id获取所属所有学期
+ * @param schoolId
+ * */
+  getTermsBySchoolId(schoolId: number): Observable<Page<Term>> {
+    const queryParams = new HttpParams()
+      .set('schoolId', schoolId ? schoolId.toString() : '')
+    return this.httpClient.get<Page<Term>>(this.url + '/getTermsBySchoolId', {params: queryParams});
+  }
 
-    getCurrentTerm(schoolId: number): Observable<Term> {
-      const queryParams = new HttpParams()
-        .set('schoolId', schoolId.toString())
-        .set('date', new Date().toISOString().split('T')[0]); // 修改参数名为 date
-      console.log(queryParams.toString());
-      return this.httpClient.get<Term>(this.url + '/getCurrentTerm', { params: queryParams });
-    }
+  getCurrentTerm(schoolId: number): Observable<Term> {
+    const queryParams = new HttpParams()
+      .set('schoolId', schoolId.toString())
+      .set('date', new Date().toISOString().split('T')[0]); // 修改参数名为 date
+    console.log(queryParams.toString());
+    return this.httpClient.get<Term>(this.url + '/getCurrentTerm', { params: queryParams });
+  }
 
   getCoursesByTerm(termId: number | undefined): Observable<boolean> {
-      const url = `http://localhost:8080/Term/getCoursesByTerm/${termId}`;
-      console.log(this.httpClient.get<boolean>(url));
-      return this.httpClient.get<boolean>(url);
-    }
-    //获取当前查询日期是每个学校的哪个学期的第几周
-    getCurrencyWeekOfEachSchool(firstDayOfCurrentWeek: string | undefined): Observable<any> {
-      const url = `http://localhost:8080/Term/getCurrencyWeekOfEachSchool`;
-      const queryParams = new HttpParams()
-      .set('firstDayOfCurrentWeek', firstDayOfCurrentWeek ? firstDayOfCurrentWeek.toString() : '')
-      return this.httpClient.get<any>(url, {params: queryParams});
-    }
+    const url = `http://localhost:8080/Term/getCoursesByTerm/${termId}`;
+    console.log(this.httpClient.get<boolean>(url));
+    return this.httpClient.get<boolean>(url);
+  }
+
+  //获取当前查询日期是每个学校的哪个学期的第几周
+  getCurrencyWeekOfEachSchool(firstDayOfCurrentWeek: string | undefined): Observable<any> {
+    const url = `http://localhost:8080/Term/getCurrencyWeekOfEachSchool`;
+    const queryParams = new HttpParams()
+    .set('firstDayOfCurrentWeek', firstDayOfCurrentWeek ? firstDayOfCurrentWeek.toString() : '')
+    return this.httpClient.get<any>(url, {params: queryParams});
+  }
 }
