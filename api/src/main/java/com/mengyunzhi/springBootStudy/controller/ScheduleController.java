@@ -4,6 +4,7 @@ import com.mengyunzhi.springBootStudy.entity.UnbusyStudentsOfCurrentWeek;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.mengyunzhi.springBootStudy.service.ScheduleService;
+import com.mengyunzhi.springBootStudy.service.ScheduleImpl;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ public class ScheduleController {
     @GetMapping("getfirstDayOfCurrentWeek")
     @CrossOrigin("*")
     public Long getfirstDayOfCurrentWeek(@RequestParam String date) {
-        return this.scheduleService.changeToMonday(date);
+        return ScheduleImpl.changeToMonday(date);
     }
 
     @GetMapping("getUnbusyStudentsOfCurrentWeek")

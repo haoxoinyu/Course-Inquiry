@@ -1,0 +1,52 @@
+<div class="container-md main">
+    <div class="timetable" style="width: 1567px; margin-left: -144px;">
+        <p style="margin-top: 90px;">{{"当前学期为:" +  currentTermName}}</p>
+        <div class="timetable-header" >
+            <h1 class="text-center" style="color: black;">我的课程表 📚</h1>
+        </div>
+
+        <div class="container" style="margin-left: 0px;">
+            <div class="row mb-2" style="width: 2079px;">
+                <div class="col-lg-1"></div>
+                <div class="col-lg-1 time-col">星期一</div>
+                <div class="col-lg-1 time-col">星期二</div>
+                <div class="col-lg-1 time-col">星期三</div>
+                <div class="col-lg-1 time-col">星期四</div>
+                <div class="col-lg-1 time-col">星期五</div>
+                <div class="col-lg-1 time-col">星期六</div>
+                <div class="col-lg-1 time-col">星期日</div>
+            </div>
+        
+            <ng-container *ngFor="let section of sectionNumber">
+                <div class="row mb-3" style="width: 2079px;margin-left: -33px;">
+                    <ng-container [ngSwitch]="section">
+                         <div class="col-lg-1 time-col" *ngSwitchCase="1">第一大节<br>(8:30 - 10:05)</div>
+                         <div class="col-lg-1 time-col" *ngSwitchCase="2">第二大节<br>(10:30 - 12:00)</div>
+                         <div class="col-lg-1 time-col" *ngSwitchCase="3">第三大节<br>(14:00 - 15:30)</div>
+                         <div class="col-lg-1 time-col" *ngSwitchCase="4">第四大节<br>(16:30 - 18:00)</div>
+                         <div class="col-lg-1 time-col" *ngSwitchCase="5">第五大节<br>(20:00 - 21:00)</div>
+                    </ng-container>
+                    <ng-container *ngFor="let date of dateNumber">
+                        <div (click)="openAddDialog(date, section)"class="col-lg-1  d-flex course-card math justify-content-center align-items-center" >
+                            <div class="d-flex flex-column" style="width: fit-content;">
+                            <ng-container *ngIf="courseTable[date - 1] !== undefined">
+                                <ng-container *ngFor="let course of courseTable[date - 1][section - 1]">
+                                    <ng-container *ngIf="course[0] !== ''">
+                                        <div style="font-size: 18px;">{{ course[0]}}</div>
+                                        <div class="course-info">{{ course[1]}}</div>
+                                    </ng-container>
+                                </ng-container>
+                                <ng-container *ngIf="courseTable[date - 1][section - 1][0][0] === ''">
+                                   <span class="oi oi-plus" style="font-size: 1.5em;"></span>
+                                </ng-container>
+                            </ng-container>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+            </ng-container>
+         
+                <!-- 添加更多课程格子... -->
+        </div>
+    </div>
+</div>
