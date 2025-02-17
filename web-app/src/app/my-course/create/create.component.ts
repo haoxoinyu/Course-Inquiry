@@ -31,17 +31,7 @@ export class CreateComponent implements OnInit {
     period: null as unknown as number
   };
 
-  formGroup = new FormGroup({
-    name: new FormControl('', Validators.required),
-    schoolId: new FormControl(0),
-    termId: new FormControl(0, Validators.required),
-    userId: new FormControl([] as number[]),
-    klassId: new FormControl(0),
-    sory: new FormControl(0, Validators.required),
-    week: new FormControl([] as number[], Validators.required),
-    day: new FormControl(null as unknown as number, Validators.required),
-    period: new FormControl(null as unknown as number, Validators.required)
-  })
+  formGroups: FormGroup[] = [];
 
   value = '';
   schools = new Array<School>();
@@ -82,6 +72,12 @@ export class CreateComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.addForm();
+    if(this.data !== undefined) {
+      this.formGroups[0].get('day')?.setValue(this.data.date);
+      this.formGroups[0].get('period')?.setValue(this.data.section);
+    }
+    this.formGroups[0].get('termId')?.setValue(this.data.termId);
     this.userService.me().subscribe((user) => {
       this.me = user;
       console.log(user);
@@ -89,39 +85,65 @@ export class CreateComponent implements OnInit {
     });
   }
 
+  addForm() {
+    const formGroup = new FormGroup({
+      name: new FormControl('', Validators.required),
+      schoolId: new FormControl(0),
+      termId: new FormControl(this.data.termId, Validators.required),
+      userId: new FormControl([] as number[]),
+      klassId: new FormControl(0),
+      sory: new FormControl(0, Validators.required),
+      week: new FormControl([] as number[], Validators.required),
+      day: new FormControl(this.data.date, Validators.required),
+      period: new FormControl(this.data.section, Validators.required)
+    })
+    this.formGroups.push(formGroup);
+  }
+
   onSubmit(): void {
-    const newCourse = {
-      name: this.formGroup.get('name')!.value,
-      sory: this.formGroup.get('sory')!.value,
-      week: this.formGroup.get('week')!.value!,
-      day: this.formGroup.get('day')!.value,
-      period: this.formGroup.get('period')!.value,
-      schoolId: this.me?.klass?.school?.id,
-      clazz_id: this.me?.klass?.id,
-      term_id: this.formGroup.get('termId')!.value,
-      userId: [this.me?.id!]
-    }
-    this.courseService.add(newCourse)
-      .subscribe((data: any )=> {
-          if (data.message === '课程名称长度最小为2位') {
-            this.sweetAlertService.showError('添加失败', '课程名称长度最小为2位', 'error');
-          } else if (data.message === '与已有课程的时间冲突') {
-            this.sweetAlertService.showError('添加失败', '与已有课程的时间冲突', 'error');
-          } else {
-            this.dialogRef.close(newCourse);
-            this.sweetAlertService.showSuccess('添加成功！', 'success');
-          }
-        },
-        error => {
-          console.log(error.error.message);
-          this.sweetAlertService.showError('添加失败', '', 'error');
-          console.log('保存失败', error);
-        });
+    this.formGroups.forEach((formGroup) => {
+      const newCourse = {
+        name: formGroup.get('name')!.value,
+        sory: formGroup.get('sory')!.value,
+        week: formGroup.get('week')!.value!,
+        day: formGroup.get('day')!.value,
+        period: formGroup.get('period')!.value,
+        schoolId: this.me?.klass?.school?.id,
+        clazz_id: this.me?.klass?.id,
+        term_id: formGroup.get('termId')!.value,
+        userId: [this.me?.id!]
+      }
+      this.courseService.add(newCourse)
+        .subscribe((data: any )=> {
+            if (data.message === '课程名称长度最小为2位') {
+              this.sweetAlertService.showError('添加失败', '课程名称长度最小为2位', 'error');
+            } else if (data.message === '与已有课程的时间冲突') {
+              this.sweetAlertService.showError('添加失败', '与已有课程的时间冲突', 'error');
+            } else {
+              this.dialogRef.close(newCourse);
+              this.sweetAlertService.showSuccess('添加成功！', 'success');
+            }
+          },
+          error => {
+            console.log(error.error.message);
+            this.sweetAlertService.showError('添加失败', '', 'error');
+            console.log('保存失败', error);
+          });
+    })
+  
   }
 
   onNoClick(): void {
     this.dialogRef.close();
   }
+
+// 使用 getter 方法来检查所有表单组是否有效
+
+get checkAllFormGroups(): boolean {
+
+  return this.formGroups.every(formGroup => formGroup.valid);
+
+}
 
   getTermsBySchoolId() {
     this.termService.getTermsBySchoolId(Number(this.me?.klass?.school?.id))
@@ -156,5 +178,7 @@ export class CreateComponent implements OnInit {
     for (let i = 1; i <= numberOfWeeks; i++) {
       this.weeks.push(i);
     }
+  }
+  onChange(formGroupEvent: Event) {
   }
 }

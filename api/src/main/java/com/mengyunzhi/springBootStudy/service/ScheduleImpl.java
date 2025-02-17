@@ -27,8 +27,7 @@ public class ScheduleImpl implements ScheduleService{
     @Autowired
     CourseRepository courseRepository;
 
-    @Override
-    public Long changeToMonday(String date) {
+    public static Long changeToMonday(String date) {
         LocalDate DateOfMonday;
         //创建一个可以处理时间字符串的控制器
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -71,7 +70,7 @@ public class ScheduleImpl implements ScheduleService{
     @Override
     public List<UnbusyStudentsOfCurrentWeek> getUnbusyStudentsOfCurrentWeek(String date) {
         //转化为周一
-        Long timestamp =this.changeToMonday(date);
+        Long timestamp =changeToMonday(date);
         //空闲的学生
         List<UnbusyStudentsOfCurrentWeek> unbusyStudentsOfCurrentWeekList = new ArrayList<UnbusyStudentsOfCurrentWeek>();
         Date formatDate = new Date(timestamp);

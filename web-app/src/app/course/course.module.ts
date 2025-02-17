@@ -11,13 +11,15 @@ import { KlassModule } from '../klass/klass.module';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import {MyCourseModule} from "../my-course/my-course.module";
+import { CourseScheduleComponent } from './course-schedule/course-schedule.component';
 
 @NgModule({
   declarations: [
     AddComponent,
     UserMultipleSelectComponent,
     IndexComponent,
-    EditComponent
+    EditComponent,
+    CourseScheduleComponent
   ],
   imports: [
     CommonModule,

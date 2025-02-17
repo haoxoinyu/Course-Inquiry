@@ -10,13 +10,15 @@ import {KlassModule} from "../klass/klass.module";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatOptionModule} from "@angular/material/core";
 import {MatSelectModule} from "@angular/material/select";
+import { MultipulformComponentComponent } from './multipulform-component/multipulform-component.component';
 
 @NgModule({
   declarations: [
     IndexComponent,
     AddComponent,
     CreateComponent,
-    SoryPipe
+    SoryPipe,
+    MultipulformComponentComponent
   ],
     imports: [
         CommonModule,
