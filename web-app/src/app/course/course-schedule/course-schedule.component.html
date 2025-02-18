@@ -1,6 +1,16 @@
 <div class="container-md main">
     <div class="timetable" style="width: 1567px; margin-left: -144px;">
-        <p style="margin-top: 90px;">{{"当前学期为:" +  currentTermName}}</p>
+            <label class="mr-2" style="margin-top: 90px;">当前课表学期为:</label>
+            <select class="form-control"
+             style="margin-left: 120px;width: 150px;margin-bottom: 15px;margin-top: -38px;"
+             (change)="onTermChange()"
+            [(ngModel)]="searchParameters.termId" 
+            name="term_id" 
+            id="term_id">
+              <option *ngFor="let term of terms" [value]="term.id">
+                {{term.name}}
+              </option>
+            </select>
         <div class="timetable-header" >
             <h1 class="text-center" style="color: black;">我的课程表 📚</h1>
         </div>

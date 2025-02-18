@@ -8,6 +8,7 @@ import { TermService } from 'src/app/service/term.service';
 import { UserService } from 'src/app/service/user.service';
 import { AddComponent } from '../add/add.component';
 import { CreateComponent } from 'src/app/my-course/create/create.component';
+import { Term } from 'src/app/norm/entity/Term';
 
 @Component({
   selector: 'app-course-schedule',
@@ -27,6 +28,7 @@ export class CourseScheduleComponent implements OnInit{
     page: 0,
     size: 1000000
   };
+  terms = new Array<Term>();
   currentTermName = '' ;
   constructor(
     private termService: TermService,
@@ -41,6 +43,10 @@ export class CourseScheduleComponent implements OnInit{
     this.userService.me()
       .subscribe((user) => {
         this.searchParameters.userId = user.id;
+        this.termService.getTermsBySchoolId(user.klass?.school?.id!)
+        .subscribe((terms) => {
+          this.terms = terms.content
+        })
         this.termService.getCurrentTerm(user.klass?.school?.id!)
           .subscribe((term) => {
             this.currentTermName = term.name!;
@@ -53,7 +59,13 @@ export class CourseScheduleComponent implements OnInit{
           })
       })
   }
-
+  onTermChange() {
+    this.courseService.page(this.searchParameters)
+    .subscribe(data => {
+    this.processCourseData(data);
+    console.log('课程详情', data)
+  });
+  }
   processCourseData(courses: Page<Course>) {
     // 初始化课表，最多7天，每天5个大节
     this.courseTable = Array.from({ length: 7 }, () => 
