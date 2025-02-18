@@ -32,18 +32,7 @@ export class AddComponent implements OnInit {
     day: null as unknown as number,
     period: null as unknown as number
   };
-
-  formGroup = new FormGroup({
-    name: new FormControl('', Validators.required),
-    schoolId: new FormControl(null as unknown as number, Validators.required),
-    termId: new FormControl(null, Validators.required),
-    userId: new FormControl([] as number [], Validators.required),
-    klassId: new FormControl(null as unknown as number, Validators.required),
-    sory: new FormControl(0, Validators.required),
-    week:  new FormControl([] as number [], Validators.required),
-    day: new FormControl(null, Validators.required),
-    period: new FormControl(null, Validators.required)
-  })
+  formGroups: FormGroup[] = [];
 
   value = '';
   schools = new Array<School>();
@@ -85,26 +74,49 @@ export class AddComponent implements OnInit {
               private schoolService: SchoolService) {
   }
 
+
+
   ngOnInit() {
+    this.addForm();
     // 获取所有学校
     this.schoolService.all()
       .subscribe(schools => this.schools = schools)
   }
 
+  addForm() {
+    const formGroup = new FormGroup({
+      name: new FormControl('', Validators.required),
+      schoolId: new FormControl(0),
+      termId: new FormControl(0, Validators.required),
+      userId: new FormControl([] as number[]),
+      klassId: new FormControl(0),
+      sory: new FormControl(0, Validators.required),
+      week: new FormControl([] as number[], Validators.required),
+      day: new FormControl(0, Validators.required),
+      period: new FormControl(0, Validators.required)
+    })
+    this.formGroups.push(formGroup);
+  }
+
+  // 使用 getter 方法来检查所有表单组是否有效
+  get checkAllFormGroups(): boolean {
+    return this.formGroups.every(formGroup => formGroup.valid);
+  }
+
   onSubmit(): void {
-    const newCourse = {
-      name: this.formGroup.get('name')!.value,
-        sory: this.formGroup.get('sory')!.value,
-        week: this.formGroup.get('week')!.value!,
-        day: this.formGroup.get('day')!.value,
-        period: this.formGroup.get('period')!.value,
-        schoolId: this.formGroup.get('schoolId')!.value,
-        clazz_id: this.formGroup.get('klassId')!.value,
-        term_id: this.formGroup.get('termId')!.value,
-        userId: this.formGroup.get('userId')!.value!
-    }
-    console.log("newCourse", newCourse)
-    this.courseService.add(newCourse)
+    this.formGroups.forEach((formGroup) => {
+      const newCourse = {
+        name: formGroup.get('name')!.value,
+          sory: formGroup.get('sory')!.value,
+          week: formGroup.get('week')!.value!,
+          day: formGroup.get('day')!.value,
+          period: formGroup.get('period')!.value,
+          schoolId: formGroup.get('schoolId')!.value,
+          clazz_id: formGroup.get('klassId')!.value,
+          term_id: formGroup.get('termId')!.value,
+          userId: formGroup.get('userId')!.value!
+      }
+      this.courseService.add(newCourse)
       .subscribe((data: any) => {
           if (data.message === '课程名称长度最小为2位') {
             this.sweetAlertService.showError('新增失败', '课程名称长度最小为2位', 'error');
@@ -123,6 +135,7 @@ export class AddComponent implements OnInit {
             this.sweetAlertService.showError('新增失败', '', 'error');
           }
         });
+    })
   }
 
   onNoClick(): void {
@@ -156,14 +169,14 @@ export class AddComponent implements OnInit {
 
   onSchoolChange(school: School) {
     this.course.school_id = school.id;
-    this.formGroup.get('schoolId')?.setValue(school.id);
+    this.formGroups[0].get('schoolId')?.setValue(school.id);
     this.getClazzBySchoolId(school.id);
     this.getTermsBySchoolId(school.id);
   }
 
   onKlassChange(klassId: number) {
     this.course.clazz_id = klassId;
-    this.formGroup.get('klassId')?.setValue(klassId);
+    this.formGroups[0].get('klassId')?.setValue(klassId);
     this.getUsersByKlassId(klassId);
   }
 
@@ -203,10 +216,12 @@ export class AddComponent implements OnInit {
   }
 
   onSelectionChange(event: MatSelectChange): void {
-    this.formGroup.get('week')?.setValue([]);
+    this.formGroups[0].get('week')?.setValue([]);
     (event.value as number[]).forEach((value)=> {
-      (this.formGroup.get('week')!.value as number[]).push(value);
+      (this.formGroups[0].get('week')!.value as number[]).push(value);
     });
   }
 
+  onChange(formGroupEvent: Event) {
+  }
 }

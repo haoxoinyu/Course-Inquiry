@@ -12,6 +12,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import {MyCourseModule} from "../my-course/my-course.module";
 import { CourseScheduleComponent } from './course-schedule/course-schedule.component';
+import { MultipleFormOfCourseComponent } from './multiple-form-of-course/multiple-form-of-course.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { CourseScheduleComponent } from './course-schedule/course-schedule.compo
     UserMultipleSelectComponent,
     IndexComponent,
     EditComponent,
-    CourseScheduleComponent
+    CourseScheduleComponent,
+    MultipleFormOfCourseComponent
   ],
   imports: [
     CommonModule,
