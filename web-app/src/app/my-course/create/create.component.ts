@@ -140,9 +140,7 @@ export class CreateComponent implements OnInit {
 // 使用 getter 方法来检查所有表单组是否有效
 
 get checkAllFormGroups(): boolean {
-
   return this.formGroups.every(formGroup => formGroup.valid);
-
 }
 
   getTermsBySchoolId() {
