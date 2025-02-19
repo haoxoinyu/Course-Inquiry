@@ -137,11 +137,10 @@ export class CreateComponent implements OnInit {
     this.dialogRef.close();
   }
 
-// 使用 getter 方法来检查所有表单组是否有效
-
-get checkAllFormGroups(): boolean {
-  return this.formGroups.every(formGroup => formGroup.valid);
-}
+  // 使用 getter 方法来检查所有表单组是否有效
+  get checkAllFormGroups(): boolean {
+    return this.formGroups.every(formGroup => formGroup.valid);
+  }
 
   getTermsBySchoolId() {
     this.termService.getTermsBySchoolId(Number(this.me?.klass?.school?.id))
