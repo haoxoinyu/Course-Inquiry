@@ -73,10 +73,14 @@ public class CourseController {
     @CrossOrigin("*")
     public ResponseEntity<Map<String, Object>> add(@RequestBody newCourse newCourse) {
         // 声明 userList 变量，使其在整个方法中可见
-        List<User> userList;
+        List<User> userList = new ArrayList<>();
 
-        // 如果 userId 为 0，从 userService 获取用户列表
-        userList = this.userService.findByKlassId(newCourse.getKlassId());
+        List<Long> usersId = newCourse.getUserId();
+        usersId.forEach(userId -> {
+            User user = new User();
+            user.setId(userId);
+            userList.add(user);
+        });
 
         // 创建 Term 对象并设置 ID
         Term term = new Term();
