@@ -56,27 +56,36 @@
       </div>
     </form>
   </div>
-  <div class="col-8">
-    <div *ngIf="courseTable.length > 0">
-      <table style="width: 1500px;margin-left: -200px">
-        <thead>
-        <tr>
-          <th>时间</th>
-          <th *ngFor="let day of days; let i = index" class="multi-line-th">
-            {{ day.name }} <br> {{ dates[i] }}
-          </th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr *ngFor="let period of periods">
-          <td>{{ period.name }} 
-            <br>({{ period.startTime }} - {{ period.endTime }})<br><br></td>
-          <td *ngFor="let day of days">
-            {{ courseTable[day.value - 1][period.value - 1] || '' }}
-          </td>
-        </tr>
-        </tbody>
-      </table>
+  <div class="timetable" style="width: 1652px; margin-left: -278px;">
+    <div class="container" style="margin-left: 0px;">
+        <div class="row mb-2" style="width: 2079px;">
+            <div class="col-lg-1"></div>
+            <div class="col-lg-1 time-col">星期一</div>
+            <div class="col-lg-1 time-col">星期二</div>
+            <div class="col-lg-1 time-col">星期三</div>
+            <div class="col-lg-1 time-col">星期四</div>
+            <div class="col-lg-1 time-col">星期五</div>
+            <div class="col-lg-1 time-col">星期六</div>
+            <div class="col-lg-1 time-col">星期日</div>
+        </div>
+        <ng-container *ngFor="let section of periods">
+            <div class="row mb-3" style="width: 2079px;margin-left: -33px;">
+                <ng-container [ngSwitch]="section.value">
+                      <div class="col-lg-1 time-col" *ngSwitchCase="1" style="font-size: 20px;">第一大节<br>(8:30 - 10:05)</div>
+                      <div class="col-lg-1 time-col" *ngSwitchCase="2" style="font-size: 20px;">第二大节<br>(10:30 - 12:00)</div>
+                      <div class="col-lg-1 time-col" *ngSwitchCase="3" style="font-size: 20px;">第三大节<br>(14:00 - 15:30)</div>
+                      <div class="col-lg-1 time-col" *ngSwitchCase="4" style="font-size: 20px;">第四大节<br>(16:30 - 18:00)</div>
+                      <div class="col-lg-1 time-col" *ngSwitchCase="5" style="font-size: 20px;">第五大节<br>(20:00 - 21:00)</div>
+                </ng-container>
+                <ng-container *ngFor="let date of days">
+                    <div class="col-lg-1  d-flex course-card math justify-content-center align-items-center" >
+                        <div class="d-flex flex-column" style="width: fit-content;">
+                          <div style="font-size: 18px;"> {{courseTable[date.value - 1][section.value - 1] || ''}}<br></div>
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+        </ng-container>
     </div>
   </div>
 </div>
