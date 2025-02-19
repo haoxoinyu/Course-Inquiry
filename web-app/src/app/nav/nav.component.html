@@ -1,21 +1,39 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-3">
   <div class="top-bar">
     <div class="title">课表查询系统</div>
-    <form class="form-inline logout" (ngSubmit)="onLogout()">
-      <div class="navbar-brand" style="color: #5c5252;">欢迎 {{me?.name}}</div>
-      <button class="btn btn-outline-light my-2 my-sm-0" type="submit" style="color: #5c5252;border-color: #d51919;">退出登录</button>
-    </form>
+    <div style=" position: fixed;right: 0;margin-top: 104px;">
+      <div class="navbar-brand" style="color: #5c5252;">欢迎! {{me?.name}}</div>
+      <div class="image-container" style="width: 25px; margin-left: 59px;" (click)="toggleList()">
+        <span class="oi oi-menu"  style="color: black;"></span>
+      </div>
+      <div class="dropdown-list" 
+      style="position: absolute;
+      background-color: white;
+      border: 1px solid #ccc;
+      z-index: 1000;
+      top: 98%;
+      margin-right: -62px;
+      width: 253px;
+      margin-left: -121px;
+      font-size: 14px;" 
+      *ngIf="isListVisible">    
+        <ul style="padding-left: 0px;">  
+          <li class="nav-item" style="display: flex; align-items: center"> 
+            <a class="nav-link" style="color: black;" routerLink="personalCenter">个人中心</a>
+            <span class="oi oi-account-logout" style="color: black;margin-left: 93px;"></span>
+          </li> 
+          <li class="nav-item" style="display: flex; align-items: center" (click)="onLogout()">
+            <a class="nav-link"  style="color: black;">退出登录</a>
+            <span class="oi oi-person" style="color: black;margin-left: 93px;"></span>
+          </li>
+        </ul>
+      </div>
   </div>
+</div>
 
   <div>
     <div class="sidebar">
       <ul>
-        <li class="nav-item">
-          <a class="nav-link"
-             routerLink=""
-             routerLinkActive="active"
-             [routerLinkActiveOptions]="{exact: true}">首页 <span class="sr-only">(current)</span></a>
-        </li>
         <li class="nav-item" *ngFor="let menu of menus" routerLinkActive="active">
           <a class="nav-link" routerLink="{{menu.url}}">{{menu.name}}</a>
         </li>
