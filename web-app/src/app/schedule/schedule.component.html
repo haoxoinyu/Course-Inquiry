@@ -27,36 +27,40 @@
     <div class="col-md" style="margin-top: -149px;margin-left: 1106px;">
         <a type="submit" class="btn btn-primary" (click)="openAddDialog()">&nbsp;<span class="oi oi-plus"></span>添加钉钉机器人发送每日行程!</a>
     </div>
-    <table class="table">
-        <thead>
-            <tr>
-            <th class="th">时间</th>
-                <ng-container *ngFor="let day of weekDates; index as index">
-                <th class="th">{{getDayOfWeek(index)}}<br>{{day}}
-                </ng-container>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let section of sectionNumber">
-            <td >
-                <ng-container [ngSwitch]="section">
-                <p *ngSwitchCase="1">第一大节<br>(8:30 - 10:05)</p>
-                <p *ngSwitchCase="2">第二大节<br>(10:30 - 12:00)</p>
-                <p *ngSwitchCase="3">第三大节<br>(14:00 - 15:30)</p>
-                <p *ngSwitchCase="4">第四大节<br>(16:30 - 18:00)</p>
-                <p *ngSwitchCase="5">第五大节<br>(20:00 - 21:00)</p>
-                </ng-container>
-            </td>
-            <ng-container *ngFor="let date of dateNumber">
-                <td style="height: 158px;" id="monday-first">
-                <ng-container *ngFor="let obj of PeopleHaveCourse">
-                    <ng-container *ngIf="obj.time === date + '-' + section">
-                        {{obj.user.name}}
+    <div class="timetable" style="width: 1652px; margin-left: -115px;margin-top: 12px;">
+        <div class="container" style="margin-left: 0px;">
+            <div class="row mb-2" style="width: 2079px;">
+                <div class="col-lg-1"></div>
+                <div class="col-lg-1 time-col">星期一</div>
+                <div class="col-lg-1 time-col">星期二</div>
+                <div class="col-lg-1 time-col">星期三</div>
+                <div class="col-lg-1 time-col">星期四</div>
+                <div class="col-lg-1 time-col">星期五</div>
+                <div class="col-lg-1 time-col">星期六</div>
+                <div class="col-lg-1 time-col">星期日</div>
+            </div>
+            <ng-container *ngFor="let section of sectionNumber">
+                <div class="row mb-3" style="width: 2079px;margin-left: -33px;">
+                    <ng-container [ngSwitch]="section">
+                          <div class="col-lg-1 time-col" *ngSwitchCase="1" style="font-size: 20px;">第一大节<br>(8:30 - 10:05)</div>
+                          <div class="col-lg-1 time-col" *ngSwitchCase="2" style="font-size: 20px;">第二大节<br>(10:30 - 12:00)</div>
+                          <div class="col-lg-1 time-col" *ngSwitchCase="3" style="font-size: 20px;">第三大节<br>(14:00 - 15:30)</div>
+                          <div class="col-lg-1 time-col" *ngSwitchCase="4" style="font-size: 20px;">第四大节<br>(16:30 - 18:00)</div>
+                          <div class="col-lg-1 time-col" *ngSwitchCase="5" style="font-size: 20px;">第五大节<br>(20:00 - 21:00)</div>
                     </ng-container>
-                </ng-container>
-                </td>
+                    <ng-container *ngFor="let date of dateNumber">
+                        <div class="col-lg-1  d-flex course-card math justify-content-center align-items-center" >
+                            <div class="d-flex flex-column" style="width: fit-content;">
+                                <ng-container *ngFor="let obj of PeopleHaveCourse">
+                                    <ng-container *ngIf="obj.time === date + '-' + section">
+                                        <div>{{obj.user.name}}<br></div>
+                                    </ng-container>
+                                </ng-container>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
             </ng-container>
-            </tr>
-        </tbody>
-    </table>
+        </div>
+      </div>
 </div>
