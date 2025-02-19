@@ -125,6 +125,9 @@ export class IndexComponent implements OnInit {
    }
 
    onPage(page: number): void {
+    if (page < 0 || page >= this.pageData.totalPages) {
+      return;
+    }
      this.loadByPage(page);
    }
 
