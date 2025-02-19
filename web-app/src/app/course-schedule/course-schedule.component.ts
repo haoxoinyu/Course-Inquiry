@@ -35,7 +35,7 @@ export class CourseScheduleComponent implements OnInit {
   terms = new Array<Term>();
   schools = new Array<School>();
   weeks: number[] = [];
-  users = new Array<User>(new User(1, '', '', 1, ''));
+  users = new Array<User>(new User(2, '', '', 2, ''));
   days = [
     {name: '星期一', value: 1},
     {name: '星期二', value: 2},

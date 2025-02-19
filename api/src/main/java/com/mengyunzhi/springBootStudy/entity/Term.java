@@ -50,14 +50,6 @@ public class Term {
         this.school = school;
     }
 
-    public Long getState() {
-        return state;
-    }
-
-    public void setState(Long state) {
-        this.state = state;
-    }
-
     public Date getStartTime() { return startTime; }
 
     public void setStartTime(Date startTime) { this.startTime = startTime; }
