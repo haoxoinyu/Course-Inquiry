@@ -22,6 +22,7 @@ export class NavComponent implements OnInit {
     this.userService.me().subscribe((user) => {
       this.me = user;
       this.myRole = user.role;
+      this.menus.push({url: 'courseSchedule', name: '首页'});
       if (this.myRole === 1 || this.myRole === 2) {
         this.menus.push({url: 'user', name: '用户管理'});
         this.menus.push({url: 'klass', name: '班级管理'});
@@ -30,9 +31,7 @@ export class NavComponent implements OnInit {
       }
       this.menus.push({url: 'course', name: '课程管理'});
       this.menus.push({url: 'myCourse', name: '我的课程'});
-      this.menus.push({url: 'courseSchedule', name: '课程查询'});
       this.menus.push({url: 'schedule', name: '行程查询'});
-      this.menus.push({url: 'personalCenter', name: '个人中心'});
     });
     this.title = '教务管理系统';
   }
@@ -42,6 +41,16 @@ export class NavComponent implements OnInit {
       .subscribe(() => {
         this.userService.setIsLogin(false);
       });
+  }
+
+  isListVisible: boolean = false;
+
+ 
+
+  toggleList(): void {
+
+    this.isListVisible = !this.isListVisible;
+
   }
 
 }
