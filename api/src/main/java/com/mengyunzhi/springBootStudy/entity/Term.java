@@ -15,7 +15,6 @@ public class Term {
     private School school;
 
     private String name;
-    private Long state;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date startTime;
@@ -48,14 +47,6 @@ public class Term {
 
     public void setSchool(School school) {
         this.school = school;
-    }
-
-    public Long getState() {
-        return state;
-    }
-
-    public void setState(Long state) {
-        this.state = state;
     }
 
     public Date getStartTime() { return startTime; }
