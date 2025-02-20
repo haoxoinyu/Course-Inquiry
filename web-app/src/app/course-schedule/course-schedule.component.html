@@ -80,7 +80,9 @@
                 <ng-container *ngFor="let date of days">
                     <div class="col-lg-1  d-flex course-card math justify-content-center align-items-center" >
                         <div class="d-flex flex-column" style="width: fit-content;">
-                          <div style="font-size: 18px;"> {{courseTable[date.value - 1][section.value - 1] || ''}}<br></div>
+                          <ng-container *ngIf="courseTable[date.value - 1] !== undefined">
+                            <div style="font-size: 18px;"> {{courseTable[date.value - 1][section.value - 1]}}<br></div>
+                          </ng-container>
                         </div>
                     </div>
                 </ng-container>

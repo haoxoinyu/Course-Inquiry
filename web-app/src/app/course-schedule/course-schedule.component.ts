@@ -35,22 +35,22 @@ export class CourseScheduleComponent implements OnInit {
   terms = new Array<Term>();
   schools = new Array<School>();
   weeks: number[] = [];
-  users = new Array<User>(new User(1, '', '', 1, ''));
+  users = new Array<User>(new User(2, '', '', 2, ''));
   days = [
-    {name: '星期一', value: 1},
-    {name: '星期二', value: 2},
-    {name: '星期三', value: 3},
-    {name: '星期四', value: 4},
-    {name: '星期五', value: 5},
-    {name: '星期六', value: 6},
-    {name: '星期日', value: 7},
+    {name: '周一', value: 1},
+    {name: '周二', value: 2},
+    {name: '周三', value: 3},
+    {name: '周四', value: 4},
+    {name: '周五', value: 5},
+    {name: '周六', value: 6},
+    {name: '周日', value: 7},
   ];
   periods = [
-    { name: '第一大节', startTime: '8:30', endTime: '10:05', value: 1 },
-    { name: '第二大节', startTime: '10:30', endTime: '12:00', value: 2 },
-    { name: '第三大节', startTime: '14:00', endTime: '15:30', value: 3 },
-    { name: '第四大节', startTime: '16:30', endTime: '18:00', value: 4 },
-    { name: '第五大节', startTime: '20:00', endTime: '21:00', value: 5 }
+    {name: '第一大节', value: 1},
+    {name: '第二大节', value: 2},
+    {name: '第三大节', value: 3},
+    {name: '第四大节', value: 4},
+    {name: '第五大节', value: 5}
   ];
   me: User | undefined;
   firstChange = true;
@@ -61,7 +61,6 @@ export class CourseScheduleComponent implements OnInit {
               private courseScheduleService: CourseScheduleService,
               private userService: UserService,
               private sweetAlertService: SweetAlertService) { }
-
   ngOnInit(): void {
     console.log('ngOnInit');
     this.getSchools(); // 调用获取学校列表的方法
@@ -90,27 +89,26 @@ export class CourseScheduleComponent implements OnInit {
             response => {
               if (response && response.id !== undefined) {
                 this.searchParameters.termId = response.id;
-                console.log(this.searchParameters.termId);
                 this.semesterStartDate = response.startTime;
-                console.log(this.semesterStartDate);
                 this.semesterEndDate = response.endTime;
-                console.log(this.semesterEndDate);
                 this.semesterStartDate = new Date(response.startTime);
                 this.semesterEndDate = new Date(response.endTime);
                 this.calculateWeeks();
                 this.searchParameters.week = this.calculateCurrentWeek();
-                console.log(this.searchParameters.week);
                 this.getWeekDates(this.searchParameters.week);
-                console.log(this.searchParameters);
                 this.onSearchSubmit();
               }
             },
             error => {
+              this.semesterStartDate = new Date();
+              this.semesterEndDate = new Date();
+              this.calculateWeeks();
+              this.searchParameters.week = this.calculateCurrentWeek();
+              this.getWeekDates(1);
               console.error('获取当前学期失败:', error);
               const errorMessage = error.error.error || '获取当前学期失败';
               this.sweetAlertService.showWithoutTerm('未识别到当前学期信息', errorMessage, 'warning');
-            }
-          );
+            });
         }
       },
       error => {
