@@ -13,6 +13,27 @@ public class CourseSpecs {
      * @param klass 班级
      * @return
      * */
+    public static Specification<Course> belongToKlassOfTheSameCourse(Klass klass) {
+
+        if(klass == null || null == klass.getId()) {
+            System.out.println("klass为null");
+            return Specification.where(null);
+        }else {
+            return new Specification<Course>() {
+                @Override
+                public Predicate toPredicate(Root<Course> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                    Join<Course, Term> termJoin = root.join("term");
+                    Join<Term, School> schoolJoin = termJoin.join("school");
+                    return criteriaBuilder.equal(schoolJoin.get("id"), klass.getId()) ;
+                }
+            };
+        }
+    }
+    /**
+     * 属于某个班级
+     * @param klass 班级
+     * @return
+     * */
     public static Specification<Course> belongToKlass(Klass klass) {
 
         if(klass == null || null == klass.getId()) {

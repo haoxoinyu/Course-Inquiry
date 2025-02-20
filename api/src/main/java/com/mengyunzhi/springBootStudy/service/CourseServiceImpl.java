@@ -181,7 +181,7 @@ public class CourseServiceImpl implements CourseService {
         school.setId(schoolId);
         Term term = new Term();
         term.setId(termId);
-        return this.courseRepository.findAll(name, school, klass, term, userId, pageable);
+        return this.courseRepository.findDistinctAll(name, school, klass, term, userId, pageable);
     }
 
     @Override
