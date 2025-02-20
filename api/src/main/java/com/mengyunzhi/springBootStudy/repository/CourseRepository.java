@@ -11,7 +11,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
-
+import java.util.stream.Collectors;
 public interface CourseRepository extends PagingAndSortingRepository<Course, Long>, JpaSpecificationExecutor {
     /**
      * 课程名称是否存在
@@ -32,6 +32,28 @@ public interface CourseRepository extends PagingAndSortingRepository<Course, Lon
      * @param pageable 分页参数
      * @return
      * */
+    default Page<Course> findDistinctAll(String name, School school, Klass klass, Term term, List<Long> user, @NotNull Pageable pageable){
+        if (null == pageable) {
+            throw new IllegalArgumentException("传入的Pageable不能为null");
+        }
+        Specification<Course> specification = CourseSpecs.nameContain(name)
+                .and(CourseSpecs.belongToSchool(school))
+                .and(CourseSpecs.belongToTerm(term))
+                .and(CourseSpecs.belongToKlassOfTheSameCourse(klass));
+        Page<Course> pageData = this.findAll(specification, pageable);
+        return pageData;
+    }
+
+    /**
+     *综合查询
+     * @param name 课程名
+     * @param klass 班级
+     * @param school 学校
+     * @param term 学期
+     * @param user 学生
+     * @param pageable 分页参数
+     * @return
+     * */
     default Page<Course> findAll(String name, School school, Klass klass, Term term, List<Long> user, @NotNull Pageable pageable){
         if (null == pageable) {
             throw new IllegalArgumentException("传入的Pageable不能为null");
@@ -40,9 +62,9 @@ public interface CourseRepository extends PagingAndSortingRepository<Course, Lon
                 .and(CourseSpecs.belongToSchool(school))
                 .and(CourseSpecs.belongToTerm(term))
                 .and(CourseSpecs.belongToUser(user))
-                .and(CourseSpecs.belongToKlass(klass))
-                .and(CourseSpecs.nameContain(name));
-        return this.findAll(specification, pageable);
+                .and(CourseSpecs.belongToKlass(klass));
+        Page<Course> pageData = this.findAll(specification, pageable);
+        return pageData;
     }
 
     default Page<Course> find(Term term, String courseName, Long sory, List<Long> user, @NotNull Pageable pageable){
