@@ -31,6 +31,7 @@ public class DingdingsendCurrentSchedule {
     public ResponseEntity<?> addWebhookUrl(@RequestBody String webhookUrl) {
         try{
             this.dingdingRobotWebhookUrlService.addWebhookUrl(webhookUrl);
+            this.generateMessage();
             return ResponseEntity.status(HttpStatus.OK).body("{\"message\": \"添加成功\"}");
         }catch(Exception e){
             return ResponseEntity.status(HttpStatus.CONFLICT).body("当前机器人已添加过了，请勿重复添加");
