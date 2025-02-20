@@ -108,7 +108,7 @@ public class CourseController {
     @CrossOrigin("*")
     public ResponseEntity<Map<String, Object>> update(@RequestBody newCourse updateCourse) {
         // 声明 userList 变量，使其在整个方法中可见
-        List<User> userList = List.of();
+        List<User> userList = new ArrayList<>();
 
         if (updateCourse.getUserId() != null) {
             for (Long userId : updateCourse.getUserId()) {
