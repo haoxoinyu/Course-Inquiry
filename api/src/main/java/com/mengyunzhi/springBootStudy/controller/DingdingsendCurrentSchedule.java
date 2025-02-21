@@ -28,7 +28,7 @@ public class DingdingsendCurrentSchedule {
     @Autowired
     DingdingSendCurrentScheduleService dingdingSendCurrentScheduleService;
 
-    String serverAddress = "http://119.132.169.197:8080";
+    String serverAddress = "http://47.97.85.189:8080";
 
     @PostMapping("/add")
     @CrossOrigin("*")
