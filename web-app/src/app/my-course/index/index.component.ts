@@ -10,6 +10,7 @@ import {User} from "../../norm/entity/User";
 import {MyCourseService} from "../../service/my-course.service";
 import {UserService} from "../../service/user.service";
 import {Course} from "../../norm/entity/Course";
+import { School } from 'src/app/norm/entity/School';
 
 @Component({
   selector: 'app-index',

@@ -7,9 +7,12 @@
             [(ngModel)]="searchParameters.termId" 
             name="term_id" 
             id="term_id">
-              <option *ngFor="let term of terms" [value]="term.id">
-                {{term.name}}
-              </option>
+                <option [value]="0">
+                    暂无学期安排
+                </option>
+                <option *ngFor="let term of terms" [value]="term.id">
+                    {{term.name}}
+                </option>
             </select>
         <div class="timetable-header" >
             <h1 class="text-center" style="color: black;">我的课程表 📚</h1>

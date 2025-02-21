@@ -13,7 +13,11 @@ import {ScheduleService} from '../service/schedule.service';
 import {School} from "../norm/entity/School";
 import {KlassService} from "../service/klass.service";
 import {SchoolService} from "../service/school.service";
-
+interface currentWeekOfSchool {
+  schoolName: string,
+  currentWeek: string,
+  termName: string
+}
 @Component({
   selector: 'app-course-schedule',
   templateUrl: './course-schedule.component.html',
@@ -36,6 +40,7 @@ export class CourseScheduleComponent implements OnInit {
   schools = new Array<School>();
   weeks: number[] = [];
   users = new Array<User>(new User(2, '', '', 2, ''));
+  currentWeekOfSchools: currentWeekOfSchool[] = [];
   days = [
     {name: '周一', value: 1},
     {name: '周二', value: 2},
@@ -97,6 +102,7 @@ export class CourseScheduleComponent implements OnInit {
                 this.searchParameters.week = this.calculateCurrentWeek();
                 this.getWeekDates(this.searchParameters.week);
                 this.onSearchSubmit();
+                this.getCurrencyWeekOfEachSchool(this.dates[0]);
               }
             },
             error => {
@@ -105,9 +111,7 @@ export class CourseScheduleComponent implements OnInit {
               this.calculateWeeks();
               this.searchParameters.week = this.calculateCurrentWeek();
               this.getWeekDates(1);
-              console.error('获取当前学期失败:', error);
-              const errorMessage = error.error.error || '获取当前学期失败';
-              this.sweetAlertService.showWithoutTerm('未识别到当前学期信息', errorMessage, 'warning');
+              this.getCurrencyWeekOfEachSchool(this.dates[0]);
             });
         }
       },
@@ -129,6 +133,31 @@ export class CourseScheduleComponent implements OnInit {
       .subscribe(data => {
       this.processCourseData(data);
     });
+  }
+
+
+   //获取当前查询日期是每个学校的哪个学期的第几周
+   getCurrencyWeekOfEachSchool(firstDayOfCurrentWeek : string) {
+    this.termService.getCurrencyWeekOfEachSchool(firstDayOfCurrentWeek)
+    .subscribe((message) => {
+      this.currentWeekOfSchools = message;
+      this.schools.forEach((school) => {
+        let flag = false;
+        this.currentWeekOfSchools.forEach((school1) => {
+          if(school1.schoolName === school.name) {
+            flag = true;
+          }
+        })
+        if(!flag) {
+          this.currentWeekOfSchools.push({
+            schoolName: school.name,
+            currentWeek: '0',
+            termName: '暂无学期安排'
+          })
+        }
+      }) 
+      console.log(this.currentWeekOfSchools)
+    })
   }
 
   private calculateCurrentWeek(): number {

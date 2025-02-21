@@ -1,19 +1,19 @@
 <div class="container-md main" style="margin-top: 120px;">
-    <div>
+    <div style="margin-left: -114px;">
         <ng-container *ngFor="let currentWeekOfSchool of currentWeekOfSchools">
             <ng-container *ngIf="currentWeekOfSchool.termName !== '暂无学期安排'">
                 <p style=" font-size: 16px;">
-                    {{'当前日期为' + currentWeekOfSchool.schoolName + currentWeekOfSchool.termName + '第' + currentWeekOfSchool.currentWeek + '周' }}<br>
+                    {{'今日日期为' + currentWeekOfSchool.schoolName + currentWeekOfSchool.termName + '第' + currentWeekOfSchool.currentWeek + '周' }}<br>
                 </p>
             </ng-container>
             <ng-container *ngIf="currentWeekOfSchool.termName === '暂无学期安排'">
                 <p style=" font-size: 16px;">
-                    {{'当前日期' + currentWeekOfSchool.schoolName + currentWeekOfSchool.termName }}<br>
+                    {{'今日日期' + currentWeekOfSchool.schoolName + currentWeekOfSchool.termName }}<br>
                 </p>
             </ng-container>
         </ng-container>
     </div>
-    <div class="mt-4 mb-4">
+    <div class="mt-4 mb-4" style="margin-left: -115px;">
         <form class="form-inline" style="margin-top: 24px;width: 1000px;"(ngSubmit)="onSubmit()" [formGroup]="formGroup" >
             <!-- 查询日期 -->
             <input class="form-control datetimepicker-input" type="date" name="date" id="date" formControlName="date"/>

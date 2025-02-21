@@ -1,4 +1,18 @@
 <div class="container-md main">
+  <div style="margin-left: -277px;">
+    <ng-container *ngFor="let currentWeekOfSchool of currentWeekOfSchools">
+        <ng-container *ngIf="currentWeekOfSchool.termName !== '暂无学期安排'">
+            <p style=" font-size: 16px;">
+                {{'今日日期为' + currentWeekOfSchool.schoolName + currentWeekOfSchool.termName + '第' + currentWeekOfSchool.currentWeek + '周' }}<br>
+            </p>
+        </ng-container>
+        <ng-container *ngIf="currentWeekOfSchool.termName === '暂无学期安排'">
+            <p style=" font-size: 16px;">
+                {{'今日日期' + currentWeekOfSchool.schoolName + currentWeekOfSchool.termName }}<br>
+            </p>
+        </ng-container>
+    </ng-container>
+</div>
   <div class="col-md-8">
     <form class="form-inline d-flex justify-content-between" style="width: 1200px;margin-bottom: 20px;margin-left: -52px;"
           (ngSubmit)="onSearchSubmit()">
@@ -23,7 +37,7 @@
       <div class="form-group mb-2">
         <label class="mr-2">学期：</label>
         <select class="form-control" [(ngModel)]="searchParameters.termId" (change)="onTermChange(searchParameters.termId)" name="term_id" id="term_id">
-          <option [ngValue]="0">所有学期</option>
+          <option [ngValue]="0">当前日期暂无学期安排</option>
           <option *ngFor="let term of terms" [value]="term.id">
             {{term.name}}
           </option>
@@ -48,7 +62,7 @@
         </select>
       </div>
       <div class="form-group mb-2">
-        <button class="btn btn-success mb-2" type="submit"
+        <button class="btn btn-outline-success" type="submit"
                 [disabled]="searchParameters.schoolId === 0 ||
                 searchParameters.klassId === 0 ||
                 searchParameters.termId === 0 ||
