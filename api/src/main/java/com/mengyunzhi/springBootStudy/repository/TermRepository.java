@@ -68,8 +68,8 @@ public interface TermRepository extends PagingAndSortingRepository<Term, Long>, 
     }
 
     default List<Term> findTermsInRange(Date date) {
-        Specification<Term> specification = TermSpecs.greaterThanDate(date)
-                .and(TermSpecs.lessThanDate(date));
+        Specification<Term> specification = TermSpecs.greaterThanOrEqualToDate(date)
+                .and(TermSpecs.lessThanOrEqualToDate(date));
         return this.findAll(specification);
     };
 

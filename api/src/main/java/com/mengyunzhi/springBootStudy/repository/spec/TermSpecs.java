@@ -31,6 +31,22 @@ public class TermSpecs {
     }
 
     /**
+     * 日期小于等于结束时间
+     * */
+    public static Specification<Term> greaterThanOrEqualToDate(Date date) {
+        if (date != null) {
+            return new Specification<Term>() {
+                @Override
+                public Predicate toPredicate(Root<Term> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                    return criteriaBuilder.greaterThanOrEqualTo(root.get("endTime"), date) ;
+                }
+            };
+        } else {
+            return Specification.where(null);
+        }
+    }
+
+    /**
      * 日期小于结束时间
      * */
     public static Specification<Term> greaterThanDate(Date date) {
@@ -39,6 +55,22 @@ public class TermSpecs {
                 @Override
                 public Predicate toPredicate(Root<Term> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
                     return criteriaBuilder.greaterThan(root.get("endTime"), date) ;
+                }
+            };
+        } else {
+            return Specification.where(null);
+        }
+    }
+
+    /**
+     * 日期大于等于开始时间
+     * */
+    public static Specification<Term> lessThanOrEqualToDate(Date date) {
+        if (date != null) {
+            return new Specification<Term>() {
+                @Override
+                public Predicate toPredicate(Root<Term> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                    return criteriaBuilder.lessThanOrEqualTo(root.get("startTime"), date) ;
                 }
             };
         } else {

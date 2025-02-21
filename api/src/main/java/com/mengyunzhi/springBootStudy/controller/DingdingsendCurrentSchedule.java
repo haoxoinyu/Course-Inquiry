@@ -5,6 +5,7 @@ import com.mengyunzhi.springBootStudy.service.DingdingRobotWebhookUrlService;
 import com.mengyunzhi.springBootStudy.service.DingdingSendCurrentScheduleService;
 import com.mengyunzhi.springBootStudy.service.ScheduleImpl;
 import com.mengyunzhi.springBootStudy.service.ScheduleService;
+import org.apache.logging.log4j.message.StringFormattedMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,12 +27,15 @@ public class DingdingsendCurrentSchedule {
 
     @Autowired
     DingdingSendCurrentScheduleService dingdingSendCurrentScheduleService;
+
+    String serverAddress = "http://119.132.169.197:8080";
+
     @PostMapping("/add")
     @CrossOrigin("*")
     public ResponseEntity<?> addWebhookUrl(@RequestBody String webhookUrl) {
         try{
             this.dingdingRobotWebhookUrlService.addWebhookUrl(webhookUrl);
-            this.generateMessage();
+            this.generateMessage(webhookUrl);
             return ResponseEntity.status(HttpStatus.OK).body("{\"message\": \"添加成功\"}");
         }catch(Exception e){
             return ResponseEntity.status(HttpStatus.CONFLICT).body("当前机器人已添加过了，请勿重复添加");
@@ -46,9 +50,19 @@ public class DingdingsendCurrentSchedule {
     @Scheduled(cron = "0 0 9 * * ?")
     public void generateMessage() {
         // 生成链接
-        String scheduleLink = "http://119.132.169.197:8080/DingdingsendCurrentSchedule/sendCurrentSchedule" ;
+        String scheduleLink = String.format("%s/DingdingsendCurrentSchedule/sendCurrentSchedule", this.serverAddress);
         String message = String.format("### 今日行程表\n点击链接查看具体行程表：[查看行程表](%s)!", scheduleLink);
         this.dingdingSendCurrentScheduleService.sendMessage(message);
+    }
+
+    /**
+     * 添加新机器人时发送信息到群里
+     * */
+    public void generateMessage(String webhookUrl) {
+        // 生成链接
+        String scheduleLink = String.format("%s/DingdingsendCurrentSchedule/sendCurrentSchedule", this.serverAddress);
+        String message = String.format("### 今日行程表\n点击链接查看具体行程表：[查看行程表](%s)!", scheduleLink);
+        this.dingdingSendCurrentScheduleService.sendMessage(message, webhookUrl);
     }
 
     @GetMapping("/sendCurrentSchedule")
