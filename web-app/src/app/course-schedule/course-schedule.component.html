@@ -32,7 +32,7 @@
       <div class="form-group mb-2">
         <label class="mr-2">周数：</label>
         <select class="form-control" [(ngModel)]="searchParameters.week" name="week" id="week">
-          <option [ngValue]=0>所有周数</option>
+          <option [ngValue]="0">所有周数</option>
           <option *ngFor="let week of weeks" [value]="week">
             {{week}}
           </option>
@@ -56,17 +56,18 @@
       </div>
     </form>
   </div>
+  <div>
   <div class="timetable" style="width: 1652px; margin-left: -278px;">
     <div class="container" style="margin-left: 0px;">
         <div class="row mb-2" style="width: 2079px;">
             <div class="col-lg-1"></div>
-            <div class="col-lg-1 time-col">星期一{{dates[0]}}</div>
-            <div class="col-lg-1 time-col">星期二{{dates[1]}}</div>
-            <div class="col-lg-1 time-col">星期三{{dates[2]}}</div>
-            <div class="col-lg-1 time-col">星期四{{dates[3]}}</div>
-            <div class="col-lg-1 time-col">星期五{{dates[4]}}</div>
-            <div class="col-lg-1 time-col">星期六{{dates[5]}}</div>
-            <div class="col-lg-1 time-col">星期日{{dates[6]}}</div>
+            <div class="col-lg-1 time-col">星期一<br>{{dates[0]}}</div>
+            <div class="col-lg-1 time-col">星期二<br>{{dates[1]}}</div>
+            <div class="col-lg-1 time-col">星期三<br>{{dates[2]}}</div>
+            <div class="col-lg-1 time-col">星期四<br>{{dates[3]}}</div>
+            <div class="col-lg-1 time-col">星期五<br>{{dates[4]}}</div>
+            <div class="col-lg-1 time-col">星期六<br>{{dates[5]}}</div>
+            <div class="col-lg-1 time-col">星期日<br>{{dates[6]}}</div>
         </div>
         <ng-container *ngFor="let section of periods">
             <div class="row mb-3" style="width: 2079px;margin-left: -33px;">
@@ -89,5 +90,6 @@
             </div>
         </ng-container>
     </div>
+  </div>
   </div>
 </div>
